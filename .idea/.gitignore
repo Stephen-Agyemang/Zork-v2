@@ -1,0 +1,54 @@
+# ========================
+# Java / IntelliJ defaults
+# ========================
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# IntelliJ IDEA project files
+*.iml
+*.iws
+.idea/
+misc.xml
+modules.xml
+vcs.xml
+workspace.xml
+out/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build tools
+target/
+build/
+
+# Maven / Gradle
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.gradle/
+
+# Ignore data sources / IDE HTTP requests
+/dataSources/
+/dataSources.local.xml
+/httpRequests/
+
+# Queries
+/queries/
+
+# Shelf folder (IntelliJ)
+shelf/

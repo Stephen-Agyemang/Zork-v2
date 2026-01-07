@@ -33,7 +33,7 @@ public class Item {
         description = pDescription;
     }
 
-    //the toString method concatonates the item's name, type, and description all together, 
+    //the toString method concatenates the item's name, type, and description all together,
     //and returns one String.
     public String toString() {
         return name + " [" + type + "] : " + description;
