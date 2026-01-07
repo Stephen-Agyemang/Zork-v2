@@ -1,12 +1,13 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Driver {
     private static Location currLocation;
-    private static ContainerItem myInventory; 
+    private static ContainerItem myInventory;
 
-    /* This is a static method that creates four new Location objects, connects the Location objects together,
-    adds items to the Locations, and makes the currLocation variable to store the address of one of the four
-    Locations created ,,
+    /* This is a static method that creates five new Location objects, connects the Location objects together,
+    adds items to the Locations, and makes the currLocation variable to store the address of one of the five
+    Locations created
     */
     public static void createWorld() {
 
@@ -18,7 +19,7 @@ public class Driver {
 
         myInventory = new ContainerItem("Inventory", "Container", "Player Backpack to store items collected");
 
-        
+
         julian.connect("north", hoover);
         hoover.connect("south", julian);
         hoover.connect("east", gcpa);
@@ -47,7 +48,7 @@ public class Driver {
         Item defaultItem = new Item("Shirt", "Clothing", "A secret shirt tucked away in players inventory");
         myInventory.addItem(defaultItem);
 
-    
+
 
         currLocation = julian;
 
@@ -104,58 +105,65 @@ public class Driver {
         Scanner scanner = new Scanner(System.in);
 
         //a variable to end the infinite loop when the user prompts "quit"
-        int temp = 0;
+        boolean running = true;
 
-        /* infinite loop that prompts the user to
-        enter a command, it reads the command, splits those words into individual cells in an array of Strings, 
-        enters a switch-case statement with three defined options, and quits when the user inputs "quit"
+        /*
+           Infinite loop that:
+           - Prompts the user for a command
+           - Reads and tokenizes the input
+           - Processes the command using a switch statement
+           - Exits when the user enters "quit"
         */
-        while (temp == 0){
+        while (running){
             System.out.println("Enter command.");
-            String userInput = scanner.nextLine();
-            userInput = userInput.toLowerCase();
+            String userInput = scanner.nextLine().toLowerCase().trim();
 
-            String[] separateUserInput = userInput.split(" ");
+            String[] words = userInput.split(" ");
 
-            switch(separateUserInput[0]){
+            if (words.length == 0) continue;
+
+            String command = words[0];
+
+            switch(command){
                 case "look":
                     System.out.println(currLocation.getName() + " - " + currLocation.getDescription());
                     for (int i = 0; i < currLocation.numItems(); i++){
-                        System.out.println("+ " + currLocation.getItem(i).getName());        
+                        System.out.println("+ " + currLocation.getItem(i).getName());
                     }
                     break;
 
                 case "examine":
-                    if (separateUserInput.length > 1){
-                        if (currLocation.hasItem(separateUserInput[1])){
-                            System.out.println(currLocation.getItem(separateUserInput[1]).toString());
-                    }
+                    if (words.length > 1){
+                        String itemName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
+                        if (currLocation.hasItem(itemName)){
+                            System.out.println(currLocation.getItem(itemName).toString());
+                        }
                         else{
                             System.out.println("Cannot find that item");
+                        }
                     }
-                    }
+
                     else{
                         System.out.println("Examine what? Give me a full sentence.");
                     }
                     break;
 
                 case "go":
-                    if (separateUserInput.length > 1) {
-                       if (currLocation.canMove(separateUserInput[1] )) {
-                            currLocation = currLocation.getLocation(separateUserInput[1]);
+                    if (words.length > 1) {
+                       if (currLocation.canMove(words[1] )) {
+                            currLocation = currLocation.getLocation(words[1]);
                     }
-                        else if (!separateUserInput[1].equals("north") && !separateUserInput[1].equals("south") 
-                        && !separateUserInput[1].equals("west") && !separateUserInput[1].equals("east") ) {
+                        else if (!words[1].equals("north") && !words[1].equals("south")
+                        && !words[1].equals("west") && !words[1].equals("east") ) {
                             System.out.println("Enter a valid direction...something like north or south you know :)");
 
-                    }
-                        else {
+                    }   else {
                             System.out.println("You cannot go in that direction");
                     }
                     }
+
                     else {
                             System.out.println("Go where? Give me a full sentence");
-
                     }
                     break;
 
@@ -171,93 +179,124 @@ public class Driver {
                     }
                     break;
 
-                case "take":
-                    if(separateUserInput.length > 1) {
-                        if (separateUserInput.length >= 4 && separateUserInput[2].equals ("from")) {
 
-                            if( !currLocation.hasItem(separateUserInput[3])) {
+                case "take":
+                    if(words.length > 1) {
+
+                        int fromIndex = -1;
+                        for (int i = 0; i < words.length; i++) {
+                            if (words[i].equals("from")) {
+                                fromIndex = i;
+                                break;
+                            }
+                        }
+
+                        if (fromIndex != -1) {
+                            String itemName = String.join(" ", Arrays.copyOfRange(words, 1, fromIndex));
+                            String containerName = String.join(" ", Arrays.copyOfRange(words, fromIndex + 1, words.length));
+
+                            if (!currLocation.hasItem(containerName)) {
                                 System.out.println("Cannot find that container in here");
                                 break;
                             }
-                            if (!(currLocation.getItem(separateUserInput[3]) instanceof ContainerItem)) {
+                            if (!(currLocation.getItem(containerName) instanceof ContainerItem container)) {
                                 System.out.println("The container does not exist in here");
                                 break;
                             }
 
-                            ContainerItem c = (ContainerItem) currLocation.getItem(separateUserInput[3]);
-
-                            if (!c.hasItem(separateUserInput[1])) {
-                                System.out.println("The " + separateUserInput[3] + " doesn't contain this item");
+                            if (!container.hasItem(itemName)) {
+                                System.out.println("The " + containerName + " doesn't contain this item");
                                 break;
                             }
 
-                            myInventory.addItem(c.removeItem(separateUserInput[1]));
-                                break;
-                        }
-
-                        if (currLocation.hasItem(separateUserInput[1])) {
-                            myInventory.addItem(currLocation.removeItem(separateUserInput[1]));
-                        }
-                        else {
-                            System.out.println("Cannot find that item here");
+                            myInventory.addItem(container.removeItem(itemName));
+                        } else {
+                            String itemName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
+                            if (currLocation.hasItem(itemName)) {
+                                myInventory.addItem(currLocation.removeItem(itemName));
+                            } else {
+                                System.out.println("Cannot find that item here");
+                            }
                         }
                     }
-    
-                    
-                    else{
+
+                    else {
                         System.out.println("Take what? Give me a full sentence.");
                         }
                     break;
-                    
+
+
                 case "drop":
-                    if(separateUserInput.length > 1) {
-                        if(myInventory.hasItem(separateUserInput[1])) {
-                            currLocation.addItem(myInventory.removeItem(separateUserInput[1]));
+                    if(words.length > 1) {
+                        String itemName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
+
+                        if(myInventory.hasItem(itemName)) {
+                            currLocation.addItem(myInventory.removeItem(itemName));
                     }
                         else {
                             System.out.println("Cannot find that item in your inventory");
                     }
                     }
+
                     else{
                         System.out.println("Drop what? Give me a full sentence.");
                     }
                     break;
-                
+
+
                 case "put":
-                    if (separateUserInput.length >= 4 && separateUserInput[2].equals("in")) {
+                    if (words.length >= 4) {
 
-                        if (!myInventory.hasItem(separateUserInput[1])) {
-                            System.out.println("You don't have this item.");
-                            break;
+                        int inIndex = -1;
+                        for (int i = 0; i < words.length; i++) {
+                            if (words[i].equals("in")) {
+                                inIndex = i;
+                                break;
+                            }
                         }
 
-                        if (!currLocation.hasItem(separateUserInput[3])) {
-                            System.out.println("Cannot find container here.");
-                            break;
+                        if (inIndex != -1) {
+                            String itemName = String.join(" ", Arrays.copyOfRange(words, 1, inIndex));
+                            String containerName = String.join(" ", Arrays.copyOfRange(words, inIndex + 1, words.length));
+
+                            if (!myInventory.hasItem(itemName)) {
+                                System.out.println("You don't have this item.");
+                                break;
+                            }
+
+                            if (!currLocation.hasItem(containerName)) {
+                                System.out.println("Cannot find container here.");
+                                break;
+                            }
+
+
+                            if (!(currLocation.getItem(containerName) instanceof ContainerItem container)) {
+                                System.out.println("The " + containerName + " is not a container.");
+                                break;
+                            }
+
+                            container.addItem(myInventory.removeItem(itemName));
+                        } else {
+                            System.out.println("Put what in what? Give me a full sentence");
                         }
-
-                        if (!(currLocation.getItem(separateUserInput[3]) instanceof ContainerItem)) {
-                            System.out.println("The " + separateUserInput[3] + " is not a container.");
-                            break;
-                        }
-
-                        ((ContainerItem) currLocation.getItem(separateUserInput[3])).addItem(myInventory.removeItem(separateUserInput[1]));
-
                     }
-                    else 
-                    {
-                    System.out.println("Put what in what? Give me a full sentence");
+
+                    else {
+                        System.out.println("Put what in what? Give me a full sentence");
                     }
-                    break;  
-                    
-                case "help":
-                    commandDescription();     
                     break;
+
+
+                case "help":
+                    commandDescription();
+                    break;
+
 
                 case "quit":
                     System.out.println("Thank you for playing the game!");
-                    temp ++;
+                    running = false;
                     break;
+
 
                 default :
                     System.out.println("I don't know how to do that");

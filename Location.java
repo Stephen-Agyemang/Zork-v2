@@ -2,11 +2,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Location {
-    //Member Varibales for the Location class
+
+    //Member Variables for the Location class
     private String name;
     private String description;
-    private ArrayList<Item> items;
-    private HashMap<String, Location> connections; 
+    private final ArrayList<Item> items;
+    private final HashMap<String, Location> connections;
 
     public Location(String pName, String pDescription){
         name = pName;
@@ -39,8 +40,8 @@ public class Location {
     //This method looks through the ArrayList and, with the name provided by the user, 
     // decides if an item with that name exists in the ArrayList. 
     public boolean hasItem(String itemName){
-        for (int i = 0; i < items.size(); i++){
-            if (items.get(i).getName().equalsIgnoreCase(itemName)){
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
                 return true;
             }
         }
@@ -49,9 +50,9 @@ public class Location {
 
     //This method looks through the array list and with the input from the user returns the item object if it finds it in the array list
     public Item getItem(String itemName){
-        for (int i = 0; i < items.size(); i++){
-            if (items.get(i).getName().equalsIgnoreCase(itemName)){
-                return items.get(i);
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                return item;
             }
         }
         return null;
@@ -101,13 +102,7 @@ public class Location {
     the direction the user enters and false if otherwise
     */
     public boolean canMove(String directionName) {
-        if(connections.containsKey(directionName)){
-            return true;
-        }
-
-        else {  
-            return false;
-        }
+        return connections.containsKey(directionName);
     }
 
 
@@ -115,13 +110,7 @@ public class Location {
     provided or null if there is no such Location object 
     */
     public Location getLocation(String directionName) {
-        if(connections.containsKey(directionName)) {
-            return connections.get(directionName);
-        }
-
-        else {
-            return null;
-        }
+        return connections.getOrDefault(directionName, null);
     }
 
     
