@@ -39,4 +39,11 @@ public class Item {
         return name + " [" + type + "] : " + description;
     }
 
+    // Helper method to normalize item names for flexible matching
+    // Removes spaces and special characters, converts to lowercase
+    public static String normalizeName(String name) {
+        if (name == null) return "";
+        return name.toLowerCase().replaceAll("[^a-z0-9]", "");
+    }
+
 }

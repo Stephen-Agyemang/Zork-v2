@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Driver {
     private static Location currLocation;
@@ -127,8 +128,9 @@ public class Driver {
             switch(command){
                 case "look":
                     System.out.println(currLocation.getName() + " - " + currLocation.getDescription());
-                    for (int i = 0; i < currLocation.numItems(); i++){
-                        System.out.println("+ " + currLocation.getItem(i).getName());
+                    ArrayList<Item> locationItems = currLocation.getItems();
+                    for (Item item : locationItems) {
+                        System.out.println("+ " + item.getName());
                     }
                     break;
 
@@ -168,13 +170,14 @@ public class Driver {
                     break;
 
                 case "inventory":
-                    if (myInventory.getItems().isEmpty()) {
+                    ArrayList<Item> inventoryItems = myInventory.getItems();
+                    if (inventoryItems.isEmpty()) {
                         System.out.println("Oops! Your inventory is empty.");
                     }
                     else {
                         System.out.println("Your inventory has: ");
-                        for(int i = 0; i < myInventory.getItems().size(); i++) {
-                            System.out.println("+ " + myInventory.getItems().get(i).getName());
+                        for(Item item : inventoryItems) {
+                            System.out.println("+ " + item.getName());
                     }
                     }
                     break;
