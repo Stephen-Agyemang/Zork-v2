@@ -28,8 +28,9 @@ public class ContainerItem extends Item {
         the ContainerItem ArrayList contains the item with the name provided or false if otherwise
     */
     public boolean hasItem(String itemName) {
+        String normalizedInput = Item.normalizeName(itemName);
         for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
+            if (Item.normalizeName(item.getName()).equals(normalizedInput)) {
                 return true;
             }
         }
@@ -43,9 +44,10 @@ public class ContainerItem extends Item {
     itemName provided and returns that Item object removed when completed
     */
     public Item removeItem(String itemName) {
+        String normalizedInput = Item.normalizeName(itemName);
         Item temp;
         for(int i = 0; i < items.size(); i++) {
-            if((items.get(i).getName().equalsIgnoreCase(itemName))) {
+            if(Item.normalizeName(items.get(i).getName()).equals(normalizedInput)) {
                 temp = items.get(i);
                 items.remove(i);
                 return temp;

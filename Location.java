@@ -40,8 +40,9 @@ public class Location {
     //This method looks through the ArrayList and, with the name provided by the user, 
     // decides if an item with that name exists in the ArrayList. 
     public boolean hasItem(String itemName){
+        String normalizedInput = Item.normalizeName(itemName);
         for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
+            if (Item.normalizeName(item.getName()).equals(normalizedInput)) {
                 return true;
             }
         }
@@ -50,8 +51,9 @@ public class Location {
 
     //This method looks through the array list and with the input from the user returns the item object if it finds it in the array list
     public Item getItem(String itemName){
+        String normalizedInput = Item.normalizeName(itemName);
         for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
+            if (Item.normalizeName(item.getName()).equals(normalizedInput)) {
                 return item;
             }
         }
@@ -70,6 +72,11 @@ public class Location {
     }
 
 
+    //This method returns a copy of the items ArrayList for safe access
+    public ArrayList<Item> getItems() {
+        return new ArrayList<>(items);
+    }
+
     //This method returns the size of the items Arraylist
     public int numItems(){
         return items.size();
@@ -78,9 +85,10 @@ public class Location {
 
     //This method goes through the Array list, checks if the given item is there, and removes it from the array list and returns it
     public Item removeItem(String itemName){
+        String normalizedInput = Item.normalizeName(itemName);
         Item temp;
         for (int i = 0; i < items.size(); i++){
-            if (items.get(i).getName().equalsIgnoreCase(itemName)){
+            if (Item.normalizeName(items.get(i).getName()).equals(normalizedInput)){
                 temp = items.get(i);
                 items.remove(i);
                 return temp;
