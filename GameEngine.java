@@ -72,20 +72,65 @@ public class GameEngine {
         roylibrary.connect("south", hoover);
 
 
-        Item julianItem = new Item("Statue", "Art", "Bust statue of Percy Lavon Julian");
-        julian.addItem(julianItem);
+        Item cdiItem = new Item("Phone", "Communication", "A smartphone used to call Sasha for help");
+        cdi.addItem(cdiItem);
 
-        Item hooverItem = new Item("Fountain", "Food", "Dispenser containing a variety of soda drinks or water");
-        hoover.addItem(hooverItem);
 
-        Item gcpaItem = new Item("Piano", "Music", "Huge piano in a practice room for music students");
-        gcpa.addItem(gcpaItem);
+        Item lillyItem1 = new Item("GlazedGuitar", "Music", "A four string based guitar with the last string glowing green being played by a Football athlete at the moment.");
+        lilly.addItem(lillyItem1);
 
-        Item olinItem = new Item("Specimen", "Reptile", "Stuffed snake on display for biology students or visitors");
-        olin.addItem(olinItem);
+        Item lillyItem2 = new Item("Treadmill", "Exercise", "A high-tech treadmill used for running exercises and energy(points) boost.");
+        lilly.addItem(lillyItem2);
 
-        Item roylibraryItem = new Item( "Bookshelf", "Furniture", "Shelf filled with books of all kinds");
-        roylibrary.addItem(roylibraryItem);
+
+        Item duckItem1 = new Item("Classic Burger", "Meal", "A juicy burger with lettuce, tomato, pickles, and cheese");
+        duck.addItem(duckItem1);
+
+        Item duckItem2 = new Item("Mac and Cheese", "Meal", "Creamy macaroni and cheese topped with breadcrumbs");
+        duck.addItem(duckItem2);
+
+        Item duckItem3 = new Item("Microphone", "Music", "A wireless microphone used by performers at The Fluttering Duck");
+        duck.addItem(duckItem3);
+
+
+        Item julianItem1 = new Item("Statue", "Art", "Bust statue of Percy Lavon Julian");
+        julian.addItem(julianItem1);
+
+        Item julianItem2 = new Item("Macbook", "Electronics", "An lost invaluable school macbook exclusive to the President recently spotted at Julian");
+        julian.addItem(julianItem2);
+
+
+        Item hooverItem1 = new Item("Fountain", "Food", "Dispenser containing a variety of soda drinks or water");
+        hoover.addItem(hooverItem1);
+
+        Item hooverItem2 = new Item("Sandwich", "Food", "A delicious sandwich with turkey, lettuce, tomato, and cheese");
+        hoover.addItem(hooverItem2);
+
+        Item hooverItem3 = new Item("Microphone", "Music", "An important stolen music microphone left by a music student during their lunch");
+        hoover.addItem(hooverItem3);
+
+        Item hooverItem4 = new Item("EndangeredSalmon", "Fish", "A rare species of salmon that has to be protected due to its endangered status");
+        hoover.addItem(hooverItem4);
+
+
+        Item humberItem1 = new Item("Yang", "Music", "A torn half of a music sheet which seems like it should be soomewhere else...");
+        humbert.addItem(humberItem1);
+
+        Item reeseItem1 = new Item("Yin", "Music", "A torn half of a music sheet which seems like it should be soomewhere else...");
+        reese.addItem(reeseItem1);
+
+
+        Item gcpaItem1 = new Item("Piano", "Music", "Huge piano in a practice room for music students");
+        gcpa.addItem(gcpaItem1);
+
+
+        Item olinItem1 = new Item("Specimen", "Reptile", "Stuffed snake on display for biology students or visitors");
+        olin.addItem(olinItem1);
+
+    
+        Item roylibraryItem1 = new Item( "Bookshelf", "Furniture", "Shelf filled with books of all kinds");
+        roylibrary.addItem(roylibraryItem1);
+
 
         Item defaultItem1 = new Item("Shirt", "Clothing", "A secret shirt tucked away in players inventory");
         Item defaultItem2 = new Item("Water", "Dring", "A bottle of water to keep the player hydrated");
@@ -102,8 +147,8 @@ public class GameEngine {
         hoover.addItem(hooverContainer);
 
         ContainerItem gcpaContainer = new ContainerItem("GuitarCase", "Container", "A big black guitar case with an ominously musical aura around it...");
-        Item hauntedGuitar = new Item("GlazedGuitar", "Music Instrument", "A four string based guitar with the last string glowing green.");
-        gcpaContainer.addItem(hauntedGuitar);
+    //    Item hauntedGuitar = new Item("GlazedGuitar", "Music Instrument", "A four string based guitar with the last string glowing green.");
+      //  gcpaContainer.addItem(hauntedGuitar);
         gcpa.addItem(gcpaContainer);
 
         ContainerItem olinContainer = new ContainerItem("PCRMachine", "Container", "A big grey box used to teach Biology, but it feels like someone's inside of it...");
@@ -308,17 +353,9 @@ public class GameEngine {
                 """;
 
 
-            case "quit":
-                return "Thank you for playing the game!";
-
-
             default:
                 return "I don't know how to do that";
-
-
-        
             } 
-
         }
 }
 
