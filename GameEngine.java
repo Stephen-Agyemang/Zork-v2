@@ -147,8 +147,6 @@ public class GameEngine {
         hoover.addItem(hooverContainer);
 
         ContainerItem gcpaContainer = new ContainerItem("GuitarCase", "Container", "A big black guitar case with an ominously musical aura around it...");
-    //    Item hauntedGuitar = new Item("GlazedGuitar", "Music Instrument", "A four string based guitar with the last string glowing green.");
-      //  gcpaContainer.addItem(hauntedGuitar);
         gcpa.addItem(gcpaContainer);
 
         ContainerItem olinContainer = new ContainerItem("PCRMachine", "Container", "A big grey box used to teach Biology, but it feels like someone's inside of it...");
