@@ -132,12 +132,8 @@ public class GameEngine {
         roylibrary.addItem(roylibraryItem1);
 
 
-        Item defaultItem1 = new Item("Shirt", "Clothing", "A secret shirt tucked away in players inventory");
-        Item defaultItem2 = new Item("Water", "Dring", "A bottle of water to keep the player hydrated");
-        myInventory.addItem(defaultItem1);
-        myInventory.addItem(defaultItem2);
-
         currLocation = julian;
+
 
         ContainerItem hooverContainer = new ContainerItem("ToGoBox", "Container", "A to-go box, and it feels like there's food inside...");
         Item chickenAmerican = new Item("Chicken", "Food", "A chicken piece with American cheese melted on top");
@@ -149,10 +145,13 @@ public class GameEngine {
         ContainerItem gcpaContainer = new ContainerItem("GuitarCase", "Container", "A big black guitar case with an ominously musical aura around it...");
         gcpa.addItem(gcpaContainer);
 
-        ContainerItem olinContainer = new ContainerItem("PCRMachine", "Container", "A big grey box used to teach Biology, but it feels like someone's inside of it...");
+        ContainerItem olinContainer1 = new ContainerItem("PCRMachine", "Container", "A big grey box used to teach Biology, but it feels like someone's inside of it...");
         Item dnaSample = new Item("BatMan's-DNA", "Molecule", "Little test tubes containing DNA of BatMan.");
-        olinContainer.addItem(dnaSample);
-        olin.addItem(olinContainer);
+        olinContainer1.addItem(dnaSample); // 
+        olin.addItem(olinContainer1);
+
+        ContainerItem olinContainer2 = new ContainerItem("Aquarium", "Container", "A beautiful aquarium filled with special water that a rare Salmon fish needs to survive");
+        olin.addItem(olinContainer2);
 
         ContainerItem julianContainer = new ContainerItem("DisplayCase", "Container", "A glass case once used to display the Monalisa painting, but it seems like something else is inside now...");
         Item rareArtifact = new Item("AncientArtifact", "History", "A mysterious artifact from ancient times.");
@@ -182,11 +181,11 @@ public class GameEngine {
                 lkOutput.append(currLocation.getName())
                         .append(" - ")
                         .append(currLocation.getDescription());
-            ArrayList<Item> locationItems = currLocation.getItems();
-            for (Item item : locationItems) {
-                lkOutput.append("\n+ ").append(item.getName());
-            }
-            return lkOutput.toString();
+                ArrayList<Item> locationItems = currLocation.getItems();
+                for (Item item : locationItems) {
+                    lkOutput.append("\n+ ").append(item.getName());
+                }
+                return lkOutput.toString();
 
             case "examine":
                 if (words.length > 1) {
@@ -328,11 +327,11 @@ public class GameEngine {
 
                 Examine <item>                : Gives a description of the specified item.
 
-                Go <direction>                : Moves you to another location (north, south, east, or west).
+                Go <direction>                : (Equlas 1 move) Go plus directions like; north, south, east, or west moves you to another location if there is one.
 
-                Jump                          : Teleports/Hops you to the specified location when you are some specifically chosen places and out of the Resident Halls (The only places you can jump to are: ....)
+                Jump                          : (Equals 2 moves) Teleports/Hops you to the specified location when you are some specifically chosen places and out of the Resident Halls (The only places you can jump to are: ....)
 
-                Cross <obstacle>              : Crosses you to the Halls Zone of the place (Places you can sleep at)...The only command to get you there.
+                Cross                         : (Equals 2 moves) Crosses you from the UB to the Resident Halls more specifically Mason where you can go to other Hall like Reese and Humbert.
 
                 Take <item>                   : Picks up an available item in your current location.
 
@@ -346,7 +345,7 @@ public class GameEngine {
 
                 Help                          : Shows a list of commands and what they do.
 
-                Quit                          : Exits the game.
+                Quit                          : Ends the game.
 
                 """;
 
