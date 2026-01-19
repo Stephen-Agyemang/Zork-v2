@@ -12,14 +12,15 @@ public class Location {
     public Location(String pName, String pDescription){
         name = pName;
         description = pDescription;
-        items = new ArrayList<Item>();
-        connections = new HashMap<String, Location>();
+        items = new ArrayList<>();
+        connections = new HashMap<>();
     }
 
     //Getter Methods for the member variables of the Location class
     public String getName() {
         return name;
     }
+
     public String getDescription() {
         return description;
     }
@@ -28,6 +29,7 @@ public class Location {
     public void setName(String pName) {
         name = pName;
     }
+
     public void setDescription(String pDescription) {
         description = pDescription;
     }
@@ -37,8 +39,9 @@ public class Location {
         items.add(currItem);
     }
 
-    //This method looks through the ArrayList and, with the name provided by the user, 
-    // decides if an item with that name exists in the ArrayList. 
+    /*This method looks through the ArrayList and, with the name provided by the user, 
+    decides if an item with that name exists in the ArrayList.
+    */  
     public boolean hasItem(String itemName){
         String normalizedInput = Item.normalizeName(itemName);
         for (Item item : items) {
@@ -71,7 +74,6 @@ public class Location {
         }
     }
 
-
     //This method returns a copy of the items ArrayList for safe access
     public ArrayList<Item> getItems() {
         return new ArrayList<>(items);
@@ -81,7 +83,6 @@ public class Location {
     public int numItems(){
         return items.size();
     }
-
 
     //This method goes through the Array list, checks if the given item is there, and removes it from the array list and returns it
     public Item removeItem(String itemName){
@@ -97,14 +98,12 @@ public class Location {
         return null;
     }
 
-
     /* This method takes two parameters of types String and Location, directionName and connectingLoc respectively, and adds an entry 
     into the HashMap that associates the direction to the Location.
     */
     public void connect(String directionName, Location connectingLoc) {
         connections.put(directionName, connectingLoc);
     }
-
 
     /* This method takes a String, directionName, as parameter and return true if there is a Location in the HashMap associated with 
     the direction the user enters and false if otherwise
@@ -113,7 +112,9 @@ public class Location {
         return connections.containsKey(directionName);
     }
 
-
+    public boolean canMove() {
+        return !connections.isEmpty();
+    }
     /* This method takes a String directionName, as parameter and return the Location object associated with the directionName 
     provided or null if there is no such Location object 
     */
