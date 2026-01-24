@@ -1,3 +1,4 @@
+package com.mygroup;
 public class Item {
     //Member Variables of Item class
     private String name;
@@ -35,6 +36,7 @@ public class Item {
 
     //the toString method concatenates the item's name, type, and description all together,
     //and returns one String.
+    @Override
     public String toString() {
         return name + " [" + type + "] : " + description;
     }
