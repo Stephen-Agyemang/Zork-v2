@@ -1,3 +1,4 @@
+package com.mygroup;
 import java.util.ArrayList;
 
 public class ContainerItem extends Item {
@@ -14,6 +15,20 @@ public class ContainerItem extends Item {
     // This method is the getter method for the items ArrayList
     public ArrayList<Item> getItems() {
         return new ArrayList<>(items);
+    }
+
+    // Names of all contained items
+    public ArrayList<String> getItemNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Item item : items) {
+            names.add(item.getName());
+        }
+        return names;
+    }
+
+    // Alias used by command routing when listing container contents
+    public ArrayList<String> getContainerItemNames() {
+        return getItemNames();
     }
 
 
@@ -38,6 +53,17 @@ public class ContainerItem extends Item {
             return false;
             
         }
+
+    // Fetch item without removing
+    public Item getItem(String itemName) {
+        String normalizedInput = Item.normalizeName(itemName);
+        for (Item item : items) {
+            if (Item.normalizeName(item.getName()).equals(normalizedInput)) {
+                return item;
+            }
+        }
+        return null;
+    }
 
     
     /* This method take a String, addedItem, as a parameter and removes the item the correlates with the
@@ -75,32 +101,3 @@ public class ContainerItem extends Item {
 
 
 }
-    
-
-    
-    
-    
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
