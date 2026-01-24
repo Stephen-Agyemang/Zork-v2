@@ -1,75 +1,73 @@
-# Zork v2
+# Zork v2 (Spring Boot backend)
 
-A text-based adventure set on a college campus. Explore 13 interconnected locations, complete multi-part quests (DNA delivery, music performance, wildlife rescue, MacBook return, treadmill sprint), and optimize your moves while managing hunger, food, and dining coupons.
+Text adventure on a college campus: 13 interconnected locations, multi-part quests (DNA courier, music performance, wildlife rescue, MacBook return, treadmill sprint), and resource juggling (moves, hunger, food decay, dining coupons, typing challenges). The game engine runs as a small Spring Boot HTTP API you can drive with curl, Postman, or a web UI.
 
-## How to Run
+## Requirements
+- Java 21+
+- Maven 3.9+
+- curl or any REST client
 
+## Quickstart
+1) Start the server
 ```bash
-javac *.java
-java Main
+cd myproject
+mvn spring-boot:run
 ```
 
-## Quick Start
+2) Initialize the world (once per session)
+```bash
+curl -X POST http://localhost:8080/game/start
+```
 
-Type `help` to see the in-game guide, or jump in with `look` and `go <direction>`.
+3) Send commands as plain text
+```bash
+curl -X POST http://localhost:8080/game/command \
+	-H "Content-Type: text/plain" \
+	-d "look"
+```
 
-## Commands
+4) Inspect current state (moves, points, location, inventory, quests)
+```bash
+curl http://localhost:8080/game/state
+```
 
-**Navigation:**
-- `look` – Describe current location and items
-- `go <direction>` – Move north/south/east/west (1 move)
-- `jump` – Teleport from Julian, Mason Hall, or Roy Library (2 moves)
-- `cross` – Cross from UB to Mason Hall (2 moves)
+Optional: toggle engine debug logging while testing
+```bash
+curl -X POST http://localhost:8080/game/debug -H "Content-Type: application/json" -d "true"
+```
 
-**Inventory:**
-- `take <item>` – Pick up an item
-- `take <item> from <container>` – Extract item from a container
-- `drop <item>` – Leave an item at current location
-- `put <item> in <container>` – Place item into a container
-- `inventory` – List carried items
+## Command reference (send via `/game/command`)
+- Navigation: `look`, `go <direction>`, `jump`, `cross`
+- Inventory: `take <item>`, `take <item> from <container>`, `drop <item>`, `put <item> in <container>`, `inventory`
+- Interaction: `examine <item>`, `use treadmill`, `status` (or `score`), `help`, `quit`
 
-**Interaction:**
-- `examine <item>` – Get item details or read Help guide
-- `use treadmill` – Start typing sprint at Lilly Building
-- `status` (or `score`) – View moves, points, food, coupons, quest progress
-- `help` – Locate or read Help guide
-- `quit` – Exit
+## Game systems
+- Moves and scoring: actions cost moves (go=1, jump/cross=2); quests award points; optimize points per move.
+- Food and hunger: carry up to 3 foods; every 5 moves hunger consumes one; empty stomach adds a 2-move penalty; foods spoil every 5 moves.
+- Dining and coupons: start with 3 coupons; first dining visit locks your food source; complete both biology rescues to gain unlimited coupons.
+- Quests: parallel objectives across music, DNA delivery countdown, wildlife rescue, MacBook return, treadmill sprint; multiple paths to victory.
+- Typing challenge: treadmill triggers a timed word sprint; repeated bad commands can also start a penalty challenge.
 
-## Core Systems
+## HTTP API surface
+- POST `/game/start` — build the world and reset state
+- POST `/game/command` — body: plain text command; returns narrative response
+- GET `/game/state` — returns current `GameState` JSON (moves, points, location, inventory, quest flags, debugging and inspection)
+- POST `/game/debug` — body: boolean; enable/disable debug logging
 
-### Moves & Points
-- Each action costs moves (go=1, jump=2, cross=2)
-- Complete quests to earn points
-- Goal: maximize points, minimize moves
+## Build and run
+- Dev server: `mvn spring-boot:run`
+- Package fat jar: `mvn -DskipTests package` then `java -jar target/myproject-1.0-SNAPSHOT.jar`
+- Fallback direct compile (bypasses Maven quirks): `./build.sh` then `java -cp target/classes com.mygroup.App`
 
-### Dining Locations
-- Two dining options available on campus
-- First visit locks your food source choice
-- Dining foods require coupons (unless earned otherwise)
+## Project layout
+- Spring Boot entrypoint: [myproject/src/main/java/com/mygroup/App.java](myproject/src/main/java/com/mygroup/App.java)
+- HTTP controller: [myproject/src/main/java/com/mygroup/GameController.java](myproject/src/main/java/com/mygroup/GameController.java)
+- Engine and systems: [myproject/src/main/java/com/mygroup/GameEngine.java](myproject/src/main/java/com/mygroup/GameEngine.java), [myproject/src/main/java/com/mygroup/GameState.java](myproject/src/main/java/com/mygroup/GameState.java) and other classes under `com.mygroup`
+- Tests placeholder: [myproject/src/test/java/com/mygroup/AppTest.java](myproject/src/test/java/com/mygroup/AppTest.java)
 
-### Food & Hunger
-- Max 3 foods in inventory
-- Every 5 moves: hunger eats one food
-- No food when hungry: +2 move penalty
-- Foods spoil every 5 moves
+## Contributing and testing
+- Run checks: `mvn test` (currently a stub; add focused tests around `GameEngine` and quest flows)
+- Keep files ASCII-only unless a file already uses Unicode.
 
-### Coupons
-- Start with 3 coupons
-- Required to take dining food (unless unlimited)
-- Both biology rescues complete → unlimited coupons
-
-## Quests
-
-Discover and complete interconnected tasks across campus. Each quest has unique mechanics—some require resource management, others time pressure. The game has multiple paths to victory.
-
-## Tips
-
-- **Examine Help** – Full in-game guide with strategic hints
-- **Status Often** – Track moves and points
-- **Explore NPCs** – Characters whisper clues about quests
-- **Manage Resources** – Plan your food and coupon usage wisely
-- **Discover Mechanics** – Some systems reveal themselves as you play
-
-## Author
-
-Built as an improved version of my freshman Software Development class project inspired by the original classic Zork game, which explores quest design, resource management (moves/food/coupons), and time-pressure mechanics (DNA countdown, food decay).
+## Credits
+Improved from the original freshman Software Development project, inspired by classic Zork with emphasis on quest design, resource management, and time-pressure mechanics.
