@@ -1,3 +1,4 @@
+package com.mygroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,6 +80,26 @@ public class Location {
         return new ArrayList<>(items);
     }
 
+    // Convenience: names of all items (including containers) in this location
+    public ArrayList<String> getItemNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Item item : items) {
+            names.add(item.getName());
+        }
+        return names;
+    }
+
+    // True if a container with this name exists at the location
+    public boolean hasContainerItem(String itemName) {
+        String normalizedInput = Item.normalizeName(itemName);
+        for (Item item : items) {
+            if (item instanceof ContainerItem && Item.normalizeName(item.getName()).equals(normalizedInput)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //This method returns the size of the items Arraylist
     public int numItems(){
         return items.size();
@@ -120,6 +141,16 @@ public class Location {
     */
     public Location getLocation(String directionName) {
         return connections.getOrDefault(directionName, null);
+    }
+
+    // Alias for clarity with command router
+    public Location getConnection(String directionName) {
+        return getLocation(directionName);
+    }
+
+    // Names of available exits
+    public ArrayList<String> getConnectionNames() {
+        return new ArrayList<>(connections.keySet());
     }
 
     
