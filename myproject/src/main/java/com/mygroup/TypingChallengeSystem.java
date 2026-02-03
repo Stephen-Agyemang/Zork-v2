@@ -14,13 +14,16 @@ import java.util.Random;
  */
 public class TypingChallengeSystem {
     private final GameState state;
+    private final RandomWordService wordService;
 
     public TypingChallengeSystem(GameState state) {
         this.state = state;
+        this.wordService = new RandomWordService();
     }
 
     /**
-     * Normalize a word for typing comparison (remove spaces/special chars, lowercase)
+     * Normalize a word for typing comparison (remove spaces/special chars,
+     * lowercase)
      */
     private String normalizeWord(String word) {
         return word.toLowerCase().replaceAll("[^a-z0-9]", "");
@@ -32,10 +35,10 @@ public class TypingChallengeSystem {
      */
     public void startChallenge(String context, int wordCount) {
         state.startTypingChallenge(context);
-        
+
         // Build word pool dynamically from game state
         ArrayList<String> pool = new ArrayList<>();
-        
+
         // Add items from current location
         for (Item item : state.getCurrLocation().getItems()) {
             String normalized = normalizeWord(item.getName());
@@ -43,7 +46,7 @@ public class TypingChallengeSystem {
                 pool.add(normalized);
             }
         }
-        
+
         // Add items from inventory
         for (Item item : state.getInventory().getItems()) {
             String normalized = normalizeWord(item.getName());
@@ -51,12 +54,20 @@ public class TypingChallengeSystem {
                 pool.add(normalized);
             }
         }
-        
+
+        // Supplement with words from the external API to verify it works
+        for (int i = 0; i < 2; i++) {
+            String apiWord = normalizeWord(wordService.fetchRandomWord());
+            if (apiWord.length() > 2) {
+                pool.add(apiWord);
+            }
+        }
+
         // Ensure we have enough words
         if (pool.size() < wordCount) {
             pool.addAll(Arrays.asList("campus", "explore", "adventure", "quest", "journey", "challenge"));
         }
-        
+
         // Pick random words from the pool
         Random r = new Random();
         String[] words = new String[wordCount];
@@ -68,12 +79,13 @@ public class TypingChallengeSystem {
 
     /**
      * Evaluate the player's typing attempt
+     * 
      * @return result message
      */
     public String evaluateAttempt(String userInput) {
         String[] parts = userInput.trim().split("\\s+");
         int correct = 0;
-        
+
         // Check each required word to see if user typed it
         for (String requiredWord : state.getTypingWords()) {
             for (String userWord : parts) {
@@ -94,11 +106,14 @@ public class TypingChallengeSystem {
                 state.addPoints(15);
                 return "You crushed the treadmill typing sprint! +15 points." + maybeFinaleMessage();
             }
-            // Penalty typing challenge - different messages based on whether it's first try or recovery
+            // Penalty typing challenge - different messages based on whether it's first try
+            // or recovery
             if (state.getTypingFails() == 0) {
-                return "Impressive! Looks like those fingers know their way around a keyboard after all. " + correct + "/" + state.getTypingWords().length + " correct. Keep exploring!";
+                return "Impressive! Looks like those fingers know their way around a keyboard after all. " + correct
+                        + "/" + state.getTypingWords().length + " correct. Keep exploring!";
             } else {
-                return "Nice recovery! You typed " + correct + "/" + state.getTypingWords().length + " words correctly. Back to the game.";
+                return "Nice recovery! You typed " + correct + "/" + state.getTypingWords().length
+                        + " words correctly. Back to the game.";
             }
         }
 
@@ -111,7 +126,9 @@ public class TypingChallengeSystem {
         if ("treadmill".equals(state.getTypingContext())) {
             scold = "Keep running!";
         }
-        return scold + " You got " + correct + "/" + state.getTypingWords().length + " correct. Type the words again or type 'skip' to move on: " + String.join(", ", state.getTypingWords());
+        return scold + " You got " + correct + "/" + state.getTypingWords().length
+                + " correct. Type the words again or type 'skip' to move on: "
+                + String.join(", ", state.getTypingWords());
     }
 
     /**
@@ -119,9 +136,11 @@ public class TypingChallengeSystem {
      */
     public String getPrompt() {
         if ("treadmill".equals(state.getTypingContext())) {
-            return "Treadmill sprint! Type at least 3 of these words in one line, or type 'skip' to hop off: " + String.join(", ", state.getTypingWords());
+            return "Treadmill sprint! Type at least 3 of these words in one line, or type 'skip' to hop off: "
+                    + String.join(", ", state.getTypingWords());
         }
-        return "Typing challenge! Type at least 3 of these words in one line to continue, or type 'skip' to ignore: " + String.join(", ", state.getTypingWords());
+        return "Typing challenge! Type at least 3 of these words in one line to continue, or type 'skip' to ignore: "
+                + String.join(", ", state.getTypingWords());
     }
 
     /**

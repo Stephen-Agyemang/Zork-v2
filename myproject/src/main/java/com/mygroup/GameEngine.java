@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameEngine {
 
-    //Core game state managed by GameEngine
+    // Core game state managed by GameEngine
     private final GameState state;
 
-    //System handling specific game mechanics
+    // System handling specific game mechanics
     private final FoodSystem foodSystem;
     private final TypingChallengeSystem typingChallengeSystem;
     private final DNASystem dnaSystem;
