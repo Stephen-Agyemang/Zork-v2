@@ -3,29 +3,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-@RestController
 public class GameState {
 
-    private final GameEngine gameEngine = new GameEngine();
-
-    public void GameController() {
-        gameEngine.createWorld();
-    }
-
-    @GetMapping("/game/state")
-    public GameState getGameState() {
-        return gameEngine.getGameState();
-    }
-
-    //Core Stats
+    // Core Stats
     public int moveCount;
     public int points;
 
-    //Location 
+    // Location
     private Location currLocation;
     private Location lillyLocation;
     public HashSet<String> visitedLocations;
@@ -34,64 +18,63 @@ public class GameState {
     public boolean visitedHoover;
     public boolean visitedDuck;
 
-    //Inventory / Resources
+    // Inventory / Resources
     private final ContainerItem inventory;
     public boolean couponsUnlimited;
     public String foodLockChoice; // "hoover" or "duck" once chosen for food
 
-    //Food and survival
+    // Food and survival
     private int hungerMoveCounter;
     private int foodDecayCounter;
 
-    //Fun Typing Challenge
+    // Fun Typing Challenge
     private int wrongCommandCount;
     private boolean typingChallengeActive;
     private String[] typingWords;
     private int typingFails;
     private String typingContext; // "penalty" or "treadmill"
 
-    //Quests and Tasks
+    // Quests and Tasks
 
-    //Music 
+    // Music
     private boolean sashaCalled;
     private Item pendingGuitar;
     private boolean musicTaskComplete;
 
-    //Salmon and Snake
+    // Salmon and Snake
     private boolean salmonTaskComplete;
     private boolean snakeTaskComplete;
 
-    //Macbook
+    // Macbook
     private boolean macbookTaskComplete;
-    
-    //Treadmill 
+
+    // Treadmill
     private boolean treadmillUsed;
 
-    //DNA Task
+    // DNA Task
     private boolean dnaTaskActive;
     private int dnaMovesLeft;
     private boolean dnaTaskComplete;
-    private boolean dnaCountdownRunning;    
+    private boolean dnaCountdownRunning;
 
-    //Endgame
+    // Endgame
     private boolean finaleShown;
-    private boolean bothDiningVisited;  // Secret: true if both Hoover AND Duck visited
-    private boolean dangerousBonusAwarded;  // Prevent awarding +50 multiple times
+    private boolean bothDiningVisited; // Secret: true if both Hoover AND Duck visited
+    private boolean dangerousBonusAwarded; // Prevent awarding +50 multiple times
 
     // NPCs and Quests
     private final Map<String, NPC> npcs;
     private final Map<String, Quest> quests;
-
 
     public GameState() {
         // Core Stats
         this.moveCount = 0;
         this.points = 0;
 
-        //Inventory
+        // Inventory
         this.inventory = new ContainerItem("BackPack", "Container", "Player personal backpack");
 
-        //Locations tracking
+        // Locations tracking
         this.currLocation = null; // Set by GameEngine when world is created
         this.visitedLocations = new HashSet<>();
         this.lillyLocation = null;
@@ -99,20 +82,20 @@ public class GameState {
         this.visitedHoover = false;
         this.visitedDuck = false;
 
-        //Food and Survival
+        // Food and Survival
         this.couponsUnlimited = false;
         this.hungerMoveCounter = 0;
         this.foodLockChoice = null;
         this.foodDecayCounter = 0;
 
-        //Typing Challenge
+        // Typing Challenge
         this.wrongCommandCount = 0;
         this.typingChallengeActive = false;
         this.typingWords = new String[0];
         this.typingFails = 0;
         this.typingContext = null;
 
-        //Quests and Tasks
+        // Quests and Tasks
         this.treadmillUsed = false;
         this.salmonTaskComplete = false;
         this.snakeTaskComplete = false;
@@ -120,16 +103,17 @@ public class GameState {
         this.sashaCalled = false;
         this.musicTaskComplete = false;
 
-        //DNA Task
+        // DNA Task
         this.dnaTaskActive = false;
         this.dnaMovesLeft = 0;
         this.dnaTaskComplete = false;
         this.dnaCountdownRunning = false;
 
-        //Pending Item
-        this.pendingGuitar = new Item("GlazedGuitar", "Music", "A four string guitar with a glowing green string, waiting for its true player.");
-        
-        //Endgame
+        // Pending Item
+        this.pendingGuitar = new Item("GlazedGuitar", "Music",
+                "A four string guitar with a glowing green string, waiting for its true player.");
+
+        // Endgame
         this.finaleShown = false;
         this.bothDiningVisited = false;
         this.dangerousBonusAwarded = false;
@@ -139,13 +123,13 @@ public class GameState {
         this.quests = new HashMap<>();
     }
 
-
     // Getter and Setter methods for all member variables
 
-    //Location related methods (Location handling)
+    // Location related methods (Location handling)
     public Location getCurrLocation() {
         return currLocation;
     }
+
     public void setCurrLocation(Location newLocation) {
         this.currLocation = newLocation;
     }
@@ -176,7 +160,7 @@ public class GameState {
         this.helpDropLocation = location;
     }
 
-    //Inventory related methods (Inventory management)
+    // Inventory related methods (Inventory management)
     public ContainerItem getInventory() {
         return inventory;
     }
@@ -189,7 +173,7 @@ public class GameState {
         return inventory.removeItem(itemName);
     }
 
-    //Move count and point methods
+    // Move count and point methods
     public int getMoveCount() {
         return moveCount;
     }
@@ -214,7 +198,7 @@ public class GameState {
         this.points -= pointsToSubtract;
     }
 
-    //Food and Survival methods 
+    // Food and Survival methods
     public void visitHoover() {
         visitedHoover = true;
     }
@@ -291,7 +275,7 @@ public class GameState {
         this.foodLockChoice = choice;
     }
 
-    //Typing Challenge methods
+    // Typing Challenge methods
     public void startTypingChallenge(String context) {
         typingChallengeActive = true;
         typingFails = 0;
@@ -349,33 +333,62 @@ public class GameState {
         wrongCommandCount = 0;
     }
 
-
-    //Quests and Task methods
-    public void completeSalmonTask() { salmonTaskComplete = true;}
-    public boolean isSalmonTaskComplete() { return salmonTaskComplete; }
-
-    public void completeSnakeTask() { snakeTaskComplete = true; }
-    public boolean isSnakeTaskComplete() { return snakeTaskComplete; }
-
-    public void completeMacbookTask() { macbookTaskComplete = true; }
-    public boolean isMacbookTaskComplete() { return macbookTaskComplete; }
-
-    public void callSasha() { sashaCalled = true; }
-    public boolean isSashaCalled() { return sashaCalled; }
-
-    public boolean allCoreQuestsDone() {
-        return musicTaskComplete && dnaTaskComplete && salmonTaskComplete && snakeTaskComplete && macbookTaskComplete && treadmillUsed;
+    // Quests and Task methods
+    public void completeSalmonTask() {
+        salmonTaskComplete = true;
     }
 
-    //Treadmill and Music methods
-    public void useTreadmill() { treadmillUsed = true; }
-    public boolean isTreadmillUsed() { return treadmillUsed; }
+    public boolean isSalmonTaskComplete() {
+        return salmonTaskComplete;
+    }
 
-    public void completeMusicTask() { musicTaskComplete = true; }
-    public boolean isMusicTaskComplete() { return musicTaskComplete; }
+    public void completeSnakeTask() {
+        snakeTaskComplete = true;
+    }
 
+    public boolean isSnakeTaskComplete() {
+        return snakeTaskComplete;
+    }
 
-    //Pending Items and References
+    public void completeMacbookTask() {
+        macbookTaskComplete = true;
+    }
+
+    public boolean isMacbookTaskComplete() {
+        return macbookTaskComplete;
+    }
+
+    public void callSasha() {
+        sashaCalled = true;
+    }
+
+    public boolean isSashaCalled() {
+        return sashaCalled;
+    }
+
+    public boolean allCoreQuestsDone() {
+        return musicTaskComplete && dnaTaskComplete && salmonTaskComplete && snakeTaskComplete && macbookTaskComplete
+                && treadmillUsed;
+    }
+
+    // Treadmill and Music methods
+    public void useTreadmill() {
+        treadmillUsed = true;
+    }
+
+    public boolean isTreadmillUsed() {
+        return treadmillUsed;
+    }
+
+    public void completeMusicTask() {
+        musicTaskComplete = true;
+    }
+
+    public boolean isMusicTaskComplete() {
+        return musicTaskComplete;
+    }
+
+    // Pending Items and References
     public void setPendingGuitar(Item guitar) {
         pendingGuitar = guitar;
     }
@@ -392,9 +405,7 @@ public class GameState {
         return lillyLocation;
     }
 
-
-
-    //DNA Task methods
+    // DNA Task methods
     public void startDNATask(int movesAllowed) {
         dnaTaskActive = true;
         dnaMovesLeft = movesAllowed;
@@ -432,7 +443,7 @@ public class GameState {
         return dnaCountdownRunning;
     }
 
-    //Endgame methods
+    // Endgame methods
     public void showFinale() {
         finaleShown = true;
     }
@@ -449,12 +460,14 @@ public class GameState {
     }
 
     public NPC getNpc(String id) {
-        if (id == null) return null;
+        if (id == null)
+            return null;
         return npcs.get(id.toLowerCase());
     }
 
     public NPC findNpcByName(String name) {
-        if (name == null) return null;
+        if (name == null)
+            return null;
         String normalized = name.toLowerCase();
         return npcs.values().stream()
                 .filter(n -> n.getName() != null && n.getName().toLowerCase().equals(normalized))
@@ -477,7 +490,8 @@ public class GameState {
     }
 
     public Quest getQuest(String id) {
-        if (id == null) return null;
+        if (id == null)
+            return null;
         return quests.get(id.toLowerCase());
     }
 
@@ -501,8 +515,19 @@ public class GameState {
     }
 
     // Hidden dangerous bonus tracking
-    public void markBothDiningVisited() { bothDiningVisited = true; }
-    public boolean isBothDiningVisited() { return bothDiningVisited; }
-    public void awardDangerousBonus() { dangerousBonusAwarded = true; }
-    public boolean isDangerousBonusAwarded() { return dangerousBonusAwarded; }
+    public void markBothDiningVisited() {
+        bothDiningVisited = true;
+    }
+
+    public boolean isBothDiningVisited() {
+        return bothDiningVisited;
+    }
+
+    public void awardDangerousBonus() {
+        dangerousBonusAwarded = true;
+    }
+
+    public boolean isDangerousBonusAwarded() {
+        return dangerousBonusAwarded;
+    }
 }
