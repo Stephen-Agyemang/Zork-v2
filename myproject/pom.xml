@@ -50,7 +50,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.12.1</version>
         <configuration>
-          <release>21</release>
+                    <release>25</release>
           <useIncrementalCompilation>false</useIncrementalCompilation>
           <!-- Compile all sources under src/main/java. The previous include
                list was whitelisting specific files and prevented new classes
