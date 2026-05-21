@@ -3,12 +3,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
+    <parent>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-parent</artifactId>
-      <version>3.2.1</version> <!-- Specify the version here -->
+      <version>3.5.0</version>
       <relativePath/> <!-- lookup parent from repository -->
-  </parent>
+    </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.mygroup</groupId>
@@ -49,12 +49,12 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>6.1.21</version>
+      <version>6.2.18</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>6.1.21</version>
+      <version>6.2.18</version>
     </dependency>
   </dependencies>
 
