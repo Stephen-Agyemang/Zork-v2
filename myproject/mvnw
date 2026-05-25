@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 MAVEN_WRAPPER_JAR=".mvn/wrapper/maven-wrapper.jar"
 if [ -f "$MAVEN_WRAPPER_JAR" ]; then
-  exec java -jar "$MAVEN_WRAPPER_JAR" "$@"
+  exec java -cp "$MAVEN_WRAPPER_JAR" org.apache.maven.wrapper.MavenWrapperMain "$@"
 else
   exec mvn "$@"
 fi
