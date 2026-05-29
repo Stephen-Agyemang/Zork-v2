@@ -231,8 +231,7 @@ export default function App() {
   }
 
   const handleCallsignSubmit = () => {
-    const name = callsignInput.trim()
-    if (!name) return
+    const name = callsignInput.trim() || 'OPERATOR_01'
     setCallsign(name)
     setCallsignInput('')
     setShowCallsignScreen(false)
@@ -318,17 +317,16 @@ export default function App() {
             <input
               className="callsign-input"
               type="text"
-              maxLength={20}
-              placeholder="e.g. ALPHA_01"
+              maxLength={32}
+              placeholder="e.g. Stephen, ALPHA_01, anything"
               value={callsignInput}
-              onChange={e => setCallsignInput(e.target.value.toUpperCase())}
+              onChange={e => setCallsignInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleCallsignSubmit() }}
               autoFocus
             />
             <button
               className="mechanical-plate active-yellow callsign-deploy-btn"
               onClick={handleCallsignSubmit}
-              disabled={!callsignInput.trim()}
             >
               DEPLOY OPERATOR
             </button>
@@ -358,7 +356,7 @@ export default function App() {
           <button 
             className="mechanical-plate" 
             style={{ marginTop: '20px' }} 
-            onClick={initGame}
+            onClick={() => initGame(callsign)}
           >
             RETRY
           </button>
