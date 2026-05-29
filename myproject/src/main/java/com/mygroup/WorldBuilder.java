@@ -163,7 +163,7 @@ public class WorldBuilder {
         gcpa.addItem(gcpaContainer);
 
         ContainerItem olinContainer1 = new ContainerItem("PCRMachine", "Container", "A big grey box used to teach Biology, but it feels like someone's inside of it...");
-        Item dnaSample = new Item("BatMan's-D   NA", "Molecule", "Little test tubes containing DNA of BatMan.");
+        Item dnaSample = new Item("Batman-DNA", "Molecule", "Little test tubes containing DNA of BatMan.");
         olinContainer1.addItem(dnaSample); 
         olin.addItem(olinContainer1);
 

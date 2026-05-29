@@ -35,7 +35,7 @@ public class DNASystem {
         state.decrementDNAMoves();
         if (state.getDnaMovesLeft() <= 0) {
             // DNA spoiled
-            state.getInventory().removeItem("BatMan's-D   NA");
+            state.getInventory().removeItem("Batman-DNA");
             state.completeDNATask();
             state.subtractPoints(10);
             return "\nThe DNA was exposed too long and is destroyed (-10 points).";

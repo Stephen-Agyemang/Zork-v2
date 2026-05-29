@@ -69,6 +69,10 @@ public class ContainerItem extends Item {
     /* This method take a String, addedItem, as a parameter and removes the item the correlates with the
     itemName provided and returns that Item object removed when completed
     */
+    public void clear() {
+        items.clear();
+    }
+
     public Item removeItem(String itemName) {
         String normalizedInput = Item.normalizeName(itemName);
         Item temp;

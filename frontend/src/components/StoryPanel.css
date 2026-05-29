@@ -1,51 +1,166 @@
-.story-panel {
+/* Story Panel Styles - Center Columns */
+
+.center-deck {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: #111827;
-  border: 1px solid #333;
-  border-radius: 4px;
-  padding: 12px;
+  height: 100%;
+  min-width: 0;
   overflow: hidden;
 }
 
-.story-panel h3 {
-  margin: 0;
-  color: #00d4ff;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 8px;
-}
-
-.messages {
+.console-hero {
   flex: 1;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  height: 100%;
+  background: #020a14;
 }
 
-.message {
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  line-height: 1.5;
+.console-hero-header {
+  height: 52px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.console-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.telemetry-compact-line {
+  font-family: var(--font-label);
+  font-size: 9px;
+  color: var(--color-outline);
+  letter-spacing: 0.05em;
+}
+
+.console-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.compact-harvest-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-surface-lowest);
+  border: 1px solid var(--color-surface-bright);
+  border-radius: var(--rounded-sm);
+  padding: 3px 10px;
+}
+
+.compact-harvest-lbl {
+  font-family: var(--font-label);
+  font-size: 8px;
+  color: var(--color-outline);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.compact-harvest-val {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-size: 13px;
+  color: var(--color-primary);
+  text-shadow: 0 0 5px rgba(242, 202, 80, 0.4);
+}
+
+.console-log-body {
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 20px;
+  overflow-y: auto;
+  position: relative;
+  flex: 1;
+}
+
+/* Atmospheric watermark of school photo — crisp, minimal processing */
+.terminal-watermark {
+  position: absolute;
+  top: 52px; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.13;
+  pointer-events: none;
+  z-index: 0;
+  filter: brightness(55%) saturate(50%);
+}
+
+.log-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  position: relative;
+  z-index: 1; /* Keep text above the watermark backdrop */
+  animation: phosphor-heat-up 0.45s ease-out forwards;
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+@keyframes phosphor-heat-up {
+  0% { 
+    opacity: 0; 
+    transform: translateY(3px); 
+    filter: brightness(250%) blur(0.75px); 
+  }
+  40% { 
+    opacity: 0.85; 
+    filter: brightness(140%) blur(0.3px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+    filter: brightness(100%) blur(0); 
+  }
+}
+
+.log-time {
+  font-family: var(--font-label);
+  font-size: 9.5px;
+  color: #6a8fa8;
+  flex-shrink: 0;
+  padding-top: 1px;
+  width: 48px;
+}
+
+.log-content-wrapper {
+  flex: 1;
+  word-break: break-word;
   white-space: pre-wrap;
-  word-wrap: break-word;
-  color: #d0d0d0;
 }
 
-.message.command {
-  color: #00d4ff;
+.command-log {
+  border-left: 2px solid var(--color-primary);
+  padding-left: 8px;
+}
+
+.command-text {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(242, 202, 80, 0.3);
+}
+
+.system-text {
+  color: #d4e4fc;
+  font-weight: 400;
+}
+
+.error-text {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.prompt-arrow {
+  color: var(--color-primary);
   font-weight: bold;
-}
-
-.message.system {
-  color: #888;
-  font-style: italic;
-}
-
-.message.error {
-  color: #ff6b6b;
+  font-size: 16px;
 }

@@ -8,6 +8,7 @@ public class GameState {
     // Core Stats
     public int moveCount;
     public int points;
+    private String playerName;
 
     // Location
     private Location currLocation;
@@ -70,6 +71,7 @@ public class GameState {
         // Core Stats
         this.moveCount = 0;
         this.points = 0;
+        this.playerName = "OPERATOR_01";
 
         // Inventory
         this.inventory = new ContainerItem("BackPack", "Container", "Player personal backpack");
@@ -123,7 +125,48 @@ public class GameState {
         this.quests = new HashMap<>();
     }
 
+    public void reset() {
+        this.moveCount = 0;
+        this.points = 0;
+        this.inventory.clear();
+        this.currLocation = null;
+        this.visitedLocations = new HashSet<>();
+        this.lillyLocation = null;
+        this.helpDropLocation = null;
+        this.visitedHoover = false;
+        this.visitedDuck = false;
+        this.couponsUnlimited = false;
+        this.hungerMoveCounter = 0;
+        this.foodLockChoice = null;
+        this.foodDecayCounter = 0;
+        this.wrongCommandCount = 0;
+        this.typingChallengeActive = false;
+        this.typingWords = new String[0];
+        this.typingFails = 0;
+        this.typingContext = null;
+        this.treadmillUsed = false;
+        this.salmonTaskComplete = false;
+        this.snakeTaskComplete = false;
+        this.macbookTaskComplete = false;
+        this.sashaCalled = false;
+        this.musicTaskComplete = false;
+        this.pendingGuitar = new Item("GlazedGuitar", "Music",
+                "A four string guitar with a glowing green string, waiting for its true player.");
+        this.dnaTaskActive = false;
+        this.dnaMovesLeft = 0;
+        this.dnaTaskComplete = false;
+        this.dnaCountdownRunning = false;
+        this.finaleShown = false;
+        this.bothDiningVisited = false;
+        this.dangerousBonusAwarded = false;
+        this.npcs.clear();
+        this.quests.clear();
+    }
+
     // Getter and Setter methods for all member variables
+
+    public String getPlayerName() { return playerName; }
+    public void setPlayerName(String name) { this.playerName = name; }
 
     // Location related methods (Location handling)
     public Location getCurrLocation() {
