@@ -143,7 +143,19 @@ public class CommandRouter {
                 if (inventoryNames.isEmpty()) {
                     return "Your inventory is empty";
                 } else {
-                    return "You have: " + String.join(", ", inventoryNames);
+                    java.util.LinkedHashMap<String, Integer> counts = new java.util.LinkedHashMap<>();
+                    for (String name : inventoryNames) {
+                        counts.put(name, counts.getOrDefault(name, 0) + 1);
+                    }
+                    ArrayList<String> groupedList = new ArrayList<>();
+                    for (java.util.Map.Entry<String, Integer> entry : counts.entrySet()) {
+                        if (entry.getValue() > 1) {
+                            groupedList.add(entry.getKey() + " (x" + entry.getValue() + ")");
+                        } else {
+                            groupedList.add(entry.getKey());
+                        }
+                    }
+                    return "You have: " + String.join(", ", groupedList);
                 }
             }
 
@@ -359,7 +371,7 @@ public class CommandRouter {
                             return "You picked up the phone. Sasha calls: 'Listen—her retirement relics slumbered on campus for years, but the school let them scatter like whispers. Dorm rumors hum, Hoover misplaced a tune at lunch, and somewhere around Lilly a footballer cradles a glowing guitar. GCPA and the library guard shadows of a case. Find it when your heart says go—we need it to wake the stage.'";
                         }
                         // DNA pickup starts task
-                        if (Item.normalizeName(taken.getName()).contains("batmansd")) {
+                        if (Item.normalizeName(taken.getName()).contains("batmandna")) {
                             state.startDNATask(3);
                         }
                         questSystem.combineSheetsInInventory();
@@ -387,7 +399,7 @@ public class CommandRouter {
                 }
 
                 // DNA delivery success only at Julian
-                if (Item.normalizeName(itemName).contains("batmansd")
+                if (Item.normalizeName(itemName).contains("batmandna")
                         && state.getCurrLocation().getName().equalsIgnoreCase("Julian") && !state.isDnaTaskComplete()) {
                     state.completeDNATask();
                     state.addPoints(15);
@@ -503,7 +515,7 @@ public class CommandRouter {
                     extra.append(questSystem.handleMusicCase(container));
                 }
 
-                if (Item.normalizeName(moving.getName()).contains("batmansd")
+                if (Item.normalizeName(moving.getName()).contains("batmandna")
                         && state.getCurrLocation().getName().equalsIgnoreCase("Julian") && !state.isDnaTaskComplete()) {
                     state.completeDNATask();
                     state.addPoints(15);

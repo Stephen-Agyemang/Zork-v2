@@ -1,8 +1,5 @@
 package com.mygroup;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class GameEngine {
 
     // Core game state managed by GameEngine
@@ -37,6 +34,7 @@ public class GameEngine {
     }
 
     public final void createWorld() {
+        state.reset();
         WorldBuilder builder = new WorldBuilder(state);
         builder.buildWorld();
         worldBuilt = true;
