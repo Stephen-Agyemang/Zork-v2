@@ -340,10 +340,10 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 12px;
+  padding: 0;
   background: #010811;
-  border: 8px solid #081628;
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9), 0 10px 30px rgba(0, 0, 0, 0.7);
+  border: none;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9);
   position: relative;
   overflow: hidden;
 }
@@ -366,7 +366,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
+  height: 38px;
   padding: 0 16px;
   background: var(--color-surface-lowest);
   border-bottom: 2px solid var(--color-surface-bright);
@@ -523,7 +523,7 @@ body {
 
 /* Left Vertical Strip */
 .vertical-menu {
-  width: 60px;
+  width: 52px;
   background: var(--color-surface-lowest);
   border-right: 2px solid var(--color-surface-bright);
   display: flex;
@@ -589,10 +589,11 @@ body {
 /* Main Tactical Grid */
 .tactical-grid {
   display: grid;
-  grid-template-columns: 220px 1fr 250px;
-  gap: var(--spacing-panel-gap);
+  grid-template-columns: 215px 1fr 240px;
+  grid-template-rows: 1fr;
+  gap: 6px;
   flex: 1;
-  padding: 12px;
+  padding: 6px 0;
   overflow: hidden;
   min-width: 0;
   min-height: 0;
@@ -600,7 +601,7 @@ body {
 }
 
 .tactical-grid.right-collapsed {
-  grid-template-columns: 220px 1fr 48px;
+  grid-template-columns: 215px 1fr 48px;
 }
 
 /* Heavy Mechanical Panel Card */
@@ -640,6 +641,9 @@ body {
   letter-spacing: 0.05em;
   color: var(--color-on-surface);
   text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .panel-header-icon {

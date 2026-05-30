@@ -112,41 +112,33 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
 
       <div className="input-deck-main-row">
         <span className={`deck-prompt-arrow ${promptError ? 'prompt-arrow-error' : ''}`}>&gt;</span>
-        
-        {/* Relative wrapper holding both transparent real input and ghost suggestion text behind it */}
+
         <div className="deck-input-wrapper">
           {ghostText && (
-            <span className="deck-ghost-text">
-              {ghostText}
-            </span>
+            <span className="deck-ghost-text">{ghostText}</span>
           )}
           <input
             ref={inputRef}
             value={input}
-            onChange={(e) => {
-              setInput(e.target.value)
-              playTick()
-            }}
+            onChange={(e) => { setInput(e.target.value); playTick() }}
             onKeyDown={handleKeyDown}
             placeholder={isChallenge ? "TYPE THE WORDS SHOWN IN THE LOG..." : "INITIATE COMMAND SEQUENCE..."}
             autoFocus
             className="deck-input-field"
           />
         </div>
-
-        <button className="deck-execute-btn" onClick={handleSubmit}>
-          EXECUTE
-        </button>
       </div>
 
-      {/* Quick macro action keys */}
+      {/* Macros + centered Execute */}
       <div className="deck-macros-row">
-        {macros.map((m, idx) => (
-          <button 
-            key={idx} 
-            className="macro-chip-btn"
-            onClick={() => handleMacroClick(m.cmd)}
-          >
+        {macros.slice(0, 2).map((m, idx) => (
+          <button key={idx} className="macro-chip-btn" onClick={() => handleMacroClick(m.cmd)}>
+            {m.label}
+          </button>
+        ))}
+        <button className="deck-execute-btn" onClick={handleSubmit}>EXECUTE</button>
+        {macros.slice(2).map((m, idx) => (
+          <button key={idx} className="macro-chip-btn" onClick={() => handleMacroClick(m.cmd)}>
             {m.label}
           </button>
         ))}
