@@ -1,0 +1,389 @@
+/* Sidebar Styles - Left Control Panel */
+
+.sidebar {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sidebar .panel-body {
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.operator-card {
+  background: var(--color-surface-lowest);
+  border: 1px solid var(--color-surface-bright);
+  border-radius: var(--rounded-default);
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.avatar-container {
+  width: 52px;
+  height: 52px;
+  min-width: 52px; /* prevent flex shrink */
+  position: relative;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--rounded-sm);
+  background: #020b16;
+  overflow: hidden;
+}
+
+.avatar-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.scanline-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 242, 202, 0.15) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.05),
+    rgba(0, 255, 0, 0.02),
+    rgba(0, 0, 255, 0.05)
+  );
+  background-size: 100% 4px, 4px 100%;
+  pointer-events: none;
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.95; }
+  50% { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+
+.operator-meta {
+  flex: 1;
+  min-width: 0; /* allows text truncation */
+}
+
+.operator-title {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.operator-status {
+  font-family: var(--font-label);
+  font-size: 9px;
+  color: #00ffcc;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 4px rgba(0, 255, 204, 0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.operator-stats-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  font-family: var(--font-label);
+  font-size: 10px;
+}
+
+.op-stat-lbl {
+  color: var(--color-outline);
+  font-weight: bold;
+}
+
+.op-stat-val {
+  color: var(--color-on-surface);
+  text-align: right;
+  font-weight: bold;
+}
+
+.truncate-sector {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-on-surface-variant);
+  max-width: 100px;
+}
+
+.small-panel-title {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 10px;
+  color: var(--color-outline);
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.command-module-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Campus Intel Feed */
+.intel-card {
+  background: var(--color-surface-lowest);
+  border: 1px solid var(--color-surface-bright);
+  border-radius: var(--rounded-default);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transition: border-color 0.3s ease;
+}
+
+.intel-card.intel-flash {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px rgba(242, 202, 80, 0.2);
+}
+
+.intel-location-tag {
+  font-family: var(--font-label);
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 4px rgba(242, 202, 80, 0.3);
+}
+
+.intel-flavor-text {
+  font-family: var(--font-body);
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--color-on-surface-variant);
+  font-style: italic;
+}
+
+.intel-alert {
+  font-family: var(--font-label);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: var(--rounded-sm);
+  text-align: center;
+}
+
+.intel-critical {
+  background: rgba(255, 180, 171, 0.12);
+  color: var(--color-error);
+  border: 1px solid rgba(255, 180, 171, 0.35);
+  animation: blink 0.8s infinite;
+}
+
+.intel-warn {
+  background: rgba(242, 202, 80, 0.1);
+  color: var(--color-primary);
+  border: 1px solid rgba(242, 202, 80, 0.3);
+}
+
+/* Analog Compass Dial & Buttons */
+.analog-compass-group {
+  background: var(--color-surface-lowest);
+  border: 1px solid var(--color-surface-bright);
+  border-radius: var(--rounded-default);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.compass-container {
+  width: 110px;
+  height: 110px;
+  position: relative;
+}
+
+.compass-dial {
+  width: 100%;
+  height: 100%;
+}
+
+.pulse-glow {
+  animation: pulse-glow-anim 1.5s infinite alternate;
+}
+
+@keyframes pulse-glow-anim {
+  0% { r: 2.5; fill-opacity: 0.6; }
+  100% { r: 4.5; fill-opacity: 1; filter: drop-shadow(0 0 3px #00ffcc); }
+}
+
+.radar-sweep {
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(242, 202, 80, 0.1) 0deg,
+    rgba(242, 202, 80, 0.0) 90deg,
+    transparent 180deg
+  );
+  animation: radar-sweep-anim 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes radar-sweep-anim {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.compass-heading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.heading-val {
+  font-family: var(--font-label);
+  font-size: 10px;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-shadow: 0 0 4px rgba(242, 202, 80, 0.3);
+}
+
+.heading-lbl {
+  font-family: var(--font-headline);
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--color-outline);
+}
+
+/* Compass Cardinal Selection Buttons */
+.compass-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.compass-btn {
+  background: var(--color-surface-container);
+  border: 1px solid var(--color-surface-bright);
+  border-radius: var(--rounded-sm);
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-headline);
+  font-weight: bold;
+  font-size: 11px;
+  width: 28px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.compass-btn.active {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 5px rgba(242, 202, 80, 0.2);
+}
+
+.compass-btn.active:hover {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 0 8px var(--color-primary);
+}
+
+.compass-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Neural Load Meter */
+.neural-load-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.neural-lbl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-label);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-outline);
+}
+
+.neural-pulse-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  animation: pulse-dot 1s infinite alternate;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 4px var(--color-primary); }
+}
+
+.neural-bars {
+  display: flex;
+  gap: 4px;
+  height: 12px;
+  padding: 1px;
+  background: var(--color-surface-lowest);
+  border: 1px solid var(--color-surface-bright);
+  border-radius: var(--rounded-sm);
+  align-items: center;
+}
+
+.neural-bar {
+  flex: 1;
+  height: 100%;
+  background: #111e2f;
+}
+
+.neural-bar.active {
+  background: var(--color-primary);
+  animation: neural-glow 1.5s infinite alternate;
+}
+
+@keyframes neural-glow {
+  0% { background: #ab8d2a; }
+  100% { background: var(--color-primary); box-shadow: 0 0 2px var(--color-primary); }
+}
+
+/* Dynamic compass pointer styling */
+.compass-needle {
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transform-origin: 50px 50px;
+}
+
+.compass-needle-scanning {
+  animation: needle-spin-scan 1.2s cubic-bezier(0.25, 1, 0.2, 1) infinite;
+  transform-origin: 50px 50px;
+}
+
+.radar-sweep.scanning-fast {
+  animation: radar-sweep-anim 1.2s linear infinite !important;
+}
+
+@keyframes needle-spin-scan {
+  0% { transform: translate(50px, 50px) rotate(0deg); }
+  100% { transform: translate(50px, 50px) rotate(720deg); }
+}
