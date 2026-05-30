@@ -309,8 +309,8 @@ export default function App() {
     return (
       <div className={`chassis-monitor theme-${theme}`}>
         <div className="callsign-screen">
-          <div className="callsign-logo">ZORK</div>
-          <div className="callsign-subtitle">TACTICAL_OS V2.4 · DEPAUW CAMPUS OPERATIONS</div>
+          <div className="callsign-logo">ZORK_V2</div>
+          <div className="callsign-subtitle">TACTICAL_OS · DEPAUW CAMPUS OPERATIONS</div>
           <div className="callsign-card">
             <div className="callsign-card-title">OPERATOR IDENTIFICATION</div>
             <div className="callsign-label">ENTER CALLSIGN</div>
@@ -371,8 +371,8 @@ export default function App() {
       <header className="chassis-header">
         <div className="logo-section">
           <span className="logo-icon"></span>
-          <span className="logo-text">ZORK</span>
-          <span className="logo-version">TACTICAL_OS V2.4</span>
+          <span className="logo-text">ZORK_V2</span>
+          <span className="logo-version">TACTICAL_OS · DEPAUW</span>
         </div>
 
         <nav className="nav-tabs">
