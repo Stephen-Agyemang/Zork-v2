@@ -339,8 +339,8 @@ export default function App() {
           <div className="callsign-logo">ZORK_V2</div>
           <div className="callsign-subtitle">TACTICAL_OS · DEPAUW CAMPUS OPERATIONS</div>
           <div className="callsign-card">
-            <div className="callsign-card-title">OPERATOR IDENTIFICATION</div>
-            <div className="callsign-label">ENTER CALLSIGN</div>
+            <div className="callsign-card-title">PLAYER SETUP</div>
+            <div className="callsign-label">ENTER YOUR NAME</div>
             <input
               className="callsign-input"
               type="text"
@@ -360,7 +360,7 @@ export default function App() {
               className="mechanical-plate active-yellow callsign-deploy-btn"
               onClick={handleCallsignSubmit}
             >
-              DEPLOY OPERATOR
+              START GAME
             </button>
           </div>
         </div>
