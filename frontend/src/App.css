@@ -933,7 +933,7 @@ body {
 /* Responsive reflow rules */
 
 /* Medium screens: auto-collapse right panel to icon strip */
-@media (max-width: 1300px) {
+@media (max-width: 1050px) {
   .tactical-grid {
     grid-template-columns: 215px 1fr 48px;
   }
