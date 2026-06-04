@@ -4,6 +4,7 @@ import StoryPanel from './components/StoryPanel'
 import RightPanel from './components/RightPanel'
 import CommandInput from './components/CommandInput'
 import { toggleSound, isSoundEnabled, playBeep, playAlarm } from './utils/audio'
+import { containsProfanity } from './utils/profanity'
 import './App.css'
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
   const [sessionSecs, setSessionSecs] = useState(0)
   const [callsign, setCallsign] = useState('')
   const [callsignInput, setCallsignInput] = useState('')
+  const [callsignError, setCallsignError] = useState('')
   const [showCallsignScreen, setShowCallsignScreen] = useState(true)
   const [linkCopied, setLinkCopied] = useState(false)
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
@@ -252,6 +254,11 @@ export default function App() {
 
   const handleCallsignSubmit = () => {
     const name = callsignInput.trim() || 'OPERATOR_01'
+    if (containsProfanity(name)) {
+      setCallsignError('CALLSIGN REJECTED — KEEP IT CLEAN, OPERATOR.')
+      return
+    }
+    setCallsignError('')
     setCallsign(name)
     setCallsignInput('')
     setShowCallsignScreen(false)
@@ -340,10 +347,15 @@ export default function App() {
               maxLength={32}
               placeholder="e.g. Stephen, ALPHA_01, anything"
               value={callsignInput}
-              onChange={e => setCallsignInput(e.target.value)}
+              onChange={e => { setCallsignInput(e.target.value); setCallsignError('') }}
               onKeyDown={e => { if (e.key === 'Enter') handleCallsignSubmit() }}
               autoFocus
             />
+            {callsignError && (
+              <div style={{ color: '#ff6b6b', fontFamily: 'Share Tech Mono, monospace', fontSize: '11px', letterSpacing: '1px', marginTop: '8px', textAlign: 'center' }}>
+                {callsignError}
+              </div>
+            )}
             <button
               className="mechanical-plate active-yellow callsign-deploy-btn"
               onClick={handleCallsignSubmit}
