@@ -1,0 +1,7 @@
+frontend/node/
+frontend/node_modules/
+myproject/target/
+myproject/src/main/resources/static/
+target/
+.git/
+*.md
