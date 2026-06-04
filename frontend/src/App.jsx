@@ -26,9 +26,12 @@ export default function App() {
   const [showCallsignScreen, setShowCallsignScreen] = useState(true)
   const [linkCopied, setLinkCopied] = useState(false)
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
+  const [leaderboard, setLeaderboard] = useState(null)
+  const [showLeaderboard, setShowLeaderboard] = useState(false)
   const pollIntervalRef = useRef(null)
   const sessionIdRef = useRef(null)
   const sessionTimerRef = useRef(null)
+  const scoreSavedRef = useRef(false)
 
   // On mount: check URL share link first, then localStorage
   useEffect(() => {
@@ -112,6 +115,22 @@ export default function App() {
     }
   }, [state?.finaleShown])
 
+  // Auto-save score to leaderboard when game ends
+  useEffect(() => {
+    if (state?.finaleShown && !scoreSavedRef.current) {
+      scoreSavedRef.current = true
+      fetch('/leaderboard/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          callsign: callsign || 'OPERATOR_01',
+          score: state.points || 0,
+          moveCount: state.moveCount || 0
+        })
+      }).catch(() => {})
+    }
+  }, [state?.finaleShown])
+
   // Warning chirp when DNA countdown ticks down
   useEffect(() => {
     if (state?.dnaMovesLeft !== undefined) {
@@ -128,6 +147,7 @@ export default function App() {
       clearInterval(sessionTimerRef.current)
       setLoading(true)
       setSessionSecs(0)
+      scoreSavedRef.current = false
       const name = playerCallsign || callsign || 'OPERATOR_01'
       const response = await fetch('/game/start', {
         method: 'POST',
@@ -472,7 +492,7 @@ export default function App() {
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-              <span className="menu-item-text">OP_01</span>
+              <span className="menu-item-text">{(callsign || 'OP_01').substring(0, 6).toUpperCase()}</span>
             </div>
             <div className="menu-item" onClick={() => handleCommand('status')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -541,7 +561,17 @@ export default function App() {
                 <button className="mechanical-plate active-yellow" onClick={() => initGame(callsign)}>
                   🔄 RESTART
                 </button>
-                <button className="mechanical-plate outline-yellow" onClick={() => alert('COMMUNITY RANKINGS AVAILABLE UPON MULTIPLAYER SYNC.')}>
+                <button className="mechanical-plate outline-yellow" onClick={async () => {
+                  try {
+                    const res = await fetch('/leaderboard/top')
+                    const data = await res.json()
+                    setLeaderboard(data)
+                    setShowLeaderboard(true)
+                  } catch {
+                    setLeaderboard([])
+                    setShowLeaderboard(true)
+                  }
+                }}>
                   GLOBAL RANKINGS
                 </button>
               </div>
@@ -832,6 +862,50 @@ export default function App() {
                   <div>Carry max 3 foods. They spoil after a few moves if not eaten.</div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Leaderboard Modal */}
+      {showLeaderboard && (
+        <div className="hud-modal-overlay" onClick={() => setShowLeaderboard(false)}>
+          <div className="hud-modal-card heavy-panel" onClick={e => e.stopPropagation()} style={{ width: '480px' }}>
+            <div className="rivet rivet-tl"></div>
+            <div className="rivet rivet-tr"></div>
+            <div className="rivet rivet-bl"></div>
+            <div className="rivet rivet-br"></div>
+            <div className="modal-header">
+              <span className="panel-title">GLOBAL RANKINGS</span>
+              <button className="mechanical-plate modal-close-btn" onClick={() => setShowLeaderboard(false)}>CLOSE</button>
+            </div>
+            <div className="modal-body-deck">
+              {leaderboard && leaderboard.length > 0 ? (
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-label)', fontSize: '11px' }}>
+                  <thead>
+                    <tr style={{ color: 'var(--color-outline)', borderBottom: '1px solid var(--color-surface-bright)' }}>
+                      <th style={{ padding: '6px 8px', textAlign: 'left' }}>#</th>
+                      <th style={{ padding: '6px 8px', textAlign: 'left' }}>CALLSIGN</th>
+                      <th style={{ padding: '6px 8px', textAlign: 'right' }}>SCORE</th>
+                      <th style={{ padding: '6px 8px', textAlign: 'right' }}>MOVES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboard.map((entry, i) => (
+                      <tr key={entry.id} style={{ borderBottom: '1px dashed var(--color-surface-bright)', color: i === 0 ? 'var(--color-primary)' : 'var(--color-on-surface)' }}>
+                        <td style={{ padding: '8px 8px' }}>{i + 1}</td>
+                        <td style={{ padding: '8px 8px', fontWeight: 700 }}>{entry.callsign}</td>
+                        <td style={{ padding: '8px 8px', textAlign: 'right' }}>{entry.score}</td>
+                        <td style={{ padding: '8px 8px', textAlign: 'right' }}>{entry.moveCount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-outline)', fontFamily: 'var(--font-label)', fontSize: '11px' }}>
+                  NO SCORES ON RECORD YET. COMPLETE A MISSION TO APPEAR HERE.
+                </div>
+              )}
             </div>
           </div>
         </div>
