@@ -930,11 +930,45 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* Mobile responsive reflow rules */
-@media (max-width: 1024px) {
+/* Responsive reflow rules */
+
+/* Medium screens: auto-collapse right panel to icon strip */
+@media (max-width: 1150px) {
+  .tactical-grid {
+    grid-template-columns: 215px 1fr 48px;
+  }
+  .tactical-grid.right-collapsed {
+    grid-template-columns: 215px 1fr 48px;
+  }
+}
+
+/* Small screens: hide left panel, keep center + command bar */
+@media (max-width: 800px) {
+  .tactical-grid {
+    grid-template-columns: 1fr 48px;
+  }
+  .tactical-grid > *:first-child {
+    display: none;
+  }
+  .vertical-menu {
+    width: 40px;
+  }
+}
+
+/* Mobile: single column, scrollable */
+@media (max-width: 600px) {
   .tactical-grid {
     grid-template-columns: 1fr;
     overflow-y: auto;
+  }
+  .tactical-grid > *:first-child {
+    display: none;
+  }
+  .tactical-grid > *:last-child {
+    display: none;
+  }
+  .vertical-menu {
+    display: none;
   }
   body {
     overflow-y: auto;
