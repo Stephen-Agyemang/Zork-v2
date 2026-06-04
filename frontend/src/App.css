@@ -1531,4 +1531,54 @@ body {
   opacity: 1 !important;
 }
 
+/* Small screen warning overlay */
+.small-screen-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--color-surface-lowest);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 32px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .small-screen-overlay {
+    display: flex;
+  }
+}
+
+.small-screen-overlay .ss-icon {
+  font-size: 48px;
+  color: var(--color-primary);
+  letter-spacing: 4px;
+}
+
+.small-screen-overlay .ss-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 3px;
+}
+
+.small-screen-overlay .ss-body {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  letter-spacing: 1px;
+  line-height: 1.8;
+  max-width: 320px;
+}
+
+.small-screen-overlay .ss-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--color-primary);
+  opacity: 0.4;
+}
 

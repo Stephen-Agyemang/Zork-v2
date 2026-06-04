@@ -387,6 +387,16 @@ export default function App() {
 
   return (
     <div className={`chassis-monitor theme-${theme}`}>
+      <div className="small-screen-overlay">
+        <div className="ss-icon">[ ! ]</div>
+        <div className="ss-divider" />
+        <div className="ss-title">DISPLAY_ALERT</div>
+        <div className="ss-body">
+          TACTICAL_OS is optimized for desktop displays.<br />
+          Please maximize your browser window or switch to a larger screen for the full experience.
+        </div>
+        <div className="ss-divider" />
+      </div>
       {/* 1. Header Bar */}
       <header className="chassis-header">
         <div className="logo-section">
@@ -534,10 +544,11 @@ export default function App() {
         {activeTab === 'MAP_INTEL' ? (
           <div className={`tactical-grid${rightPanelCollapsed ? ' right-collapsed' : ''}`}>
             {/* Left Column: Operator Sync Dossier */}
-            <Sidebar 
-              state={state} 
-              onCommand={handleCommand} 
+            <Sidebar
+              state={state}
+              onCommand={handleCommand}
               lastCommand={commandHistory[commandHistory.length - 1]}
+              callsign={callsign}
             />
 
             {/* Center Column: Telemetry monitor and log panel */}

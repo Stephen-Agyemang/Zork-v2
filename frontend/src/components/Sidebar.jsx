@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { playTick, playScan } from '../utils/audio'
 import './Sidebar.css'
 
-export default function Sidebar({ state, onCommand, lastCommand }) {
+export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
   const [lastLoc, setLastLoc] = useState(state?.currLocation?.name || '')
   const [isScanning, setIsScanning] = useState(false)
   const [hoverDir, setHoverDir] = useState(null)
@@ -115,7 +115,7 @@ export default function Sidebar({ state, onCommand, lastCommand }) {
 
       <div className="panel-header">
         <span className="panel-title">OPERATOR_PROFILE</span>
-        <span className="panel-header-icon">OP_01</span>
+        <span className="panel-header-icon">{(callsign || 'OP_01').substring(0, 6).toUpperCase()}</span>
       </div>
 
       <div className="panel-body">
@@ -140,7 +140,7 @@ export default function Sidebar({ state, onCommand, lastCommand }) {
           </div>
 
           <div className="operator-meta">
-            <div className="operator-title">OPERATOR_01</div>
+            <div className="operator-title">{(callsign || 'OPERATOR_01').toUpperCase()}</div>
             <div className="operator-status">ONLINE // SYNC_OK</div>
             <div className="operator-stats-grid">
               <div className="op-stat-lbl">CYCLES:</div>
