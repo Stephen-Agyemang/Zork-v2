@@ -498,7 +498,7 @@ export default function App() {
               </div>
             )}
           </div>
-          <button className="icon-button power-btn" onClick={() => handleCommand('quit')}>
+          <button className="icon-button power-btn" onClick={() => { if (window.confirm('Return to player setup? Your current progress will be lost.')) { setShowCallsignScreen(true); setCallsign(''); setCallsignInput(''); } }}>
             ⏻
           </button>
         </div>
