@@ -1,8 +1,20 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './StoryPanel.css'
 
 export default function StoryPanel({ messages, state, activeBg, fadingBg }) {
   const scrollRef = useRef(null)
+  const [cursorTime, setCursorTime] = useState(() => {
+    const d = new Date()
+    return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`
+  })
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      const d = new Date()
+      setCursorTime(`${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`)
+    }, 1000)
+    return () => clearInterval(t)
+  }, [])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -54,8 +66,7 @@ export default function StoryPanel({ messages, state, activeBg, fadingBg }) {
           
           
           {messages.map((msg, index) => {
-            const secondsOffset = index * 4
-            const timeStr = `10:${(4 + Math.floor(secondsOffset / 60)).toString().padStart(2, '0')}:${(secondsOffset % 60).toString().padStart(2, '0')}`
+            const timeStr = msg.time || '--:--:--'
 
             if (msg.type === 'command') {
               return (
@@ -91,7 +102,7 @@ export default function StoryPanel({ messages, state, activeBg, fadingBg }) {
           
           {/* Active blinking prompt cursor */}
           <div className="log-line prompt-cursor-line">
-            <span className="log-time">10:05:00</span>
+            <span className="log-time">{cursorTime}</span>
             <span className="log-content-wrapper">
               <span className="prompt-arrow">&gt;</span>
               <span className="blinking-cursor"></span>

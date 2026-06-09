@@ -7,6 +7,11 @@ import { toggleSound, isSoundEnabled, playBeep, playAlarm } from './utils/audio'
 import { containsProfanity } from './utils/profanity'
 import './App.css'
 
+const now = () => {
+  const d = new Date()
+  return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`
+}
+
 export default function App() {
   const [state, setState] = useState(null)
   const [messages, setMessages] = useState([])
@@ -64,15 +69,17 @@ export default function App() {
         if (ok) {
           localStorage.setItem('zork_session_id', savedId)
           localStorage.setItem('zork_callsign', savedCallsign)
-          setMessages([
-            { type: 'system', text: 'SESSION RESTORED — Welcome back, ' + (savedCallsign || 'OPERATOR') + '.' },
-            { type: 'system', text: 'Type "look" to reorient yourself.' }
+          const savedMessages = JSON.parse(localStorage.getItem('zork_messages') || '[]')
+          setMessages(savedMessages.length > 0 ? savedMessages : [
+            { type: 'system', text: 'SESSION RESTORED — Welcome back, ' + (savedCallsign || 'OPERATOR') + '.', time: now() },
+            { type: 'system', text: 'Type "look" to reorient yourself.', time: now() }
           ])
           pollIntervalRef.current = setInterval(() => fetchState(sessionIdRef.current), 1500)
         } else {
           localStorage.removeItem('zork_session_id')
           localStorage.removeItem('zork_session_secs')
           localStorage.removeItem('zork_callsign')
+          localStorage.removeItem('zork_messages')
           sessionIdRef.current = null
           setShowCallsignScreen(true)
         }
@@ -80,6 +87,14 @@ export default function App() {
       })
     }
   }, [])
+
+  // Persist message log to localStorage (capped at 300 to stay well under storage limits)
+  useEffect(() => {
+    if (sessionIdRef.current && messages.length > 0) {
+      const toSave = messages.length > 300 ? messages.slice(-300) : messages
+      localStorage.setItem('zork_messages', JSON.stringify(toSave))
+    }
+  }, [messages])
 
   // Persist session timer to localStorage every 5 seconds
   useEffect(() => {
@@ -167,11 +182,12 @@ export default function App() {
       localStorage.setItem('zork_session_id', newSessionId)
       localStorage.setItem('zork_session_secs', '0')
       localStorage.setItem('zork_callsign', name)
+      localStorage.removeItem('zork_messages')
       await fetchState(newSessionId)
       setMessages([
-        { type: 'system', text: 'TACTICAL TERMINAL CORE INITIALIZED.' },
-        { type: 'system', text: 'You stand in Julian — the Percy Lavon Julian Science Building at DePauw. The bust of Julian watches as your adventure begins.' },
-        { type: 'system', text: 'Type "examine help" to view the campus mission briefing.' }
+        { type: 'system', text: 'TACTICAL TERMINAL CORE INITIALIZED.', time: now() },
+        { type: 'system', text: 'You stand in Julian — the Percy Lavon Julian Science Building at DePauw. The bust of Julian watches as your adventure begins.', time: now() },
+        { type: 'system', text: 'Type "examine help" to view the campus mission briefing.', time: now() }
       ])
       setLoading(false)
       pollIntervalRef.current = setInterval(() => fetchState(sessionIdRef.current), 1500)
@@ -212,15 +228,15 @@ export default function App() {
     const cmdLower = sanitizedCommand.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()
     if (cmdLower === 'help' || cmdLower === 'examine help' || cmdLower === 'examine help guide' || cmdLower === 'status help') {
       setShowHelpModal(true)
-      setMessages(prev => [...prev, { type: 'command', text: `> ${sanitizedCommand}` }])
-      setMessages(prev => [...prev, { type: 'output', text: 'Opening manual...' }])
+      setMessages(prev => [...prev, { type: 'command', text: `> ${sanitizedCommand}`, time: now() }])
+      setMessages(prev => [...prev, { type: 'output', text: 'Opening manual...', time: now() }])
       return
     }
 
     try {
       setCommandHistory(prev => [...prev, sanitizedCommand])
       setHistoryIndex(-1)
-      setMessages(prev => [...prev, { type: 'command', text: `> ${sanitizedCommand}` }])
+      setMessages(prev => [...prev, { type: 'command', text: `> ${sanitizedCommand}`, time: now() }])
 
       // If user typed quit, switch to logs/debrief tab
       if (sanitizedCommand.toLowerCase() === 'quit') {
@@ -234,7 +250,7 @@ export default function App() {
       })
 
       const output = await response.text()
-      setMessages(prev => [...prev, { type: 'output', text: output }])
+      setMessages(prev => [...prev, { type: 'output', text: output, time: now() }])
 
       // Detect command recognition errors / fumbles to trigger prompt error flicker
       const lowerOut = output.toLowerCase();
@@ -253,7 +269,7 @@ export default function App() {
 
       await fetchState()
     } catch (e) {
-      setMessages(prev => [...prev, { type: 'error', text: `Telemetry error: ${e.message}` }])
+      setMessages(prev => [...prev, { type: 'error', text: `Telemetry error: ${e.message}`, time: now() }])
     }
   }
 
