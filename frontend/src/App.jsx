@@ -32,6 +32,8 @@ export default function App() {
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [dpuLeaderboard, setDpuLeaderboard] = useState(null)
   const [showDpuLeaderboard, setShowDpuLeaderboard] = useState(false)
+  const [activeBg, setActiveBg] = useState(null)
+  const [fadingBg, setFadingBg] = useState(null)
   const pollIntervalRef = useRef(null)
   const sessionIdRef = useRef(null)
   const sessionTimerRef = useRef(null)
@@ -337,7 +339,7 @@ export default function App() {
   const LOCATION_IMAGES = {
     'julian':                 '/julian.jpg',
     'hoover':                 '/hoover.jpg',
-    'olin':                   '/olin.jpg',
+    'olin':                   '/oline.jpg',
     'gcpa':                   '/gcpa.jpg',
     'roy library':            '/roylibrary.jpg',
     'cdi':                    '/cdi.jpg',
@@ -351,7 +353,15 @@ export default function App() {
   }
 
   const locationKey = state?.currLocation?.name?.toLowerCase() || ''
-  const locationBg = LOCATION_IMAGES[locationKey] || '/school.jpg'
+  const newBg = LOCATION_IMAGES[locationKey] || null
+
+  useEffect(() => {
+    if (newBg === activeBg) return
+    setFadingBg(activeBg)
+    setActiveBg(newBg)
+    const t = setTimeout(() => setFadingBg(null), 900)
+    return () => clearTimeout(t)
+  }, [newBg])
 
   if (showCallsignScreen) {
     return (
@@ -423,7 +433,9 @@ export default function App() {
   }
 
   return (
-    <div className={`chassis-monitor theme-${theme}`} style={{ '--location-bg': `url(${locationBg})` }}>
+    <div className={`chassis-monitor theme-${theme}`}>
+      {fadingBg && <div className="location-bg location-bg-fade" style={{ backgroundImage: `url(${fadingBg})` }} />}
+      {activeBg && <div className="location-bg location-bg-active" style={{ backgroundImage: `url(${activeBg})` }} />}
       <div className="small-screen-overlay">
         <div className="ss-icon">[ ! ]</div>
         <div className="ss-divider" />
