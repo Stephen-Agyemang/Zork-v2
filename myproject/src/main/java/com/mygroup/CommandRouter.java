@@ -605,7 +605,7 @@ public class CommandRouter {
 
             default -> {
                 state.incrementWrongCommandCount();
-                if (state.getWrongCommandCount() >= 10) {
+                if (state.getWrongCommandCount() >= 5) {
                     typingChallengeSystem.startChallenge("penalty", 5);
                     return "You keep fumbling commands. " + typingChallengeSystem.getPrompt();
                 }

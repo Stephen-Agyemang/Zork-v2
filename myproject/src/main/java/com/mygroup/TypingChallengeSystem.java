@@ -120,7 +120,7 @@ public class TypingChallengeSystem {
         state.failTypingAttempt();
         String scold = switch (state.getTypingFails()) {
             case 1 -> "Come on, even freshmen can type better than that!";
-            case 2 -> "Seriously? The registrar's office types faster than you.";
+            case 2 -> "Seriously? Even a dial-up modem sends data faster than that.";
             default -> "At this rate, you'll graduate before learning to type.";
         };
         if ("treadmill".equals(state.getTypingContext())) {
