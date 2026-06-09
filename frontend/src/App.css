@@ -1695,6 +1695,29 @@ body {
   color: var(--color-on-surface);
 }
 
+/* Typing Challenge Word Chips */
+.typing-challenge-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.typing-word-chip {
+  font-family: var(--font-headline);
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border-radius: var(--rounded-sm);
+  padding: 7px 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 0 #8c721c, 0 0 12px rgba(242, 202, 80, 0.3);
+  animation: phosphor-heat-up 0.4s ease-out forwards;
+}
+
 /* Settings Cog HUD Container & Dropdown Styling */
 .settings-container-hud {
   position: relative;

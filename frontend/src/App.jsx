@@ -1005,6 +1005,42 @@ export default function App() {
           </div>
         </div>
       )}
+      {/* Typing Challenge Overlay — shown when penalty challenge is active */}
+      {state?.typingChallengeActive && state?.typingWords?.length > 0 && (
+        <div className="hud-modal-overlay">
+          <div className="hud-modal-card heavy-panel" style={{ width: '480px' }}>
+            <div className="rivet rivet-tl"></div>
+            <div className="rivet rivet-tr"></div>
+            <div className="rivet rivet-bl"></div>
+            <div className="rivet rivet-br"></div>
+
+            <div className="panel-header modal-header">
+              <span className="panel-title">⌨ INPUT_VERIFICATION</span>
+              <span className="hud-tag hud-tag-error">CHALLENGE_ACTIVE</span>
+            </div>
+
+            <div className="modal-body-deck">
+              <div className="modal-section">
+                <div className="modal-sec-header">REQUIRED WORDS</div>
+                <div className="modal-sec-content" style={{ marginBottom: '10px' }}>
+                  Type at least <strong>3 of these words</strong> in one message below to continue:
+                </div>
+                <div className="typing-challenge-words">
+                  {state.typingWords.map((word, i) => (
+                    <span key={i} className="typing-word-chip">{word}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="modal-section">
+                <div className="modal-sec-content" style={{ textAlign: 'center', color: 'var(--color-outline)', fontSize: '11px' }}>
+                  Type them in one line in the terminal — or type <strong style={{ color: 'var(--color-primary)' }}>skip</strong> to dismiss the penalty.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* DePauw Leaderboard Modal */}
       {showDpuLeaderboard && (
         <div className="hud-modal-overlay" onClick={() => setShowDpuLeaderboard(false)}>
