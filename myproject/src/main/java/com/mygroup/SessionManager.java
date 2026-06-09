@@ -9,7 +9,12 @@ public class SessionManager {
 
     private final ConcurrentHashMap<String, GameEngine> sessions = new ConcurrentHashMap<>();
 
+    private static final int MAX_SESSIONS = 400;
+
     public String createSession(String callsign) {
+        if (sessions.size() >= MAX_SESSIONS) {
+            return null;
+        }
         String sessionId = UUID.randomUUID().toString();
         GameEngine engine = new GameEngine();
         engine.createWorld();

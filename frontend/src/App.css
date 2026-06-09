@@ -387,10 +387,10 @@
   text-shadow: none;
 }
 
-/* Archive: watermark — heavy sepia aged look */
+/* Archive: watermark — sepia aged photo, more visible on light parchment */
 .chassis-monitor.theme-archive .terminal-watermark {
-  filter: sepia(100%) contrast(90%) brightness(55%) saturate(80%);
-  opacity: 0.2;
+  --wm-opacity: 0.28;
+  filter: sepia(80%) contrast(85%) brightness(65%) saturate(70%);
 }
 
 /* Archive: nav tabs */
@@ -455,6 +455,103 @@
   background: rgba(107, 47, 14, 0.12);
   color: #6b2f0e;
   border-color: #6b2f0e;
+}
+
+/* Archive: paper texture on the whole chassis */
+.chassis-monitor.theme-archive {
+  background: #e8d9b0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
+    linear-gradient(160deg, #ede0b5 0%, #ddd09e 50%, #e8d9b0 100%);
+}
+
+/* Archive: story terminal panel — warm parchment instead of dark screen */
+.chassis-monitor.theme-archive .console-hero {
+  background: #f2e8c8;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* Archive: system response text — dark readable ink on parchment */
+.chassis-monitor.theme-archive .system-text {
+  color: #2c1a0e;
+}
+
+/* Archive: log timestamps — muted sepia ink */
+.chassis-monitor.theme-archive .log-time {
+  color: #8b6040;
+}
+
+/* Archive: error text — dark red-brown (still readable) */
+.chassis-monitor.theme-archive .error-text {
+  color: #8b2010;
+}
+
+/* Archive: heavy panels — paper feel, not cast metal */
+.chassis-monitor.theme-archive .heavy-panel {
+  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(255, 255, 255, 0.4);
+}
+.chassis-monitor.theme-archive .heavy-panel::after {
+  border: 1px solid rgba(139, 96, 64, 0.2);
+}
+
+/* Archive: debrief title — no neon glow */
+.chassis-monitor.theme-archive .debrief-title {
+  text-shadow: none;
+}
+
+/* Archive: val-gold stat — dark rust, not glowing gold */
+.chassis-monitor.theme-archive .circ-stat-val.val-gold {
+  color: #6b2f0e;
+  text-shadow: none;
+}
+
+/* Archive: avatar frame — warm parchment instead of dark */
+.chassis-monitor.theme-archive .avatar-frame {
+  background: #d4c282;
+}
+
+/* Archive: operator status (was cyan) */
+.chassis-monitor.theme-archive .operator-status {
+  color: #6b2f0e;
+  text-shadow: none;
+}
+
+/* Archive: inactive neural load bars */
+.chassis-monitor.theme-archive .neural-bar {
+  background: #c9b07a;
+}
+
+/* Archive: neural glow animation → muted sepia pulse */
+.chassis-monitor.theme-archive .neural-bar.active {
+  animation: archive-neural-pulse 1.5s infinite alternate;
+}
+@keyframes archive-neural-pulse {
+  0%   { background: #8b6040; }
+  100% { background: #6b2f0e; box-shadow: none; }
+}
+
+/* Archive: quest completed dot */
+.chassis-monitor.theme-archive .dot-done {
+  background: #6b2f0e;
+  box-shadow: 0 0 4px rgba(107, 47, 14, 0.4);
+}
+
+/* Archive: quest done badge text */
+.chassis-monitor.theme-archive .quest-done-badge {
+  color: #6b2f0e;
+}
+
+/* Archive: acquired item badge */
+.chassis-monitor.theme-archive .quest-item-badge.acquired {
+  background: rgba(107, 47, 14, 0.1);
+  color: #6b2f0e;
+  border: 1px solid rgba(107, 47, 14, 0.35);
+  text-shadow: none;
+}
+
+/* Archive: command input placeholder */
+.chassis-monitor.theme-archive .deck-input-field::placeholder {
+  color: #8b6040;
 }
 
 /* Base resets & scrollbars */

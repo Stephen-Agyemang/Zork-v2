@@ -18,6 +18,9 @@ public class GameController {
     public ResponseEntity<Map<String, String>> startGame(@RequestBody Map<String, String> body) {
         String callsign = body.getOrDefault("callsign", "OPERATOR_01");
         String sessionId = sessionManager.createSession(callsign);
+        if (sessionId == null) {
+            return ResponseEntity.status(503).body(Map.of("message", "Server is at capacity. Try again shortly."));
+        }
         return ResponseEntity.ok(Map.of(
             "sessionId", sessionId,
             "message", "Game world created, ready to play!"
@@ -44,14 +47,4 @@ public class GameController {
         return ResponseEntity.ok(engine.getGameState());
     }
 
-    @PostMapping("/debug")
-    public ResponseEntity<String> setDebugLogging(
-            @RequestHeader(value = "X-Session-ID", required = false) String sessionId,
-            @RequestBody boolean enabled) {
-        if (sessionId != null) {
-            GameEngine engine = sessionManager.getEngine(sessionId);
-            if (engine != null) engine.setDebugLogging(enabled);
-        }
-        return ResponseEntity.ok("Debug logging " + (enabled ? "enabled." : "disabled."));
-    }
 }
