@@ -302,6 +302,161 @@
   background: rgba(232, 236, 255, 0.08);
 }
 
+/* 📜 Theme 5: Archive (Aged Parchment) */
+.chassis-monitor.theme-archive {
+  --color-surface: #ede0b5;
+  --color-surface-dim: #e5d5a0;
+  --color-surface-bright: #f5eccf;
+  --color-surface-lowest: #d4c282;
+  --color-surface-low: #ddd09e;
+  --color-surface-container: #e2d0a0;
+  --color-surface-high: #eddfc0;
+  --color-surface-highest: #f5ecda;
+  --color-on-surface: #2c1a0e;
+  --color-on-surface-variant: #5c3d2a;
+  --color-inverse-surface: #2c1a0e;
+  --color-inverse-on-surface: #f5ead0;
+  --color-outline: #8b6040;
+  --color-outline-variant: #c4a070;
+  --color-primary: #6b2f0e;
+  --color-on-primary: #f5ead0;
+  --color-primary-container: #a0522d;
+  --color-on-primary-container: #3d1505;
+  --color-primary-fixed: #3d1505;
+  --color-primary-fixed-dim: #5c2510;
+  --color-secondary: #7a5c40;
+  --color-on-secondary: #f0e4c0;
+  --color-secondary-container: #c4a070;
+  --color-on-secondary-container: #3d2818;
+}
+
+/* Archive: hide the CRT scanline — doesn't suit a light parchment surface */
+.chassis-monitor.theme-archive::before {
+  opacity: 0;
+}
+
+/* Archive: execute button in dark rust */
+.chassis-monitor.theme-archive .deck-execute-btn {
+  background: linear-gradient(to bottom, #8b4010, #6b2f0e);
+  color: #f5ead0;
+  box-shadow: 0 3px 0 #3d1505, 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.chassis-monitor.theme-archive .deck-execute-btn:hover {
+  background: linear-gradient(to bottom, #a04e1a, #7a3810);
+  box-shadow: 0 3px 0 #3d1505, 0 6px 14px rgba(107, 47, 14, 0.4);
+}
+
+/* Archive: mechanical plates — parchment with brown border */
+.chassis-monitor.theme-archive .mechanical-plate {
+  background: linear-gradient(to bottom, #f0e4c0, #e5d5a0);
+  border-color: #8b6040;
+  color: #2c1a0e;
+  box-shadow: 0 2px 0 #5c3d2a;
+}
+.chassis-monitor.theme-archive .mechanical-plate:hover {
+  background: linear-gradient(to bottom, #f5ead0, #eddfc0);
+  border-color: #6b2f0e;
+}
+.chassis-monitor.theme-archive .mechanical-plate.active-yellow {
+  background: linear-gradient(to bottom, #8b4010, #6b2f0e);
+  color: #f5ead0;
+  border-color: #3d1505;
+  box-shadow: 0 2px 0 #2c1a0e;
+}
+.chassis-monitor.theme-archive .mechanical-plate.outline-yellow {
+  border-color: #6b2f0e;
+  color: #6b2f0e;
+  box-shadow: 0 2px 0 rgba(107, 47, 14, 0.2);
+}
+
+/* Archive: cursor and command log */
+.chassis-monitor.theme-archive .blinking-cursor {
+  background: #6b2f0e;
+  box-shadow: 0 0 6px rgba(107, 47, 14, 0.7);
+}
+.chassis-monitor.theme-archive .command-log {
+  border-left-color: #6b2f0e;
+}
+.chassis-monitor.theme-archive .command-text {
+  color: #6b2f0e;
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .prompt-arrow,
+.chassis-monitor.theme-archive .deck-prompt-arrow {
+  color: #6b2f0e;
+  text-shadow: none;
+}
+
+/* Archive: watermark — heavy sepia aged look */
+.chassis-monitor.theme-archive .terminal-watermark {
+  filter: sepia(100%) contrast(90%) brightness(55%) saturate(80%);
+  opacity: 0.2;
+}
+
+/* Archive: nav tabs */
+.chassis-monitor.theme-archive .nav-tab.active {
+  color: #6b2f0e;
+}
+.chassis-monitor.theme-archive .nav-tab.active::after {
+  background: #6b2f0e;
+  box-shadow: none;
+}
+
+/* Archive: left menu active indicator */
+.chassis-monitor.theme-archive .menu-item.active {
+  color: #6b2f0e;
+}
+.chassis-monitor.theme-archive .menu-item.active::before {
+  background: #6b2f0e;
+  box-shadow: none;
+}
+
+/* Archive: header signal bars */
+.chassis-monitor.theme-archive .bar-indicator.active {
+  background: #6b2f0e;
+  box-shadow: none;
+}
+
+/* Archive: neural load bars */
+.chassis-monitor.theme-archive .neural-bar.active {
+  background: #6b2f0e;
+  animation: none;
+  box-shadow: none;
+}
+
+/* Archive: meter segments */
+.chassis-monitor.theme-archive .meter-segment.active {
+  background: #6b2f0e;
+  box-shadow: none;
+}
+.chassis-monitor.theme-archive .cognitive-progress-fill {
+  background: linear-gradient(90deg, #8b6040, #6b2f0e);
+  box-shadow: none;
+}
+
+/* Archive: icon button hover */
+.chassis-monitor.theme-archive .icon-button:hover {
+  color: #6b2f0e;
+  background: rgba(107, 47, 14, 0.1);
+}
+
+/* Archive: hud tags */
+.chassis-monitor.theme-archive .hud-tag-primary {
+  background: rgba(107, 47, 14, 0.1);
+  color: #6b2f0e;
+  border-color: rgba(107, 47, 14, 0.4);
+}
+
+/* Archive: checklist items */
+.chassis-monitor.theme-archive .checklist-item.checked {
+  border-color: #6b2f0e;
+}
+.chassis-monitor.theme-archive .checklist-item.checked .check-box {
+  background: rgba(107, 47, 14, 0.12);
+  color: #6b2f0e;
+  border-color: #6b2f0e;
+}
+
 /* Base resets & scrollbars */
 * {
   margin: 0;
@@ -346,6 +501,21 @@ body {
   box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9);
   position: relative;
   overflow: hidden;
+}
+
+/* Location background image layer — sits behind UI and CRT overlay */
+.chassis-monitor::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background-image: var(--location-bg, none);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+  z-index: 0;
+  pointer-events: none;
+  transition: background-image 0.8s ease, opacity 0.8s ease;
 }
 
 /* CRT Scanline grid effect overlay */

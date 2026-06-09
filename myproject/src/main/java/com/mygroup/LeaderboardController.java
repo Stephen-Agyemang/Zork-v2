@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/leaderboard")
@@ -69,6 +70,22 @@ public class LeaderboardController {
     public ResponseEntity<List<ScoreEntry>> top() {
         try {
             return ResponseEntity.ok(repo.findTop10ByOrderByScoreDescMoveCountAsc());
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of());
+        }
+    }
+
+    @GetMapping("/top-dpu")
+    public ResponseEntity<List<ScoreEntry>> topDpu() {
+        try {
+            List<ScoreEntry> dpu = repo.findAllByOrderByScoreDescMoveCountAsc().stream()
+                .filter(e -> {
+                    String name = e.getCallsign().toLowerCase();
+                    return name.endsWith("_dpu") || name.endsWith(".dpu");
+                })
+                .limit(10)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(dpu);
         } catch (Exception e) {
             return ResponseEntity.ok(List.of());
         }

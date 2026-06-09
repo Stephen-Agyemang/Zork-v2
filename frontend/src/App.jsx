@@ -30,6 +30,8 @@ export default function App() {
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false)
   const [leaderboard, setLeaderboard] = useState(null)
   const [showLeaderboard, setShowLeaderboard] = useState(false)
+  const [dpuLeaderboard, setDpuLeaderboard] = useState(null)
+  const [showDpuLeaderboard, setShowDpuLeaderboard] = useState(false)
   const pollIntervalRef = useRef(null)
   const sessionIdRef = useRef(null)
   const sessionTimerRef = useRef(null)
@@ -332,6 +334,25 @@ export default function App() {
     }
   }
 
+  const LOCATION_IMAGES = {
+    'julian':                 '/julian.jpg',
+    'hoover':                 '/hoover.jpg',
+    'olin':                   '/olin.jpg',
+    'gcpa':                   '/gcpa.jpg',
+    'roy library':            '/roylibrary.jpg',
+    'cdi':                    '/cdi.jpg',
+    'lilly building':         '/lilly.jpg',
+    'the fluttering duck':    '/duck.jpg',
+    'the union building':     '/ub.jpg',
+    'administration building':'/admin.jpg',
+    'mason hall':             '/mason.jpg',
+    'reese hall':             '/reese.jpg',
+    'humbert hall':           '/humbert.jpg',
+  }
+
+  const locationKey = state?.currLocation?.name?.toLowerCase() || ''
+  const locationBg = LOCATION_IMAGES[locationKey] || '/school.jpg'
+
   if (showCallsignScreen) {
     return (
       <div className={`chassis-monitor theme-${theme}`}>
@@ -362,6 +383,10 @@ export default function App() {
             >
               START GAME
             </button>
+            <div style={{ marginTop: '16px', fontFamily: 'Share Tech Mono, monospace', fontSize: '10px', color: 'var(--color-outline)', textAlign: 'center', lineHeight: '1.6', letterSpacing: '0.5px' }}>
+              DePauw student? Add <span style={{ color: 'var(--color-primary)' }}>_dpu</span> to your name<br />
+              (e.g. <span style={{ color: 'var(--color-primary)' }}>Stephen_dpu</span>) to appear on the DePauw leaderboard
+            </div>
           </div>
         </div>
       </div>
@@ -398,7 +423,7 @@ export default function App() {
   }
 
   return (
-    <div className={`chassis-monitor theme-${theme}`}>
+    <div className={`chassis-monitor theme-${theme}`} style={{ '--location-bg': `url(${locationBg})` }}>
       <div className="small-screen-overlay">
         <div className="ss-icon">[ ! ]</div>
         <div className="ss-divider" />
@@ -488,11 +513,17 @@ export default function App() {
                   >
                     🎛️ STEAMPUNK_COPPER
                   </button>
-                  <button 
+                  <button
                     className={`dropdown-opt-btn ${theme === 'phantom' ? 'active' : ''}`}
                     onClick={() => { setTheme('phantom'); setShowSettings(false); }}
                   >
                     ⬜ PHANTOM_WHITE
+                  </button>
+                  <button
+                    className={`dropdown-opt-btn ${theme === 'archive' ? 'active' : ''}`}
+                    onClick={() => { setTheme('archive'); setShowSettings(false); }}
+                  >
+                    📜 ARCHIVE
                   </button>
                 </div>
               </div>
@@ -596,6 +627,19 @@ export default function App() {
                   }
                 }}>
                   GLOBAL RANKINGS
+                </button>
+                <button className="mechanical-plate outline-yellow" onClick={async () => {
+                  try {
+                    const res = await fetch('/leaderboard/top-dpu')
+                    const data = await res.json()
+                    setDpuLeaderboard(data)
+                    setShowDpuLeaderboard(true)
+                  } catch {
+                    setDpuLeaderboard([])
+                    setShowDpuLeaderboard(true)
+                  }
+                }}>
+                  DEPAUW RANKINGS
                 </button>
               </div>
             </div>
@@ -927,6 +971,49 @@ export default function App() {
               ) : (
                 <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-outline)', fontFamily: 'var(--font-label)', fontSize: '11px' }}>
                   NO SCORES ON RECORD YET. COMPLETE A MISSION TO APPEAR HERE.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* DePauw Leaderboard Modal */}
+      {showDpuLeaderboard && (
+        <div className="hud-modal-overlay" onClick={() => setShowDpuLeaderboard(false)}>
+          <div className="hud-modal-card heavy-panel" onClick={e => e.stopPropagation()} style={{ width: '480px' }}>
+            <div className="rivet rivet-tl"></div>
+            <div className="rivet rivet-tr"></div>
+            <div className="rivet rivet-bl"></div>
+            <div className="rivet rivet-br"></div>
+            <div className="modal-header">
+              <span className="panel-title">DEPAUW RANKINGS</span>
+              <button className="mechanical-plate modal-close-btn" onClick={() => setShowDpuLeaderboard(false)}>CLOSE</button>
+            </div>
+            <div className="modal-body-deck">
+              {dpuLeaderboard && dpuLeaderboard.length > 0 ? (
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-label)', fontSize: '11px' }}>
+                  <thead>
+                    <tr style={{ color: 'var(--color-outline)', borderBottom: '1px solid var(--color-surface-bright)' }}>
+                      <th style={{ padding: '6px 8px', textAlign: 'left' }}>#</th>
+                      <th style={{ padding: '6px 8px', textAlign: 'left' }}>CALLSIGN</th>
+                      <th style={{ padding: '6px 8px', textAlign: 'right' }}>SCORE</th>
+                      <th style={{ padding: '6px 8px', textAlign: 'right' }}>MOVES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dpuLeaderboard.map((entry, i) => (
+                      <tr key={entry.id} style={{ borderBottom: '1px dashed var(--color-surface-bright)', color: i === 0 ? 'var(--color-primary)' : 'var(--color-on-surface)' }}>
+                        <td style={{ padding: '8px 8px' }}>{i + 1}</td>
+                        <td style={{ padding: '8px 8px', fontWeight: 700 }}>{entry.callsign}</td>
+                        <td style={{ padding: '8px 8px', textAlign: 'right' }}>{entry.score}</td>
+                        <td style={{ padding: '8px 8px', textAlign: 'right' }}>{entry.moveCount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-outline)', fontFamily: 'var(--font-label)', fontSize: '11px' }}>
+                  NO DEPAUW SCORES YET. ADD _dpu TO YOUR NAME TO APPEAR HERE.
                 </div>
               )}
             </div>

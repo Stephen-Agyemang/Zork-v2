@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface ScoreRepository extends JpaRepository<ScoreEntry, Long> {
     List<ScoreEntry> findTop10ByOrderByScoreDescMoveCountAsc();
+    List<ScoreEntry> findAllByOrderByScoreDescMoveCountAsc();
 }
