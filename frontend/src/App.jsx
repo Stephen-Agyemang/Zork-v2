@@ -34,6 +34,7 @@ export default function App() {
   const [showDpuLeaderboard, setShowDpuLeaderboard] = useState(false)
   const [activeBg, setActiveBg] = useState(null)
   const [fadingBg, setFadingBg] = useState(null)
+  const activeBgRef = useRef(null)
   const pollIntervalRef = useRef(null)
   const sessionIdRef = useRef(null)
   const sessionTimerRef = useRef(null)
@@ -356,8 +357,9 @@ export default function App() {
   const newBg = LOCATION_IMAGES[locationKey] || null
 
   useEffect(() => {
-    if (newBg === activeBg) return
-    setFadingBg(activeBg)
+    if (newBg === activeBgRef.current) return
+    setFadingBg(activeBgRef.current)
+    activeBgRef.current = newBg
     setActiveBg(newBg)
     const t = setTimeout(() => setFadingBg(null), 900)
     return () => clearTimeout(t)
@@ -434,8 +436,6 @@ export default function App() {
 
   return (
     <div className={`chassis-monitor theme-${theme}`}>
-      {fadingBg && <div className="location-bg location-bg-fade" style={{ backgroundImage: `url(${fadingBg})` }} />}
-      {activeBg && <div className="location-bg location-bg-active" style={{ backgroundImage: `url(${activeBg})` }} />}
       <div className="small-screen-overlay">
         <div className="ss-icon">[ ! ]</div>
         <div className="ss-divider" />
@@ -607,7 +607,7 @@ export default function App() {
             />
 
             {/* Center Column: Telemetry monitor and log panel */}
-            <StoryPanel messages={messages} state={state} />
+            <StoryPanel messages={messages} state={state} activeBg={activeBg} fadingBg={fadingBg} />
 
             {/* Right Column: session load, signatures inventory, active quests */}
             <RightPanel state={state} onShareSession={handleShareSession} linkCopied={linkCopied} onCommand={handleCommand} collapsed={rightPanelCollapsed} onToggleCollapse={() => setRightPanelCollapsed(c => !c)} />

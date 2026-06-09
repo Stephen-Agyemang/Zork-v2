@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import './StoryPanel.css'
 
-export default function StoryPanel({ messages, state }) {
+export default function StoryPanel({ messages, state, activeBg, fadingBg }) {
   const scrollRef = useRef(null)
 
   useEffect(() => {
@@ -47,11 +47,8 @@ export default function StoryPanel({ messages, state }) {
           </div>
         </div>
 
-        {/* Static Watermark backdrop behind the transparent scrollable console body */}
-        <div 
-          className="terminal-watermark" 
-          style={{ backgroundImage: 'url("/school.jpg")' }}
-        ></div>
+        {fadingBg && <div className="terminal-watermark terminal-watermark-out" style={{ backgroundImage: `url(${fadingBg})` }} />}
+        {activeBg && <div className="terminal-watermark terminal-watermark-in" style={{ backgroundImage: `url(${activeBg})` }} />}
 
         <div className="panel-body console-log-body" ref={scrollRef}>
           

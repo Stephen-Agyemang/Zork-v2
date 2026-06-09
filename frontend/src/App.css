@@ -503,35 +503,6 @@ body {
   overflow: hidden;
 }
 
-/* Location background image crossfade layers */
-.location-bg {
-  position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background-size: cover;
-  background-position: center;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.location-bg-active {
-  opacity: 0.13;
-  animation: bg-fade-in 0.9s ease forwards;
-}
-
-.location-bg-fade {
-  opacity: 0;
-  animation: bg-fade-out 0.9s ease forwards;
-}
-
-@keyframes bg-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 0.13; }
-}
-
-@keyframes bg-fade-out {
-  from { opacity: 0.13; }
-  to   { opacity: 0; }
-}
 
 /* CRT Scanline grid effect overlay */
 .chassis-monitor::before {
