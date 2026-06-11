@@ -566,13 +566,13 @@
   background: #c0a870;
 }
 .chassis-monitor.theme-archive .neural-bar.active {
-  background: #5a2008;
+  background: #9a6030;
   animation: archive-neural-pulse 1.5s infinite alternate;
   box-shadow: none;
 }
 @keyframes archive-neural-pulse {
-  0%   { background: #7a5030; }
-  100% { background: #5a2008; box-shadow: none; }
+  0%   { background: #b07840; }
+  100% { background: #9a6030; box-shadow: none; }
 }
 .chassis-monitor.theme-archive .meter-segment.active {
   background: #5a2008;
@@ -745,6 +745,11 @@
 .chassis-monitor.theme-archive .avatar-container {
   background: #c4ae6e;
   border-color: #7a5030;
+}
+/* Sepia-tone the avatar SVG to look like a faded old portrait */
+.chassis-monitor.theme-archive .avatar-svg {
+  filter: sepia(75%) saturate(45%) brightness(0.88) contrast(0.82);
+  opacity: 0.85;
 }
 /* Hide the CRT scanline overlay on the avatar — wrong era */
 .chassis-monitor.theme-archive .scanline-overlay {
