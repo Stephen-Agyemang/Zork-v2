@@ -651,6 +651,349 @@
   font-family: 'Special Elite', 'Courier New', monospace;
 }
 
+/* ── Badges: locked = faded parchment, unlocked = inked border ── */
+.chassis-monitor.theme-archive .badge-box.locked {
+  background: rgba(90, 50, 15, 0.08);
+  border-color: rgba(90, 50, 15, 0.22);
+  opacity: 0.55;
+}
+.chassis-monitor.theme-archive .badge-box.unlocked {
+  background: rgba(90, 32, 8, 0.08);
+  border-color: #7a5030;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 1px 1px 3px rgba(40,20,5,0.2);
+}
+.chassis-monitor.theme-archive .badge-icon {
+  filter: none;
+}
+.chassis-monitor.theme-archive .badge-lbl {
+  color: #4a2e18;
+}
+
+/* ── Meter segments: inactive = light parchment, not dark navy ── */
+.chassis-monitor.theme-archive .meter-segment {
+  background: rgba(90, 50, 15, 0.12);
+}
+.chassis-monitor.theme-archive .segmented-meter {
+  background: rgba(90, 50, 15, 0.06);
+  border-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .meter-segment.active {
+  box-shadow: none;
+}
+
+/* ── HUD tags: success and error adapted to ink palette ── */
+.chassis-monitor.theme-archive .hud-tag-success {
+  background: rgba(40, 80, 30, 0.1);
+  color: #3a5c28;
+  border-color: rgba(40, 80, 30, 0.35);
+}
+.chassis-monitor.theme-archive .hud-tag-error {
+  background: rgba(90, 32, 8, 0.1);
+  color: #7a1808;
+  border-color: rgba(90, 32, 8, 0.4);
+  animation: none;
+}
+
+/* ── Accuracy wave container: parchment bg ── */
+.chassis-monitor.theme-archive .accuracy-wave-container {
+  background: rgba(90, 50, 15, 0.06);
+  border-color: rgba(90, 50, 15, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Header & nav strip
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .chassis-header {
+  background: #d0ba80;
+  border-bottom-color: rgba(90, 50, 15, 0.45);
+}
+.chassis-monitor.theme-archive .nav-tab.active::after {
+  box-shadow: none;
+}
+.chassis-monitor.theme-archive .nav-tab:hover {
+  color: #5a2008;
+}
+.chassis-monitor.theme-archive .icon-button:hover {
+  background: rgba(90, 32, 8, 0.1);
+  color: #5a2008;
+}
+.chassis-monitor.theme-archive .power-btn {
+  color: #7a1808;
+}
+.chassis-monitor.theme-archive .power-btn:hover {
+  color: #5a0808;
+  background: rgba(90, 8, 8, 0.12);
+}
+.chassis-monitor.theme-archive .bar-indicator {
+  background: rgba(90, 50, 15, 0.25);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Left vertical menu strip
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .vertical-menu {
+  background: #c8b474;
+  border-right-color: rgba(90, 50, 15, 0.4);
+}
+.chassis-monitor.theme-archive .dashboard-container {
+  background: transparent;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Sidebar panels (avatar, compass, intel)
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .avatar-container {
+  background: #c4ae6e;
+  border-color: #7a5030;
+}
+/* Hide the CRT scanline overlay on the avatar — wrong era */
+.chassis-monitor.theme-archive .scanline-overlay {
+  display: none;
+}
+/* Radar sweep: rust tint instead of gold */
+.chassis-monitor.theme-archive .radar-sweep {
+  background: conic-gradient(
+    from 0deg,
+    rgba(90, 32, 8, 0.10) 0deg,
+    rgba(90, 32, 8, 0.0) 90deg,
+    transparent 180deg
+  );
+}
+/* Compass heading text: no glow */
+.chassis-monitor.theme-archive .heading-val {
+  text-shadow: none;
+}
+/* Compass direction buttons */
+.chassis-monitor.theme-archive .compass-btn.active {
+  box-shadow: 1px 2px 0 rgba(90, 32, 8, 0.35);
+}
+.chassis-monitor.theme-archive .compass-btn.active:hover {
+  box-shadow: none;
+}
+/* Neural bar: inactive dark navy → parchment slot */
+.chassis-monitor.theme-archive .neural-bar {
+  background: rgba(90, 50, 15, 0.14);
+}
+/* Intel card flash: no gold glow */
+.chassis-monitor.theme-archive .intel-card.intel-flash {
+  border-color: #7a5030;
+  box-shadow: none;
+}
+.chassis-monitor.theme-archive .intel-location-tag {
+  text-shadow: none;
+}
+/* Operator status: no teal */
+.chassis-monitor.theme-archive .operator-status {
+  color: #5a4020;
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .operator-card {
+  background: rgba(90, 50, 15, 0.06);
+  border-color: rgba(90, 50, 15, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Command input deck
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .command-input-area {
+  background: #d0ba80;
+  border-color: rgba(90, 50, 15, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.chassis-monitor.theme-archive .command-input-area.typing-challenge-active {
+  border-color: #5a2008;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.chassis-monitor.theme-archive .deck-prompt-arrow {
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .macro-chip-btn {
+  background: rgba(90, 50, 15, 0.08);
+  border-color: rgba(90, 50, 15, 0.3);
+  color: #4a2e18;
+}
+.chassis-monitor.theme-archive .macro-chip-btn:hover {
+  border-color: #7a5030;
+  color: #5a2008;
+  background: rgba(90, 32, 8, 0.08);
+}
+.chassis-monitor.theme-archive .input-suggestions-bar {
+  background: #d8c890;
+  border-color: rgba(90, 50, 15, 0.4);
+  box-shadow: 0 -3px 10px rgba(60, 30, 5, 0.2);
+}
+.chassis-monitor.theme-archive .suggestion-chip {
+  background: rgba(90, 50, 15, 0.08);
+  border-color: rgba(90, 50, 15, 0.3);
+  color: #4a2e18;
+}
+.chassis-monitor.theme-archive .suggestion-chip:hover {
+  border-color: #7a5030;
+  color: #5a2008;
+  background: rgba(90, 32, 8, 0.08);
+}
+.chassis-monitor.theme-archive .suggestion-kbd {
+  background: rgba(90, 50, 15, 0.15);
+  color: #5a2008;
+  border-color: rgba(90, 32, 8, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Story panel header (DATA_HARVESTED, NEURAL_LINK)
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .compact-harvest-stat {
+  background: rgba(90, 50, 15, 0.1);
+  border-color: rgba(90, 50, 15, 0.35);
+}
+.chassis-monitor.theme-archive .compact-harvest-val {
+  text-shadow: none;
+}
+/* Log line fade-in: replace sci-fi phosphor flash with a gentle ink-on-paper reveal */
+.chassis-monitor.theme-archive .log-line {
+  animation: archive-ink-appear 0.35s ease-out forwards;
+}
+@keyframes archive-ink-appear {
+  0%   { opacity: 0; transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.chassis-monitor.theme-archive .command-text {
+  text-shadow: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Right panel: session clock, vitals, bars
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .vc-clock-row {
+  background: rgba(90, 50, 15, 0.1);
+  border-color: rgba(90, 50, 15, 0.4);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3);
+}
+.chassis-monitor.theme-archive .vc-clock {
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .vc-clock-icon {
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .vc-bar-fill {
+  background: linear-gradient(90deg, #7a5030, #5a2008);
+  box-shadow: none;
+}
+.chassis-monitor.theme-archive .vc-bar-track {
+  background: rgba(90, 50, 15, 0.08);
+  border-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .vc-vitals-row {
+  background: rgba(90, 50, 15, 0.06);
+  border-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .vc-vital-divider {
+  background: rgba(90, 50, 15, 0.25);
+}
+.chassis-monitor.theme-archive .vc-mini-track {
+  background: rgba(90, 50, 15, 0.2);
+}
+.chassis-monitor.theme-archive .vc-mini-fill {
+  background: #7a5030;
+}
+.chassis-monitor.theme-archive .vc-vital-val.val-danger {
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .vc-mini-fill.fill-danger {
+  background: #7a1808;
+  box-shadow: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Right panel: priorities / quest list
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .dot-active {
+  box-shadow: none;
+}
+.chassis-monitor.theme-archive .dot-idle {
+  background: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .dot-critical {
+  box-shadow: none;
+  animation: none;
+}
+.chassis-monitor.theme-archive .quest-location.loc-alert {
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .quest-item-badge.missing {
+  background: rgba(90, 50, 15, 0.1);
+  color: #7a5030;
+  border-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .right-panel-footer {
+  background: rgba(90, 50, 15, 0.08);
+  border-top-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .footer-icon-btn {
+  color: rgba(90, 50, 15, 0.5);
+}
+.chassis-monitor.theme-archive .footer-icon-btn:hover {
+  color: #5a2008;
+  border-color: rgba(90, 50, 15, 0.4);
+  background: rgba(90, 32, 8, 0.08);
+}
+.chassis-monitor.theme-archive .session-warning-card {
+  background: #ddd0a0;
+  border-color: rgba(122, 24, 8, 0.4);
+  box-shadow: 0 -4px 12px rgba(60, 30, 5, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Right panel: inventory table
+   ══════════════════════════════════════════════════════════ */
+.chassis-monitor.theme-archive .inv-row {
+  border-bottom-color: rgba(90, 50, 15, 0.2);
+}
+.chassis-monitor.theme-archive .inv-row:hover {
+  background: rgba(90, 32, 8, 0.05);
+}
+.chassis-monitor.theme-archive .inv-thead-row {
+  background: rgba(90, 50, 15, 0.1);
+  border-bottom-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .inv-count-badge {
+  background: rgba(90, 50, 15, 0.08);
+  border-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .inv-item-count {
+  background: rgba(90, 32, 8, 0.1);
+  color: #5a2008;
+  border-color: rgba(90, 32, 8, 0.35);
+  text-shadow: none;
+}
+.chassis-monitor.theme-archive .inv-status-ok {
+  background: rgba(90, 50, 15, 0.1);
+  color: #5a4020;
+  border-color: rgba(90, 50, 15, 0.3);
+}
+.chassis-monitor.theme-archive .inv-status-warn {
+  background: rgba(90, 32, 8, 0.1);
+  color: #5a2008;
+  border-color: rgba(90, 32, 8, 0.35);
+}
+.chassis-monitor.theme-archive .inv-status-critical {
+  animation: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARCHIVE — Panel variation: slightly different tints per zone
+   so the page doesn't look like one flat sheet of beige
+   ══════════════════════════════════════════════════════════ */
+/* Right column panels: slightly cooler/lighter parchment */
+.chassis-monitor.theme-archive .vitals-panel.heavy-panel,
+.chassis-monitor.theme-archive .biosig-panel.heavy-panel,
+.chassis-monitor.theme-archive .priority-panel.heavy-panel {
+  background-color: #ede3c0 !important;
+}
+/* Sidebar panels: slightly warmer/darker aged tone */
+.chassis-monitor.theme-archive .sidebar .heavy-panel {
+  background-color: #d8cc98 !important;
+}
+
 /* Base resets & scrollbars */
 * {
   margin: 0;

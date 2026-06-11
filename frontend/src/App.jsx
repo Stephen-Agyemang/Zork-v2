@@ -761,7 +761,7 @@ export default function App() {
                     const pts = state?.points || 0
                     const ppm = moves > 0 ? pts / moves : 1
                     const effLabel = ppm >= 0.8 ? 'OPTIMAL' : ppm >= 0.4 ? 'EFFICIENT' : 'STRAINED'
-                    const effColor = ppm >= 0.8 ? '#00ffcc' : ppm >= 0.4 ? 'var(--color-primary)' : 'var(--color-error)'
+                    const effColor = ppm >= 0.8 ? 'var(--color-primary)' : ppm >= 0.4 ? 'var(--color-primary)' : 'var(--color-error)'
                     const avgTime = moves > 0 ? (sessionSecs / moves).toFixed(1) : '—'
                     return (
                       <>
@@ -783,7 +783,7 @@ export default function App() {
                           </div>
                           <div className="dashed-row">
                             <span style={{ color: 'var(--color-outline)' }}>QUESTS_DONE</span>
-                            <span style={{ color: questsDone >= 5 ? '#00ffcc' : questsDone >= 3 ? 'var(--color-primary)' : 'var(--color-outline)', fontWeight: 'bold' }}>{questsDone}/6</span>
+                            <span style={{ color: questsDone >= 3 ? 'var(--color-primary)' : 'var(--color-outline)', fontWeight: 'bold' }}>{questsDone}/6</span>
                           </div>
                         </div>
                       </>
