@@ -303,255 +303,352 @@
 }
 
 /* 📜 Theme 5: Archive (Aged Parchment) */
-.chassis-monitor.theme-archive {
-  --color-surface: #ede0b5;
-  --color-surface-dim: #e5d5a0;
-  --color-surface-bright: #f5eccf;
-  --color-surface-lowest: #d4c282;
-  --color-surface-low: #ddd09e;
-  --color-surface-container: #e2d0a0;
-  --color-surface-high: #eddfc0;
-  --color-surface-highest: #f5ecda;
-  --color-on-surface: #2c1a0e;
-  --color-on-surface-variant: #5c3d2a;
-  --color-inverse-surface: #2c1a0e;
-  --color-inverse-on-surface: #f5ead0;
-  --color-outline: #8b6040;
-  --color-outline-variant: #c4a070;
-  --color-primary: #6b2f0e;
-  --color-on-primary: #f5ead0;
-  --color-primary-container: #a0522d;
-  --color-on-primary-container: #3d1505;
-  --color-primary-fixed: #3d1505;
-  --color-primary-fixed-dim: #5c2510;
-  --color-secondary: #7a5c40;
-  --color-on-secondary: #f0e4c0;
-  --color-secondary-container: #c4a070;
-  --color-on-secondary-container: #3d2818;
+/* ===== ARCHIVE THEME: AGED PARCHMENT / ARCHIVAL DOCUMENT ===== */
+
+/* ── Torn / degraded paper overlay ────────────────────────────── */
+/* pointer-events: none — clicks pass through; all UI remains usable */
+.archive-torn-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 996;
+  background-image:
+    /* Top-left corner: chunk torn off — kept in the margin away from content */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Cpath d='M0,0 L68,0 L60,10 L52,4 L44,15 L36,8 L28,20 L20,12 L14,26 L6,18 L0,30 Z' fill='rgba(22,8,2,0.38)'/%3E%3Cpath d='M68,0 L60,10 L52,4 L44,15 L36,8 L28,20 L20,12 L14,26 L6,18 L0,30 L0,42 L8,33 L16,45 L24,35 L30,48 L40,37 L46,50 L56,40 L62,28 L72,20 L80,10 L90,4 L80,0 Z' fill='rgba(215,185,115,0.15)'/%3E%3C/svg%3E"),
+    /* Bottom-right corner: worn frayed edge */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90'%3E%3Cpath d='M130,90 L0,90 L0,68 L12,74 L22,66 L34,72 L44,64 L56,70 L66,62 L76,68 L86,60 L96,67 L106,60 L116,66 L130,58 Z' fill='rgba(22,8,2,0.22)'/%3E%3Cpath d='M130,90 L55,90 L62,84 L72,88 L80,81 L90,85 L98,78 L108,83 L116,76 L124,81 L130,75 Z' fill='rgba(22,8,2,0.18)'/%3E%3C/svg%3E"),
+    /* Horizontal rip slash — positioned in the lower-centre gap between panels */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='28'%3E%3Cpath d='M0,12 L18,8 L36,14 L54,7 L72,13 L90,9 L108,15 L126,8 L144,12 L162,7 L180,13 L200,10 L200,16 L180,19 L162,14 L144,18 L126,13 L108,19 L90,15 L72,18 L54,13 L36,19 L18,15 L0,17 Z' fill='rgba(22,8,2,0.16)'/%3E%3C/svg%3E"),
+    /* Worn spots — very faint so nothing is obscured */
+    radial-gradient(ellipse 60px 45px at 8% 80%, rgba(30,10,2,0.14) 0%, transparent 100%),
+    radial-gradient(ellipse 50px 40px at 91% 88%, rgba(30,10,2,0.12) 0%, transparent 100%),
+    /* Tide-line stain */
+    linear-gradient(180deg, transparent 44%, rgba(30,10,2,0.04) 46%, transparent 48%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-position:
+    top left,
+    bottom right,
+    35% 62%,
+    0 0, 0 0, 0 0;
+  background-size:
+    110px 110px,
+    130px 90px,
+    200px 28px,
+    100% 100%, 100% 100%, 100% 100%;
 }
 
-/* Archive: hide the CRT scanline — doesn't suit a light parchment surface */
+/* ── Apply organic worn-edge filter to side panels (not main log body) ── */
+.chassis-monitor.theme-archive .heavy-panel {
+  filter: url(#archive-worn-edges);
+}
+/* Remove filter from the log body itself so text stays sharp */
+.chassis-monitor.theme-archive .console-log-body {
+  filter: none;
+}
+
+/* ── Repurpose ::before (was CRT scanline) as a top-right page-fold ── */
+/* 26px keeps it safely in the corner gap, away from any header icons */
+.chassis-monitor.theme-archive::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; right: 0 !important; left: auto !important; bottom: auto !important;
+  width: 0 !important; height: 0 !important;
+  background: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  border-style: solid !important;
+  border-width: 0 26px 26px 0 !important;
+  border-color: transparent #b09858 transparent transparent !important;
+  filter: drop-shadow(-2px 2px 4px rgba(40,18,4,0.5)) !important;
+  z-index: 997 !important;
+}
+
+.chassis-monitor.theme-archive {
+  /* Ink & paper palette */
+  --color-surface: #e8d9a8;
+  --color-surface-dim: #ddd09a;
+  --color-surface-bright: #f4ebcc;
+  --color-surface-lowest: #cfc07a;
+  --color-surface-low: #d8ca8e;
+  --color-surface-container: #ddd0a0;
+  --color-surface-high: #eaddba;
+  --color-surface-highest: #f4ead8;
+  --color-on-surface: #1e0e04;
+  --color-on-surface-variant: #4a2e18;
+  --color-inverse-surface: #1e0e04;
+  --color-inverse-on-surface: #f4ead0;
+  --color-outline: #7a5030;
+  --color-outline-variant: #b89060;
+  --color-primary: #5a2008;
+  --color-on-primary: #f4ead0;
+  --color-primary-container: #904020;
+  --color-on-primary-container: #2c0e02;
+  --color-primary-fixed: #2c0e02;
+  --color-primary-fixed-dim: #501808;
+  --color-secondary: #6a4c30;
+  --color-on-secondary: #eedfc0;
+  --color-secondary-container: #b08848;
+  --color-on-secondary-container: #2c1808;
+
+  /* Typewriter & archival serif fonts */
+  --font-headline: 'IM Fell English SC', Georgia, 'Times New Roman', serif;
+  --font-body: 'Special Elite', 'Courier New', Courier, monospace;
+  --font-label: 'Special Elite', 'Courier New', Courier, monospace;
+
+  /* Sharp document corners — no modern rounding */
+  --rounded-sm: 0px;
+  --rounded-default: 0px;
+  --rounded-md: 1px;
+  --rounded-lg: 1px;
+  --rounded-xl: 2px;
+}
+
+/* Heavy aged-paper texture — fractalNoise grain + foxing stains + vignette */
+.chassis-monitor.theme-archive {
+  background-color: #d8c890;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.13'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 15% 20%, rgba(120,80,20,0.18) 0%, transparent 40%),
+    radial-gradient(ellipse at 85% 75%, rgba(100,60,10,0.15) 0%, transparent 38%),
+    radial-gradient(ellipse at 60% 10%, rgba(140,100,30,0.10) 0%, transparent 30%),
+    linear-gradient(170deg, #e8d9a8 0%, #cfc080 45%, #ddd0a0 75%, #e0d4a8 100%);
+}
+
+/* Hide CRT scanline — doesn't suit paper */
 .chassis-monitor.theme-archive::before {
   opacity: 0;
 }
 
-/* Archive: execute button in dark rust */
-.chassis-monitor.theme-archive .deck-execute-btn {
-  background: linear-gradient(to bottom, #8b4010, #6b2f0e);
-  color: #f5ead0;
-  box-shadow: 0 3px 0 #3d1505, 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.chassis-monitor.theme-archive .deck-execute-btn:hover {
-  background: linear-gradient(to bottom, #a04e1a, #7a3810);
-  box-shadow: 0 3px 0 #3d1505, 0 6px 14px rgba(107, 47, 14, 0.4);
-}
-
-/* Archive: mechanical plates — parchment with brown border */
-.chassis-monitor.theme-archive .mechanical-plate {
-  background: linear-gradient(to bottom, #f0e4c0, #e5d5a0);
-  border-color: #8b6040;
-  color: #2c1a0e;
-  box-shadow: 0 2px 0 #5c3d2a;
-}
-.chassis-monitor.theme-archive .mechanical-plate:hover {
-  background: linear-gradient(to bottom, #f5ead0, #eddfc0);
-  border-color: #6b2f0e;
-}
-.chassis-monitor.theme-archive .mechanical-plate.active-yellow {
-  background: linear-gradient(to bottom, #8b4010, #6b2f0e);
-  color: #f5ead0;
-  border-color: #3d1505;
-  box-shadow: 0 2px 0 #2c1a0e;
-}
-.chassis-monitor.theme-archive .mechanical-plate.outline-yellow {
-  border-color: #6b2f0e;
-  color: #6b2f0e;
-  box-shadow: 0 2px 0 rgba(107, 47, 14, 0.2);
+/* Aged-paper vignette over the whole chassis */
+.chassis-monitor.theme-archive::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(60,30,5,0.28) 100%);
+  z-index: 998;
 }
 
-/* Archive: cursor and command log */
-.chassis-monitor.theme-archive .blinking-cursor {
-  background: #6b2f0e;
-  box-shadow: 0 0 6px rgba(107, 47, 14, 0.7);
+/* ── Story/console panel: scroll-like parchment ── */
+.chassis-monitor.theme-archive .console-hero {
+  background-color: #f0e4c0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 80% 15%, rgba(100,60,10,0.10) 0%, transparent 35%),
+    linear-gradient(180deg, #f4ead0 0%, #eedad8 50%, #f0e4c0 100%);
+  border-left: 2px solid rgba(90, 50, 15, 0.4);
+  border-right: 2px solid rgba(90, 50, 15, 0.4);
 }
-.chassis-monitor.theme-archive .command-log {
-  border-left-color: #6b2f0e;
+
+/* All panels: sharp edges, inked border, no glow */
+.chassis-monitor.theme-archive .heavy-panel {
+  border-radius: 0 !important;
+  border-color: rgba(90, 50, 15, 0.45) !important;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.45), 2px 2px 5px rgba(40,20,5,0.22);
+}
+
+/* Inner document rule line via ::after */
+.chassis-monitor.theme-archive .heavy-panel::after {
+  border: 1px solid rgba(90, 50, 15, 0.14) !important;
+  border-radius: 0 !important;
+  inset: 5px !important;
+}
+
+/* ── Typography ── */
+.chassis-monitor.theme-archive .system-text {
+  color: #1e0e04;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.chassis-monitor.theme-archive .log-time {
+  color: #7a5030;
+  font-style: italic;
+}
+.chassis-monitor.theme-archive .error-text {
+  color: #7a1808;
 }
 .chassis-monitor.theme-archive .command-text {
-  color: #6b2f0e;
+  color: #5a2008;
   text-shadow: none;
 }
 .chassis-monitor.theme-archive .prompt-arrow,
 .chassis-monitor.theme-archive .deck-prompt-arrow {
-  color: #6b2f0e;
+  color: #5a2008;
   text-shadow: none;
 }
+.chassis-monitor.theme-archive .command-log {
+  border-left-color: #5a2008;
+}
+.chassis-monitor.theme-archive .debrief-title {
+  text-shadow: none;
+  font-family: 'IM Fell English SC', Georgia, serif;
+  letter-spacing: 0.04em;
+}
+.chassis-monitor.theme-archive .panel-title {
+  font-family: 'IM Fell English SC', Georgia, serif;
+  letter-spacing: 0.05em;
+}
 
-/* Archive: watermark — sepia aged photo, more visible on light parchment */
+/* ── Watermark: sepia aged photo ── */
 .chassis-monitor.theme-archive .terminal-watermark {
   --wm-opacity: 0.28;
-  filter: sepia(80%) contrast(85%) brightness(65%) saturate(70%);
+  filter: sepia(90%) contrast(80%) brightness(60%) saturate(60%);
 }
 
-/* Archive: nav tabs */
+/* ── Buttons & plates ── */
+.chassis-monitor.theme-archive .deck-execute-btn {
+  background: linear-gradient(to bottom, #7a3010, #5a2008);
+  color: #f4ead0;
+  border-radius: 0 !important;
+  box-shadow: 0 3px 0 #2c0e02, 2px 3px 6px rgba(0,0,0,0.3);
+  font-family: 'Special Elite', 'Courier New', monospace;
+  letter-spacing: 0.08em;
+}
+.chassis-monitor.theme-archive .deck-execute-btn:hover {
+  background: linear-gradient(to bottom, #904020, #7a3010);
+  box-shadow: 0 3px 0 #2c0e02, 2px 5px 10px rgba(90,32,8,0.4);
+}
+.chassis-monitor.theme-archive .mechanical-plate {
+  background: linear-gradient(to bottom, #eedfc0, #e0d0a0);
+  border-color: #7a5030;
+  border-radius: 0 !important;
+  color: #1e0e04;
+  box-shadow: 0 2px 0 #4a2e18, 1px 1px 3px rgba(0,0,0,0.15);
+  font-family: 'Special Elite', 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+.chassis-monitor.theme-archive .mechanical-plate:hover {
+  background: linear-gradient(to bottom, #f4ead0, #eeddc0);
+  border-color: #5a2008;
+}
+.chassis-monitor.theme-archive .mechanical-plate.active-yellow {
+  background: linear-gradient(to bottom, #7a3010, #5a2008);
+  color: #f4ead0;
+  border-color: #2c0e02;
+  box-shadow: 0 2px 0 #1e0e04;
+}
+.chassis-monitor.theme-archive .mechanical-plate.outline-yellow {
+  border-color: #5a2008;
+  color: #5a2008;
+  box-shadow: 0 2px 0 rgba(90,32,8,0.2);
+}
+
+/* ── Cursor ── */
+.chassis-monitor.theme-archive .blinking-cursor {
+  background: #5a2008;
+  box-shadow: none;
+}
+
+/* ── Nav tabs ── */
 .chassis-monitor.theme-archive .nav-tab.active {
-  color: #6b2f0e;
+  color: #5a2008;
 }
 .chassis-monitor.theme-archive .nav-tab.active::after {
-  background: #6b2f0e;
+  background: #5a2008;
   box-shadow: none;
 }
 
-/* Archive: left menu active indicator */
+/* ── Left menu ── */
 .chassis-monitor.theme-archive .menu-item.active {
-  color: #6b2f0e;
+  color: #5a2008;
 }
 .chassis-monitor.theme-archive .menu-item.active::before {
-  background: #6b2f0e;
+  background: #5a2008;
   box-shadow: none;
 }
 
-/* Archive: header signal bars */
+/* ── Signal bars & meters ── */
 .chassis-monitor.theme-archive .bar-indicator.active {
-  background: #6b2f0e;
+  background: #5a2008;
   box-shadow: none;
 }
-
-/* Archive: neural load bars */
+.chassis-monitor.theme-archive .neural-bar {
+  background: #c0a870;
+}
 .chassis-monitor.theme-archive .neural-bar.active {
-  background: #6b2f0e;
-  animation: none;
+  background: #5a2008;
+  animation: archive-neural-pulse 1.5s infinite alternate;
   box-shadow: none;
 }
-
-/* Archive: meter segments */
+@keyframes archive-neural-pulse {
+  0%   { background: #7a5030; }
+  100% { background: #5a2008; box-shadow: none; }
+}
 .chassis-monitor.theme-archive .meter-segment.active {
-  background: #6b2f0e;
+  background: #5a2008;
   box-shadow: none;
 }
 .chassis-monitor.theme-archive .cognitive-progress-fill {
-  background: linear-gradient(90deg, #8b6040, #6b2f0e);
+  background: linear-gradient(90deg, #7a5030, #5a2008);
   box-shadow: none;
 }
 
-/* Archive: icon button hover */
+/* ── Icon buttons ── */
 .chassis-monitor.theme-archive .icon-button:hover {
-  color: #6b2f0e;
-  background: rgba(107, 47, 14, 0.1);
+  color: #5a2008;
+  background: rgba(90, 32, 8, 0.1);
 }
 
-/* Archive: hud tags */
+/* ── HUD tags ── */
 .chassis-monitor.theme-archive .hud-tag-primary {
-  background: rgba(107, 47, 14, 0.1);
-  color: #6b2f0e;
-  border-color: rgba(107, 47, 14, 0.4);
+  background: rgba(90, 32, 8, 0.1);
+  color: #5a2008;
+  border-color: rgba(90, 32, 8, 0.4);
+  border-radius: 0;
 }
 
-/* Archive: checklist items */
+/* ── Checklist ── */
 .chassis-monitor.theme-archive .checklist-item.checked {
-  border-color: #6b2f0e;
+  border-color: #5a2008;
 }
 .chassis-monitor.theme-archive .checklist-item.checked .check-box {
-  background: rgba(107, 47, 14, 0.12);
-  color: #6b2f0e;
-  border-color: #6b2f0e;
+  background: rgba(90, 32, 8, 0.12);
+  color: #5a2008;
+  border-color: #5a2008;
 }
 
-/* Archive: paper texture on the whole chassis */
-.chassis-monitor.theme-archive {
-  background: #e8d9b0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
-    linear-gradient(160deg, #ede0b5 0%, #ddd09e 50%, #e8d9b0 100%);
-}
-
-/* Archive: story terminal panel — warm parchment instead of dark screen */
-.chassis-monitor.theme-archive .console-hero {
-  background: #f2e8c8;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-}
-
-/* Archive: system response text — dark readable ink on parchment */
-.chassis-monitor.theme-archive .system-text {
-  color: #2c1a0e;
-}
-
-/* Archive: log timestamps — muted sepia ink */
-.chassis-monitor.theme-archive .log-time {
-  color: #8b6040;
-}
-
-/* Archive: error text — dark red-brown (still readable) */
-.chassis-monitor.theme-archive .error-text {
-  color: #8b2010;
-}
-
-/* Archive: heavy panels — paper feel, not cast metal */
-.chassis-monitor.theme-archive .heavy-panel {
-  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.15), inset -1px -1px 2px rgba(255, 255, 255, 0.4);
-}
-.chassis-monitor.theme-archive .heavy-panel::after {
-  border: 1px solid rgba(139, 96, 64, 0.2);
-}
-
-/* Archive: debrief title — no neon glow */
-.chassis-monitor.theme-archive .debrief-title {
-  text-shadow: none;
-}
-
-/* Archive: val-gold stat — dark rust, not glowing gold */
+/* ── Stats & debrief ── */
 .chassis-monitor.theme-archive .circ-stat-val.val-gold {
-  color: #6b2f0e;
+  color: #5a2008;
   text-shadow: none;
 }
-
-/* Archive: avatar frame — warm parchment instead of dark */
 .chassis-monitor.theme-archive .avatar-frame {
-  background: #d4c282;
+  background: #cfc07a;
+  border-radius: 0 !important;
 }
-
-/* Archive: operator status (was cyan) */
 .chassis-monitor.theme-archive .operator-status {
-  color: #6b2f0e;
+  color: #5a2008;
   text-shadow: none;
 }
 
-/* Archive: inactive neural load bars */
-.chassis-monitor.theme-archive .neural-bar {
-  background: #c9b07a;
-}
-
-/* Archive: neural glow animation → muted sepia pulse */
-.chassis-monitor.theme-archive .neural-bar.active {
-  animation: archive-neural-pulse 1.5s infinite alternate;
-}
-@keyframes archive-neural-pulse {
-  0%   { background: #8b6040; }
-  100% { background: #6b2f0e; box-shadow: none; }
-}
-
-/* Archive: quest completed dot */
+/* ── Quest markers ── */
 .chassis-monitor.theme-archive .dot-done {
-  background: #6b2f0e;
-  box-shadow: 0 0 4px rgba(107, 47, 14, 0.4);
+  background: #5a2008;
+  box-shadow: none;
 }
-
-/* Archive: quest done badge text */
 .chassis-monitor.theme-archive .quest-done-badge {
-  color: #6b2f0e;
+  color: #5a2008;
 }
-
-/* Archive: acquired item badge */
 .chassis-monitor.theme-archive .quest-item-badge.acquired {
-  background: rgba(107, 47, 14, 0.1);
-  color: #6b2f0e;
-  border: 1px solid rgba(107, 47, 14, 0.35);
+  background: rgba(90, 32, 8, 0.10);
+  color: #5a2008;
+  border: 1px solid rgba(90, 32, 8, 0.35);
+  border-radius: 0;
   text-shadow: none;
 }
 
-/* Archive: command input placeholder */
+/* ── Input placeholder ── */
 .chassis-monitor.theme-archive .deck-input-field::placeholder {
-  color: #8b6040;
+  color: #7a5030;
+}
+
+/* ── Typing word chips in archive: ink-stamped look ── */
+.chassis-monitor.theme-archive .typing-word-chip {
+  background: #5a2008;
+  color: #f4ead0;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #2c0e02;
+  font-family: 'Special Elite', 'Courier New', monospace;
 }
 
 /* Base resets & scrollbars */
@@ -625,6 +722,8 @@ body {
   border-bottom: 2px solid var(--color-surface-bright);
   font-family: var(--font-label);
   flex-shrink: 0;
+  position: relative;
+  z-index: 999;
 }
 
 .logo-section {
@@ -784,6 +883,8 @@ body {
   align-items: center;
   padding: 16px 0;
   justify-content: space-between;
+  position: relative;
+  z-index: 999;
 }
 
 .vertical-menu-top {

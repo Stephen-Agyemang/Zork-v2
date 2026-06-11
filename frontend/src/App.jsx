@@ -452,6 +452,22 @@ export default function App() {
 
   return (
     <div className={`chassis-monitor theme-${theme}`}>
+
+      {/* Archive theme: SVG filter defs for organic worn-edge displacement */}
+      {theme === 'archive' && (
+        <svg style={{position:'absolute',width:0,height:0,overflow:'hidden',pointerEvents:'none'}} aria-hidden="true">
+          <defs>
+            <filter id="archive-worn-edges" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04 0.05" numOctaves="4" seed="12" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+          </defs>
+        </svg>
+      )}
+
+      {/* Archive theme: torn paper / degraded edge overlay */}
+      {theme === 'archive' && <div className="archive-torn-overlay" aria-hidden="true" />}
+
       <div className="small-screen-overlay">
         <div className="ss-icon">[ ! ]</div>
         <div className="ss-divider" />
