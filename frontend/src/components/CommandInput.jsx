@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { playTick, playBeep } from '../utils/audio'
 import './CommandInput.css'
 
-export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCommand, state, promptError }) {
+export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCommand, state, promptError, pending }) {
   const [input, setInput] = useState('')
   const inputRef = useRef(null)
 
@@ -13,7 +13,7 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
 
   const handleSubmit = () => {
     const cmd = input.trim()
-    if (cmd) {
+    if (cmd && !pending) {
       onCommand(cmd)
       setInput('')
     }
@@ -74,6 +74,7 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
   ]
 
   const handleMacroClick = (cmd) => {
+    if (pending) return
     playBeep()
     onCommand(cmd)
     inputRef.current?.focus()
@@ -83,7 +84,7 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
   const isChallenge = state?.typingChallengeActive
 
   return (
-    <div className={`command-input-area heavy-panel ${isChallenge ? 'typing-challenge-active' : ''}`}>
+    <div className={`command-input-area heavy-panel ${isChallenge ? 'typing-challenge-active' : ''} ${pending ? 'command-pending' : ''}`}>
       {/* Heavy Panel Rivets */}
       <div className="rivet rivet-tl"></div>
       <div className="rivet rivet-tr"></div>
@@ -120,9 +121,10 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
           <input
             ref={inputRef}
             value={input}
-            onChange={(e) => { setInput(e.target.value); playTick() }}
+            onChange={(e) => { if (!pending) { setInput(e.target.value); playTick() } }}
             onKeyDown={handleKeyDown}
-            placeholder={isChallenge ? "TYPE THE WORDS SHOWN IN THE LOG..." : "INITIATE COMMAND SEQUENCE..."}
+            placeholder={pending ? "PROCESSING..." : isChallenge ? "TYPE THE WORDS SHOWN ABOVE..." : "INITIATE COMMAND SEQUENCE..."}
+            disabled={pending}
             autoFocus
             className="deck-input-field"
           />

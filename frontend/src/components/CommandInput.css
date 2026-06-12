@@ -19,6 +19,11 @@
   box-shadow: inset 0 0 15px rgba(242, 202, 80, 0.2), 0 0 10px rgba(242, 202, 80, 0.3);
 }
 
+.command-input-area.command-pending {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 .input-deck-main-row {
   display: flex;
   align-items: center;

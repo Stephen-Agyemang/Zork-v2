@@ -25,6 +25,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [soundOn, setSoundOn] = useState(isSoundEnabled())
   const [promptError, setPromptError] = useState(false)
+  const [commandPending, setCommandPending] = useState(false)
   const [prevDnaMoves, setPrevDnaMoves] = useState(null)
   const [sessionSecs, setSessionSecs] = useState(0)
   const [callsign, setCallsign] = useState('')
@@ -218,7 +219,7 @@ export default function App() {
 
   // World-class integration: send command directly as raw text body to match Spring Boot @RequestBody String
   const handleCommand = async (command) => {
-    if (!command.trim()) return
+    if (!command.trim() || commandPending) return
 
     playBeep()
 
@@ -233,6 +234,7 @@ export default function App() {
       return
     }
 
+    setCommandPending(true)
     try {
       setCommandHistory(prev => [...prev, sanitizedCommand])
       setHistoryIndex(-1)
@@ -251,8 +253,11 @@ export default function App() {
 
       const output = await response.text()
 
-      // Fetch state first so overlay/challenge UI updates before the message renders
-      await fetchState()
+      // Unlock input as soon as the command response arrives — user can type again
+      setCommandPending(false)
+
+      // Fire state fetch in background so overlay updates without blocking input
+      fetchState()
 
       setMessages(prev => [...prev, { type: 'output', text: output, time: now() }])
 
@@ -272,6 +277,7 @@ export default function App() {
       }
     } catch (e) {
       setMessages(prev => [...prev, { type: 'error', text: `Telemetry error: ${e.message}`, time: now() }])
+      setCommandPending(false)
     }
   }
 
@@ -877,6 +883,7 @@ export default function App() {
           handleHistoryNav={handleHistoryNav}
           onCommand={handleCommand}
           state={state}
+          pending={commandPending}
           promptError={promptError}
         />
       )}

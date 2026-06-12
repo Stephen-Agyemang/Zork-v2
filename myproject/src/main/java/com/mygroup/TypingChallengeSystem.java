@@ -14,11 +14,9 @@ import java.util.Random;
  */
 public class TypingChallengeSystem {
     private final GameState state;
-    private final RandomWordService wordService;
 
     public TypingChallengeSystem(GameState state) {
         this.state = state;
-        this.wordService = new RandomWordService();
     }
 
     /**
@@ -52,14 +50,6 @@ public class TypingChallengeSystem {
             String normalized = normalizeWord(item.getName());
             if (normalized.length() > 3) {
                 pool.add(normalized);
-            }
-        }
-
-        // Supplement with words from the external API to verify it works
-        for (int i = 0; i < 2; i++) {
-            String apiWord = normalizeWord(wordService.fetchRandomWord());
-            if (apiWord.length() > 2) {
-                pool.add(apiWord);
             }
         }
 
