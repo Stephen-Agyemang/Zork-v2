@@ -250,6 +250,10 @@ export default function App() {
       })
 
       const output = await response.text()
+
+      // Fetch state first so overlay/challenge UI updates before the message renders
+      await fetchState()
+
       setMessages(prev => [...prev, { type: 'output', text: output, time: now() }])
 
       // Detect command recognition errors / fumbles to trigger prompt error flicker
@@ -266,8 +270,6 @@ export default function App() {
         setPromptError(true)
         setTimeout(() => setPromptError(false), 500)
       }
-
-      await fetchState()
     } catch (e) {
       setMessages(prev => [...prev, { type: 'error', text: `Telemetry error: ${e.message}`, time: now() }])
     }

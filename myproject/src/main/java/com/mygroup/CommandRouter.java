@@ -37,6 +37,7 @@ public class CommandRouter {
         if (state.isTypingChallengeActive()) {
             if (userInput.equalsIgnoreCase("skip")) {
                 state.endTypingChallenge();
+                state.resetWrongCommandCount();
                 if ("treadmill".equals(state.getTypingContext())) {
                     return "You step off the treadmill. No bonus, but you can keep exploring.";
                 }
@@ -606,6 +607,7 @@ public class CommandRouter {
             default -> {
                 state.incrementWrongCommandCount();
                 if (state.getWrongCommandCount() >= 5) {
+                    state.resetWrongCommandCount();
                     typingChallengeSystem.startChallenge("penalty", 5);
                     return "You keep fumbling commands. " + typingChallengeSystem.getPrompt();
                 }

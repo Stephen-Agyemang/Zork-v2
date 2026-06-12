@@ -10,7 +10,7 @@
   flex-direction: column;
   gap: 4px;
   position: relative;
-  z-index: 110;
+  z-index: 1400;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
