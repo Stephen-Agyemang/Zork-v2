@@ -12,6 +12,10 @@ export default defineConfig({
       '/game': {
         target: 'http://localhost:8080',
         changeOrigin: true
+      },
+      '/leaderboard': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
       }
     }
   }
