@@ -94,6 +94,19 @@
   filter: brightness(55%) saturate(50%);
 }
 
+/* Net/mesh overlay — tactical scrim crosshatch over the photo */
+.terminal-watermark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.5) 0px, rgba(0,0,0,0.5) 1px, transparent 1px, transparent 9px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,0.5) 0px, rgba(0,0,0,0.5) 1px, transparent 1px, transparent 9px);
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
 .terminal-watermark-in {
   animation: wm-fade-in 0.9s ease forwards;
 }
@@ -104,11 +117,11 @@
 
 @keyframes wm-fade-in {
   from { opacity: 0; }
-  to   { opacity: var(--wm-opacity, 0.13); }
+  to   { opacity: var(--wm-opacity, 0.19); }
 }
 
 @keyframes wm-fade-out {
-  from { opacity: var(--wm-opacity, 0.13); }
+  from { opacity: var(--wm-opacity, 0.19); }
   to   { opacity: 0; }
 }
 

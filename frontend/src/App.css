@@ -186,25 +186,25 @@
 /* Phantom: watermark gets a cooler tint for white-text readability */
 .chassis-monitor.theme-phantom .terminal-watermark {
   filter: grayscale(30%) contrast(115%) brightness(65%) hue-rotate(200deg);
-  opacity: 0.28;
+  opacity: 0.34;
 }
 
 /* Amber: warm glowing gold-sepia watermark tint */
 .chassis-monitor.theme-amber .terminal-watermark {
   filter: sepia(45%) contrast(110%) brightness(65%) saturate(125%) hue-rotate(-15deg);
-  opacity: 0.35;
+  opacity: 0.41;
 }
 
 /* Fallout Green: retro glowing green phosphor monitor tint */
 .chassis-monitor.theme-green .terminal-watermark {
   filter: grayscale(50%) brightness(60%) contrast(130%) sepia(100%) hue-rotate(85deg) saturate(180%);
-  opacity: 0.32;
+  opacity: 0.38;
 }
 
 /* Steampunk Copper: rustic weathered sepia bronze tint */
 .chassis-monitor.theme-steampunk .terminal-watermark {
   filter: sepia(80%) contrast(100%) brightness(55%) hue-rotate(10deg) saturate(135%);
-  opacity: 0.35;
+  opacity: 0.41;
 }
 
 /* Phantom: cursors and prompt indicators */
@@ -491,7 +491,7 @@
 
 /* ── Watermark: sepia aged photo ── */
 .chassis-monitor.theme-archive .terminal-watermark {
-  --wm-opacity: 0.28;
+  --wm-opacity: 0.34;
   filter: sepia(90%) contrast(80%) brightness(60%) saturate(60%);
 }
 
