@@ -234,6 +234,13 @@ export default function App() {
       return
     }
 
+    // Seamless UX Intercept: 'clear' wipes the visible terminal log only — progress/session is untouched
+    if (cmdLower === 'clear' || cmdLower === 'cls') {
+      setMessages([])
+      localStorage.removeItem('zork_messages')
+      return
+    }
+
     setCommandPending(true)
     try {
       setCommandHistory(prev => [...prev, sanitizedCommand])
@@ -914,6 +921,17 @@ export default function App() {
                   <br/><br/>
                   Navigate campus, complete your missions, and protect what matters. Move efficiently — every wasted step costs you.
                   Hunger and thirst build as you travel, so eat when you can. The most thorough explorers tend to find things others miss.
+                </div>
+              </div>
+
+              <div className="modal-section">
+                <div className="modal-sec-header">🖥️ TERMINAL CONTROLS</div>
+                <div className="modal-sec-grid">
+                  <div><strong>HELP</strong></div>
+                  <div>Opens this manual at any time.</div>
+
+                  <div><strong>CLEAR</strong></div>
+                  <div>Wipes the terminal log to give you a clean screen. Your progress, score, and inventory are untouched.</div>
                 </div>
               </div>
 

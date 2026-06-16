@@ -97,28 +97,19 @@ public class CommandRouter {
                     return "Go where?";
                 }
                 String direction = words[1].toLowerCase();
-                Location previousLocation = state.getCurrLocation();
-                Location nextLocation = state.getCurrLocation().getConnection(direction);
-                if (nextLocation != null) {
-                    state.setCurrLocation(nextLocation);
-                    state.addVisitedLocation(nextLocation);
-                    state.incrementMoveCount();
-
-                    StringBuilder output = new StringBuilder();
-                    output.append("You are now at ")
-                            .append(state.getCurrLocation().getName())
-                            .append(". ")
-                            .append(state.getCurrLocation().getDescription());
-
-                    dnaSystem.startCountdownIfNeeded(previousLocation);
-                    output.append(dnaSystem.tickCountdown());
-                    output.append(foodSystem.applyHungerAfterMove());
-                    output.append(foodSystem.checkDiningLocationPenalty());
-
-                    return output.toString();
-                } else {
-                    return "You can't go that way";
+                if (!direction.equals("north") && !direction.equals("south")
+                        && !direction.equals("east") && !direction.equals("west")) {
+                    return "Go only works with cardinal directions (north, south, east, west). Try 'jump' or 'cross' instead.";
                 }
+                return moveDirection(direction, 1);
+            }
+
+            case "jump" -> {
+                return moveDirection("jump", 2);
+            }
+
+            case "cross" -> {
+                return moveDirection("cross", 2);
             }
 
             case "items" -> {
@@ -230,6 +221,10 @@ public class CommandRouter {
 
                                 HELP
                                   Directs you to this guide. You must have the Help item to read it.
+
+                                CLEAR
+                                  Wipes your terminal screen for a clean workspace. Your moves, points,
+                                  and inventory are NOT affected — it only clears what's displayed.
 
                                 QUIT
                                   Exit the game.
@@ -614,5 +609,31 @@ public class CommandRouter {
                 return "Hmm, I'm not sure what you mean by that. Try 'examine help' for a list of commands!";
             }
         }
+    }
+
+    // Shared movement logic for "go", "jump", and "cross" — moveCost lets jump/cross charge 2 moves
+    private String moveDirection(String direction, int moveCost) {
+        Location previousLocation = state.getCurrLocation();
+        Location nextLocation = state.getCurrLocation().getConnection(direction);
+        if (nextLocation == null) {
+            return "You can't go that way";
+        }
+
+        state.setCurrLocation(nextLocation);
+        state.addVisitedLocation(nextLocation);
+        state.addMoveCount(moveCost);
+
+        StringBuilder output = new StringBuilder();
+        output.append("You are now at ")
+                .append(state.getCurrLocation().getName())
+                .append(". ")
+                .append(state.getCurrLocation().getDescription());
+
+        dnaSystem.startCountdownIfNeeded(previousLocation);
+        output.append(dnaSystem.tickCountdown());
+        output.append(foodSystem.applyHungerAfterMove());
+        output.append(foodSystem.checkDiningLocationPenalty());
+
+        return output.toString();
     }
 }

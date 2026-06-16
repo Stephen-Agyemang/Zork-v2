@@ -23,7 +23,7 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
     'look', 
     'go north', 'go south', 'go east', 'go west', 
     'connections', 'inventory', 'status', 'quests',
-    'examine help', 'use treadmill', 'quit'
+    'examine help', 'use treadmill', 'clear', 'quit'
   ]
 
   // Filter commands to find matches
