@@ -4,8 +4,8 @@ When a player moves to a location, the game background image changes to match th
 
 ## How it works
 - Photos go in `frontend/public/` as `.jpg` files
-- The filename must match the key in `locationImageMap` in `App.jsx`
-- The background transitions smoothly via CSS `transition: background-image 0.6s ease`
+- The filename must match the value in the `LOCATION_IMAGES` map in `frontend/src/App.jsx`
+- The background transitions smoothly via a cross-fade animation (`terminal-watermark-in` / `terminal-watermark-out`) over 0.9s
 - If no photo exists for a location, it falls back to `school.jpg` (campus aerial)
 
 ## Photo needed — filename → location name in game
@@ -25,9 +25,10 @@ When a player moves to a location, the game background image changes to match th
 | `mason.jpg`            | Mason Hall                     | Mason Hall residence                       |
 | `reese.jpg`            | Reese Hall                     | Reese Hall residence                       |
 | `humbert.jpg`          | Humbert Hall                   | Humbert Hall residence                     |
+| `school.jpg`           | (fallback)                     | Used when a location has no dedicated photo |
 
 ## Current status
-- [x] All photos added
+- [x] All photos added, including the fallback
 
 ## How to add a photo
 1. Take or find a photo of the building

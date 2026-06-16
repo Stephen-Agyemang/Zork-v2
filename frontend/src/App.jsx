@@ -371,7 +371,7 @@ export default function App() {
   const LOCATION_IMAGES = {
     'julian':                 '/julian.jpg',
     'hoover':                 '/hoover.jpg',
-    'olin':                   '/oline.jpg',
+    'olin':                   '/olin.jpg',
     'gcpa':                   '/gcpa.jpg',
     'roy library':            '/roylibrary.jpg',
     'cdi':                    '/cdi.jpg',
@@ -385,7 +385,7 @@ export default function App() {
   }
 
   const locationKey = state?.currLocation?.name?.toLowerCase() || ''
-  const newBg = LOCATION_IMAGES[locationKey] || null
+  const newBg = LOCATION_IMAGES[locationKey] || '/school.jpg'
 
   useEffect(() => {
     if (newBg === activeBgRef.current) return
