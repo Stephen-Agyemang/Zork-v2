@@ -2,6 +2,8 @@ package com.mygroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Random;
 
 /**
@@ -58,13 +60,20 @@ public class TypingChallengeSystem {
             pool.addAll(Arrays.asList("campus", "explore", "adventure", "quest", "journey", "challenge"));
         }
 
-        // Pick random words from the pool
-        Random r = new Random();
-        String[] words = new String[wordCount];
-        for (int i = 0; i < wordCount; i++) {
-            words[i] = pool.get(r.nextInt(pool.size()));
+        // Pick distinct random words from the pool
+        Collections.shuffle(pool, new Random());
+        LinkedHashSet<String> picked = new LinkedHashSet<>();
+        for (String w : pool) {
+            if (picked.size() >= wordCount) break;
+            picked.add(w);
         }
-        state.setTypingWords(words);
+        // If pool didn't have enough distinct words, pad with fallbacks
+        String[] fallbacks = {"campus", "explore", "adventure", "quest", "journey", "challenge", "library", "study"};
+        int fi = 0;
+        while (picked.size() < wordCount) {
+            picked.add(fallbacks[fi++ % fallbacks.length]);
+        }
+        state.setTypingWords(picked.toArray(new String[0]));
     }
 
     /**
