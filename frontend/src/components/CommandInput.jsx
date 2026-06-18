@@ -6,16 +6,17 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
   const [input, setInput] = useState('')
   const inputRef = useRef(null)
 
-  // Focus the tactical input deck on start
+  // Focus on mount and whenever pending clears (after each response)
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    if (!pending) inputRef.current?.focus()
+  }, [pending])
 
   const handleSubmit = () => {
     const cmd = input.trim()
     if (cmd && !pending) {
       onCommand(cmd)
       setInput('')
+      inputRef.current?.focus()
     }
   }
 
@@ -68,7 +69,7 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
   // Quick micro macro key commands
   const macros = [
     { label: 'LOOK', cmd: 'look' },
-    { label: 'GO NORTH', cmd: 'go north' },
+    { label: 'GO SOUTH', cmd: 'go south' },
     { label: 'INVENTORY', cmd: 'inventory' },
     { label: 'EXITS', cmd: 'connections' },
   ]
