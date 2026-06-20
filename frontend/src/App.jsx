@@ -249,9 +249,21 @@ export default function App() {
       setHistoryIndex(-1)
       setMessages(prev => [...prev, { type: 'command', text: `> ${sanitizedCommand}`, time: now() }])
 
-      // If user typed quit, switch to logs/debrief tab
+      // If user typed quit, switch to logs/debrief tab and save score
       if (sanitizedCommand.toLowerCase() === 'quit') {
         setActiveTab('LOGS')
+        if (!scoreSavedRef.current && state) {
+          scoreSavedRef.current = true
+          fetch('/leaderboard/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              callsign: callsign || 'OPERATOR_01',
+              score: state.points || 0,
+              moveCount: state.moveCount || 0
+            })
+          }).catch(() => {})
+        }
       }
 
       const response = await fetch('/game/command', {
