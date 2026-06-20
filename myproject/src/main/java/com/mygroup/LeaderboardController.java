@@ -8,6 +8,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * REST controller for leaderboard score submission and retrieval.
+ *
+ * POST /leaderboard/save    — validate and persist a score entry
+ * GET  /leaderboard/top     — top 10 global scores (highest score, fewest moves wins ties)
+ * GET  /leaderboard/top-dpu — top 10 filtered to callsigns ending in _dpu or .dpu
+ *
+ * Defenses built in:
+ *  - Rate limit: one save per IP per 60 seconds to block rapid re-submissions
+ *  - Score bounds: rejects impossible scores (negative or above MAX_SCORE) and bogus move counts
+ *  - Profanity filter: silently drops entries with blocked words in the callsign
+ *  All rejections return 200 OK — clients can't tell which check fired.
+ */
 @RestController
 @RequestMapping("/leaderboard")
 public class LeaderboardController {

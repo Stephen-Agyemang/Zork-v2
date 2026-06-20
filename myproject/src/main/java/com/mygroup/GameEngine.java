@@ -1,5 +1,12 @@
 package com.mygroup;
 
+/**
+ * Top-level game coordinator. Wires together all subsystems and exposes two public methods:
+ *   createWorld() — resets state and calls WorldBuilder to set up locations, items, and connections
+ *   processCommand(String) — routes player input through CommandRouter and returns the response text
+ *
+ * One GameEngine instance = one player's game session (managed by SessionManager).
+ */
 public class GameEngine {
 
     // Core game state managed by GameEngine

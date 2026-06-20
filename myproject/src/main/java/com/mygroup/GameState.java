@@ -3,6 +3,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * Single source of truth for everything about a player's current game run.
+ * GameEngine and all subsystems (FoodSystem, TypingChallengeSystem, etc.) read and
+ * write this object — nothing else holds live game data.
+ * reset() brings it back to the exact starting state for a new run.
+ */
 public class GameState {
 
     // Core Stats
@@ -250,6 +256,8 @@ public class GameState {
         visitedDuck = true;
     }
 
+    // Once the player eats at a dining location, foodLockChoice is set to that location name.
+    // All future eat attempts are checked against it — eating at the other dining hall triggers the penalty.
     public boolean canEat(String choice) {
         // If not yet locked, only lock to a non-empty choice
         if (foodLockChoice == null || foodLockChoice.isEmpty()) {

@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import { playTick, playBeep } from '../utils/audio'
 import './CommandInput.css'
 
+// CommandInput — the terminal input bar at the bottom of the screen.
+// Handles: typing, Enter to submit, Tab/ArrowRight to autocomplete, ArrowUp/Down for command history,
+// ghost text preview, macro shortcut buttons, and keeping focus in the input at all times.
 export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCommand, state, promptError, pending }) {
   const [input, setInput] = useState('')
   const inputRef = useRef(null)

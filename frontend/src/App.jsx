@@ -46,7 +46,8 @@ export default function App() {
   const sessionTimerRef = useRef(null)
   const scoreSavedRef = useRef(false)
 
-  // On mount: check URL share link first, then localStorage
+  // On mount: resume from a shared URL session or a locally saved session.
+  // URL params take priority so share links always restore the right game.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const urlSessionId = params.get('session')
@@ -217,7 +218,8 @@ export default function App() {
     }
   }
 
-  // World-class integration: send command directly as raw text body to match Spring Boot @RequestBody String
+  // Sends the command as plain text (not JSON) to match the Spring Boot @RequestBody String endpoint.
+  // commandPending blocks additional input while the server is processing so responses don't pile up.
   const handleCommand = async (command) => {
     if (!command.trim() || commandPending) return
 
@@ -335,7 +337,7 @@ export default function App() {
     return `${hrs}:${mins}:${secs}`
   }
 
-  // Circular gauge score calculation for Screen 2
+  // Maps point totals to letter-tier labels shown on the debrief screen gauge
   const getDebriefRanking = () => {
     if (!state) return 'C-TIER'
     const pts = state.points || 0
@@ -351,7 +353,7 @@ export default function App() {
     return `${acc.toFixed(1)}%`
   }
 
-  // Operator badges logic
+  // Each badge has its own unlock condition checked against live game state
   const isBadgeUnlocked = (badge) => {
     if (!state) return false
     switch (badge) {
