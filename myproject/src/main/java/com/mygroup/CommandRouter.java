@@ -619,6 +619,13 @@ public class CommandRouter {
             return "You can't go that way";
         }
 
+        // Warn before entering any dining location for the first time
+        if (foodSystem.isDiningLocation(nextLocation) && !state.isVisitedHoover() && !state.isVisitedDuck()) {
+            return "⚠️  DINING ALERT: " + nextLocation.getName() + " is a dining location. "
+                    + "There are TWO dining spots on campus — Hoover (north of Julian) and The Fluttering Duck (near Roy Library). "
+                    + "You may only visit ONE without penalty. Choose wisely, then type the command again to enter.";
+        }
+
         state.setCurrLocation(nextLocation);
         state.addVisitedLocation(nextLocation);
         state.addMoveCount(moveCost);

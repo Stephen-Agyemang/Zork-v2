@@ -15,7 +15,7 @@ public class WorldBuilder {
      * Build the complete game world with all locations, items, and connections
      */
     public void buildWorld() {
-        Location julian = new Location("Julian", "Science Building filled with cool nerdy stuff duh!");
+        Location julian = new Location("Julian", "Science Building filled with cool nerdy stuff duh! Hoover Dining Hall is to the north — but there's another dining option further across campus too. Choose your dining spot carefully.");
         Location hoover = new Location("Hoover", "The place for Food. The legendary musician has always loved the food here. Strange—there's a tense atmosphere in the kitchen today.");
         Location olin = new Location("Olin", "Biology building for the super nerds!");
         Location gcpa = new Location("GCPA", "The Musical and theatrical venue. The stage is set, the crowd is gathering. The legend's performance will be here tonight. Everything is ready... except the music equipment.");
