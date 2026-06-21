@@ -15,7 +15,8 @@ public class WorldBuilder {
      * Build the complete game world with all locations, items, and connections
      */
     public void buildWorld() {
-        Location julian = new Location("Julian", "Science Building filled with cool nerdy stuff duh! Hoover Dining Hall is to the north — but there's another dining option further across campus too. Choose your dining spot carefully.");
+        Location eastCollege = new Location("East College", "The crown jewel of DePauw University — built in 1877 and listed on the National Register of Historic Places. Its Victorian Gothic tower has watched over this campus for generations. Something ancient feels like it belongs here.");
+        Location julian = new Location("Julian", "The Percy Lavon Julian Science Building — named after DePauw's most celebrated alumnus, a pioneering chemist who overcame enormous odds to change modern medicine. Cool nerdy stuff everywhere. A mysterious display case sits in the corner, its contents seem out of place here.");
         Location hoover = new Location("Hoover", "The place for Food. The legendary musician has always loved the food here. Strange—there's a tense atmosphere in the kitchen today.");
         Location olin = new Location("Olin", "Biology building for the super nerds!");
         Location gcpa = new Location("GCPA", "The Musical and theatrical venue. The stage is set, the crowd is gathering. The legend's performance will be here tonight. Everything is ready... except the music equipment.");
@@ -46,7 +47,15 @@ public class WorldBuilder {
         cdi.connect("north",olin);
         olin.connect("south", cdi);
 
-        julian.connect("jump", cdi);
+        eastCollege.connect("south", olin);
+        olin.connect("north", eastCollege);
+
+        eastCollege.connect("east", roylibrary);
+        roylibrary.connect("west", eastCollege);
+
+        julian.connect("west", cdi);
+        cdi.connect("east", julian);
+        cdi.connect("jump", lilly);
 
         julian.connect("north", hoover);
         hoover.connect("south", julian);
@@ -144,7 +153,11 @@ public class WorldBuilder {
         roylibrary.addItem(roylibraryItem1);
 
 
-        state.setCurrLocation(julian);
+        Location stadium = new Location("Stadium", "Byron P. Hollett Little Giant Stadium at Wabash College in Crawfordsville. The crowd is electric. The smell of rivalry and glory hangs in the air. DePauw's finest hour echoes here — the Monon Bell is close.");
+        stadium.connect("jump", lilly);
+        state.setStadiumLocation(stadium);
+
+        state.setCurrLocation(eastCollege);
 
 
         ContainerItem duckContainer = new ContainerItem("TreasureBox", "Container", "A wooden mystery box filled with snakes that should not be opened...");
@@ -177,6 +190,9 @@ public class WorldBuilder {
         Item rareArtifact = new Item("AncientArtifact", "History", "A mysterious artifact from ancient times.");
         julianContainer.addItem(rareArtifact);
         julian.addItem(julianContainer);
+
+        ContainerItem eastCollegeContainer = new ContainerItem("HistoryWall", "Container", "A storied display wall in East College's main hall — built to honour artefacts of DePauw's long history. Something is clearly missing from it.");
+        eastCollege.addItem(eastCollegeContainer);
 
         ContainerItem roylibraryContainer = new ContainerItem("SecretDrawer", "Container", "A hidden drawer in the bookshelf that seems to contain something valuable...");
         Item oldManuscript = new Item("OldManuscript", "Literature", "A fragile manuscript filled with ancient writings and illustrations.");

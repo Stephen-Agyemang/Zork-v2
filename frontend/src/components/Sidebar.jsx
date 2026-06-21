@@ -40,7 +40,9 @@ export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
   const getLocationIntel = (name) => {
     if (!name) return 'Awaiting field signal...'
     const n = name.toLowerCase()
-    if (n.includes('julian'))        return 'Percy Lavon Julian\'s bust watches the corridor. This is where it all begins.'
+    if (n.includes('east college'))  return 'The historic heart of DePauw since 1877. Something ancient feels like it belongs here — check the HistoryWall.'
+    if (n.includes('stadium'))       return 'Byron P. Hollett Little Giant Stadium. The roar of the crowd echoes. Legends were made here.'
+    if (n.includes('julian'))        return 'Percy Lavon Julian\'s Science Building — named after DePauw\'s most celebrated alumnus. A mysterious DisplayCase sits in the corner.'
     if (n.includes('hoover'))        return 'Kitchen staff on edge today. A microphone went missing at lunch — no one\'s saying who took it.'
     if (n.includes('gcpa'))          return 'The stage is set and the crowd is gathering. The legend\'s performance depends on what you find.'
     if (n.includes('olin'))          return 'PCR machines humming quietly. Something cold is sealed inside. Biology never sleeps.'

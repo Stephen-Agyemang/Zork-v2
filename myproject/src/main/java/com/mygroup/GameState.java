@@ -58,6 +58,14 @@ public class GameState {
     // Treadmill
     private boolean treadmillUsed;
 
+    // Stadium (optional bonus quest)
+    private boolean stadiumBonusOffered;
+    private boolean stadiumTaskComplete;
+    private Location stadiumLocation;
+
+    // AncientArtifact (core quest)
+    private boolean artifactTaskComplete;
+
     // DNA Task
     private boolean dnaTaskActive;
     private int dnaMovesLeft;
@@ -105,6 +113,10 @@ public class GameState {
 
         // Quests and Tasks
         this.treadmillUsed = false;
+        this.stadiumBonusOffered = false;
+        this.stadiumTaskComplete = false;
+        this.stadiumLocation = null;
+        this.artifactTaskComplete = false;
         this.salmonTaskComplete = false;
         this.snakeTaskComplete = false;
         this.macbookTaskComplete = false;
@@ -151,6 +163,10 @@ public class GameState {
         this.typingFails = 0;
         this.typingContext = null;
         this.treadmillUsed = false;
+        this.stadiumBonusOffered = false;
+        this.stadiumTaskComplete = false;
+        this.stadiumLocation = null;
+        this.artifactTaskComplete = false;
         this.salmonTaskComplete = false;
         this.snakeTaskComplete = false;
         this.macbookTaskComplete = false;
@@ -419,7 +435,7 @@ public class GameState {
 
     public boolean allCoreQuestsDone() {
         return musicTaskComplete && dnaTaskComplete && salmonTaskComplete && snakeTaskComplete && macbookTaskComplete
-                && treadmillUsed;
+                && treadmillUsed && artifactTaskComplete;
     }
 
     // Treadmill and Music methods
@@ -438,6 +454,17 @@ public class GameState {
     public boolean isMusicTaskComplete() {
         return musicTaskComplete;
     }
+
+    public boolean isStadiumBonusOffered() { return stadiumBonusOffered; }
+    public void offerStadiumBonus() { stadiumBonusOffered = true; }
+    public void clearStadiumBonusOffer() { stadiumBonusOffered = false; }
+    public boolean isStadiumTaskComplete() { return stadiumTaskComplete; }
+    public void completeStadiumTask() { stadiumTaskComplete = true; }
+    public Location getStadiumLocation() { return stadiumLocation; }
+    public void setStadiumLocation(Location loc) { stadiumLocation = loc; }
+
+    public boolean isArtifactTaskComplete() { return artifactTaskComplete; }
+    public void completeArtifactTask() { artifactTaskComplete = true; }
 
     // Pending Items and References
     public void setPendingGuitar(Item guitar) {

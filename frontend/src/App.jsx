@@ -188,7 +188,7 @@ export default function App() {
       await fetchState(newSessionId)
       setMessages([
         { type: 'system', text: 'TACTICAL TERMINAL CORE INITIALIZED.', time: now() },
-        { type: 'system', text: 'You stand in Julian — the Percy Lavon Julian Science Building at DePauw. The bust of Julian watches as your adventure begins.', time: now() },
+        { type: 'system', text: 'You stand in East College — the crown jewel of DePauw University, built in 1877. Its Victorian Gothic tower has watched over this campus for generations. Your adventure begins here.', time: now() },
         { type: 'system', text: 'Type "examine help" to view the campus mission briefing.', time: now() }
       ])
       setLoading(false)
@@ -383,7 +383,9 @@ export default function App() {
   }
 
   const LOCATION_IMAGES = {
-    'julian':                 '/julian.jpg',
+    'east college':           '/eastcollege.png',
+    'stadium':                '/monon.png',
+  'julian':                 '/julian.jpg',
     'hoover':                 '/hoover.jpg',
     'olin':                   '/olin.jpg',
     'gcpa':                   '/gcpa.jpg',
@@ -783,9 +785,10 @@ export default function App() {
                     const questsDone = [
                       state?.musicTaskComplete, state?.dnaTaskComplete,
                       state?.salmonTaskComplete, state?.snakeTaskComplete,
-                      state?.macbookTaskComplete, state?.treadmillUsed
+                      state?.macbookTaskComplete, state?.treadmillUsed,
+                      state?.artifactTaskComplete
                     ].filter(Boolean).length
-                    const filledSegs = Math.round((questsDone / 6) * 10)
+                    const filledSegs = Math.round((questsDone / 7) * 10)
                     const moves = state?.moveCount || 0
                     const pts = state?.points || 0
                     const ppm = moves > 0 ? pts / moves : 1
@@ -812,7 +815,7 @@ export default function App() {
                           </div>
                           <div className="dashed-row">
                             <span style={{ color: 'var(--color-outline)' }}>QUESTS_DONE</span>
-                            <span style={{ color: questsDone >= 3 ? 'var(--color-primary)' : 'var(--color-outline)', fontWeight: 'bold' }}>{questsDone}/6</span>
+                            <span style={{ color: questsDone >= 3 ? 'var(--color-primary)' : 'var(--color-outline)', fontWeight: 'bold' }}>{questsDone}/7</span>
                           </div>
                         </div>
                       </>
@@ -860,7 +863,7 @@ export default function App() {
                 <div className="checklist-body scrollable-checklist">
                   <div className="checklist-item checked">
                     <span className="check-box">✓</span>
-                    <span>CAMPUS: ADVENTURE STARTED AT JULIAN</span>
+                    <span>CAMPUS: ADVENTURE STARTED AT EAST COLLEGE</span>
                   </div>
                   <div className={`checklist-item ${state?.sashaCalled ? 'checked' : 'unchecked'}`}>
                     <span className="check-box">{state?.sashaCalled ? '✓' : '✗'}</span>
@@ -889,6 +892,14 @@ export default function App() {
                   <div className={`checklist-item ${state?.treadmillUsed ? 'checked' : 'unchecked'}`}>
                     <span className="check-box">{state?.treadmillUsed ? '✓' : '✗'}</span>
                     <span>FITNESS: TREADMILL CHALLENGE COMPLETE</span>
+                  </div>
+                  <div className={`checklist-item ${state?.artifactTaskComplete ? 'checked' : 'unchecked'}`}>
+                    <span className="check-box">{state?.artifactTaskComplete ? '✓' : '✗'}</span>
+                    <span>ARTIFACT: ANCIENT ARTIFACT RETURNED TO EAST COLLEGE</span>
+                  </div>
+                  <div className={`checklist-item ${state?.stadiumTaskComplete ? 'checked' : 'unchecked'}`}>
+                    <span className="check-box">{state?.stadiumTaskComplete ? '✓' : '✗'}</span>
+                    <span>BONUS: STADIUM SPRINT — MONON BELL MOMENT</span>
                   </div>
                 </div>
               </div>
@@ -1000,6 +1011,9 @@ export default function App() {
 
                   <div><strong>Treadmill Challenge</strong></div>
                   <div>Head to Lilly Building and use the Treadmill for an energy and points boost.</div>
+
+                  <div><strong>Ancient Artifact</strong></div>
+                  <div>The AncientArtifact in Julian's DisplayCase doesn't belong there. Return it to the HistoryWall at East College.</div>
                 </div>
               </div>
 

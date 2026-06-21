@@ -103,7 +103,28 @@ public class TypingChallengeSystem {
             if ("treadmill".equals(state.getTypingContext())) {
                 state.useTreadmill();
                 state.addPoints(15);
-                return "You crushed the treadmill typing sprint! +15 points." + maybeFinaleMessage();
+                state.offerStadiumBonus();
+                return "You crushed the treadmill typing sprint! +15 points.\n\n"
+                        + "A coach taps your shoulder: 'Impressive work. One more sprint could take you somewhere legendary — "
+                        + "the Monon Bell game at Byron P. Hollett Stadium. "
+                        + "Type 'continue' to accept the challenge, or 'reward' to take your points and stop.'"
+                        + maybeFinaleMessage();
+            }
+            if ("stadium".equals(state.getTypingContext())) {
+                state.completeStadiumTask();
+                state.addPoints(25);
+                Location stadiumLoc = state.getStadiumLocation();
+                if (stadiumLoc != null) {
+                    state.setCurrLocation(stadiumLoc);
+                    state.addVisitedLocation(stadiumLoc);
+                }
+                state.getInventory().addItem(new Item("Football", "Trophy", "A game-used football from DePauw's legendary Monon Bell victory. A piece of history."));
+                return "You sprint beyond your limits...\n\nThe campus fades. The crowd roars to life.\n\n"
+                        + "BYRON P. HOLLETT LITTLE GIANT STADIUM — DePauw scores the final point. "
+                        + "The Monon Bell rings out across Crawfordsville. The Tigers win!\n\n"
+                        + "A football lands in your hands — a keepsake from this legendary moment.\n"
+                        + "Football added to inventory. +25 points.\n\n"
+                        + "(Type 'jump' to return to Lilly.)" + maybeFinaleMessage();
             }
             // Penalty typing challenge - different messages based on whether it's first try
             // or recovery

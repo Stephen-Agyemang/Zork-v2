@@ -81,6 +81,10 @@ export default function RightPanel({ state, onShareSession, linkCopied, onComman
       return { label: 'FOOD COUPON', status: 'VALID', statusType: 'ok', icon: '🍽️', note: 'DINING HALL' }
     if (name.includes('HELP'))
       return { label: 'HELP GUIDE', status: 'AVAIL', statusType: 'ok', icon: '📋', note: 'READ ME' }
+    if (name.includes('ANCIENT') || name.includes('ARTIFACT'))
+      return { label: 'ANCIENT ARTIFACT', status: 'CARRY', statusType: 'warn', icon: '🏛️', note: '→ EAST COLLEGE' }
+    if (name.includes('FOOTBALL'))
+      return { label: 'MONON FOOTBALL', status: 'TROPHY', statusType: 'ok', icon: '🏈', note: 'MONON BELL WIN' }
     return { label: name.slice(0, 14), status: 'SYNCED', statusType: 'ok', icon: '💎', note: 'CARGO' }
   }
 
@@ -306,6 +310,25 @@ export default function RightPanel({ state, onShareSession, linkCopied, onComman
                   </span>
                 </div>
                 {state?.treadmillUsed && <span className="quest-done-badge">✓</span>}
+              </div>
+
+              {/* Quest: Ancient Artifact */}
+              <div className="quest-row">
+                <div className={`quest-dot ${state?.artifactTaskComplete ? 'dot-done' : 'dot-idle'}`}></div>
+                <div className="quest-details">
+                  <span className="quest-name">Ancient Artifact</span>
+                  <span className="quest-location">
+                    {state?.artifactTaskComplete ? '✓ COMPLETE' : 'JULIAN DisplayCase → EAST COLLEGE HistoryWall'}
+                  </span>
+                  {!state?.artifactTaskComplete && (
+                    <div className="quest-items-telemetry">
+                      <span className={`quest-item-badge ${items.some(i => i.name.toLowerCase().includes('ancient') || i.name.toLowerCase().includes('artifact')) ? 'acquired' : 'missing'}`} title="AncientArtifact">
+                        🏛️ {items.some(i => i.name.toLowerCase().includes('ancient') || i.name.toLowerCase().includes('artifact')) ? '[SYNCED]' : '[NO_SIGNAL]'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                {state?.artifactTaskComplete && <span className="quest-done-badge">✓</span>}
               </div>
 
               {/* Quest 3: Wildlife Ops */}

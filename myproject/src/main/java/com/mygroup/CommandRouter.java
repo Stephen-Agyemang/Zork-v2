@@ -33,6 +33,20 @@ public class CommandRouter {
             return "Enter a command...";
         }
 
+        // Stadium bonus offer intercept
+        if (state.isStadiumBonusOffered()) {
+            String cmd = userInput.trim().toLowerCase();
+            if (cmd.equals("continue")) {
+                state.clearStadiumBonusOffer();
+                typingChallengeSystem.startChallenge("stadium", 5);
+                return "Final sprint for the Monon Bell! " + typingChallengeSystem.getPrompt();
+            } else if (cmd.equals("reward") || cmd.equals("accept") || cmd.equals("stop")) {
+                state.clearStadiumBonusOffer();
+                return "You take your reward and step off. Well earned! " + questSystem.maybeFinaleMessage();
+            }
+            return "Type 'continue' to take on the stadium challenge, or 'reward' to keep your points and stop.";
+        }
+
         // Typing challenge gate
         if (state.isTypingChallengeActive()) {
             if (userInput.equalsIgnoreCase("skip")) {
@@ -245,7 +259,7 @@ public class CommandRouter {
                                                                 • Carry max 3 foods; food spoils every few moves and hunger slows you if you run out.
 
                                 💀 DEAD ENDS (Worth the Cost!):
-                                  The Duck, Humbert, Admin, and CDI are dead-ends with few exits.
+                                  The Duck, Humbert, and Admin are dead-ends with few exits.
                                   BUT they contain HIGH-VALUE items worth the extra moves!
                                   • Plan your route to collect them efficiently.
                                   • Don't waste moves if you won't grab items.
@@ -284,6 +298,11 @@ public class CommandRouter {
                                                                 🏃 TREADMILL TYPING SPRINT:
                                                                 Use the treadmill at Lilly and ace the typing challenge.
                                                                 Reward: +15 points
+
+                                                                🏛️  ANCIENT ARTIFACT RECOVERY:
+                                                                The AncientArtifact in Julian's DisplayCase doesn't belong there.
+                                                                Return it to the HistoryWall at East College where it truly belongs.
+                                                                Reward: +13 points
 
                                 ─────────────────────────────────────────────────────────────────
                                 Good luck, explorer! Make every move count and collect wisely!
@@ -507,6 +526,14 @@ public class CommandRouter {
                     extra.append("\nMacBook returned to Admin. +7 points and gratitude from IT.");
                 }
 
+                if (containerName.equalsIgnoreCase("HistoryWall")
+                        && Item.normalizeName(moving.getName()).equals(Item.normalizeName("AncientArtifact"))
+                        && !state.isArtifactTaskComplete()) {
+                    state.completeArtifactTask();
+                    state.addPoints(13);
+                    extra.append("\nThe artifact slots into place on East College's HistoryWall. Its history is restored. +13 points.");
+                }
+
                 if (containerName.equalsIgnoreCase("GuitarCase")) {
                     extra.append(questSystem.handleMusicCase(container));
                 }
@@ -621,9 +648,14 @@ public class CommandRouter {
 
         // Warn before entering any dining location for the first time
         if (foodSystem.isDiningLocation(nextLocation) && !state.isVisitedHoover() && !state.isVisitedDuck()) {
+            String nextName = nextLocation.getName().toLowerCase();
+            String nearby = nextName.equals("hoover")
+                    ? "From Hoover you can reach Olin (Biology/DNA quest), GCPA (Music venue), and Roy Library."
+                    : "From The Fluttering Duck you can reach Roy Library and the Administration Building (Macbook delivery).";
             return "⚠️  DINING ALERT: " + nextLocation.getName() + " is a dining location. "
-                    + "There are TWO dining spots on campus — Hoover (north of Julian) and The Fluttering Duck (near Roy Library). "
-                    + "You may only visit ONE without penalty. Choose wisely, then type the command again to enter.";
+                    + "There are TWO dining spots on campus — Hoover and The Fluttering Duck — and you may only visit ONE without penalty. "
+                    + nearby + " The other dining option offers different access. "
+                    + "Choose wisely, then type the command again to enter.";
         }
 
         state.setCurrLocation(nextLocation);

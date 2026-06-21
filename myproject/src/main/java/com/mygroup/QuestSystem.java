@@ -105,6 +105,7 @@ public class QuestSystem {
         summary.append("\n");
         summary.append("  You restored the macbook, delivered DNA,\n");
         summary.append("  saved the salmon and snakes, rocked the music,\n");
+        summary.append("  returned the artifact to East College,\n");
         summary.append("  and finished the treadmill grind.\n\n");
         summary.append("  Total Points : ").append(state.getPoints()).append("\n");
         summary.append("  Total Moves  : ").append(state.getMoveCount()).append("\n");
@@ -129,7 +130,8 @@ public class QuestSystem {
                 && state.isSalmonTaskComplete()
                 && state.isSnakeTaskComplete()
                 && state.isMacbookTaskComplete()
-                && state.isTreadmillUsed();
+                && state.isTreadmillUsed()
+                && state.isArtifactTaskComplete();
 
         // Apply efficiency bonus if earned
         boolean efficiencyBonus = false;
@@ -148,13 +150,13 @@ public class QuestSystem {
             dangerousBonus = true;
         }
 
-        // Determine ranking (updated for 124-point max)
+        // Determine ranking (updated for 162-point max)
         String ranking;
-        if (points >= 110) {
+        if (points >= 130) {
             ranking = "🏆 CAMPUS LEGEND";
-        } else if (points >= 90) {
+        } else if (points >= 100) {
             ranking = "⭐ TRUE EXPLORER";
-        } else if (points >= 70) {
+        } else if (points >= 75) {
             ranking = "📚 DEDICATED ADVENTURER";
         } else if (points >= 40) {
             ranking = "🎒 CASUAL WANDERER";
@@ -182,7 +184,9 @@ public class QuestSystem {
         summary.append("   Wildlife Rescue (Salmon): ").append(state.isSalmonTaskComplete() ? "✓ Complete" : "✗ Incomplete").append("\n");
         summary.append("   Wildlife Rescue (Snakes): ").append(state.isSnakeTaskComplete() ? "✓ Complete" : "✗ Incomplete").append("\n");
         summary.append("   MacBook Return: ").append(state.isMacbookTaskComplete() ? "✓ Complete" : "✗ Incomplete").append("\n");
-        summary.append("   Treadmill Challenge: ").append(state.isTreadmillUsed() ? "✓ Complete" : "✗ Incomplete").append("\n\n");
+        summary.append("   Treadmill Challenge: ").append(state.isTreadmillUsed() ? "✓ Complete" : "✗ Incomplete").append("\n");
+        summary.append("   Ancient Artifact Return: ").append(state.isArtifactTaskComplete() ? "✓ Complete" : "✗ Incomplete").append("\n");
+        summary.append("   Stadium Sprint (Bonus): ").append(state.isStadiumTaskComplete() ? "✓ Complete (+25 pts)" : "✗ Not attempted").append("\n\n");
 
         if (efficiencyBonus) {
             summary.append("🌟 EFFICIENCY BONUS: Completed all quests in under 70 moves! (+10 points)\n\n");
