@@ -98,9 +98,10 @@ public class TypingChallengeSystem {
 
         boolean success = correct >= 3;
         if (success) {
+            String context = state.getTypingContext();
             state.endTypingChallenge();
             state.resetWrongCommandCount();
-            if ("treadmill".equals(state.getTypingContext())) {
+            if ("treadmill".equals(context)) {
                 state.useTreadmill();
                 state.addPoints(15);
                 state.offerStadiumBonus();
@@ -110,7 +111,7 @@ public class TypingChallengeSystem {
                         + "Type 'continue' to accept the challenge, or 'reward' to take your points and stop.'"
                         + maybeFinaleMessage();
             }
-            if ("stadium".equals(state.getTypingContext())) {
+            if ("stadium".equals(context)) {
                 state.completeStadiumTask();
                 state.addPoints(25);
                 Location stadiumLoc = state.getStadiumLocation();

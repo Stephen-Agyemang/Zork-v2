@@ -153,6 +153,11 @@ public class Location {
         return new ArrayList<>(connections.keySet());
     }
 
+    // Full connections map: direction → destination Location
+    public HashMap<String, Location> getConnections() {
+        return connections;
+    }
+
     
 }
 

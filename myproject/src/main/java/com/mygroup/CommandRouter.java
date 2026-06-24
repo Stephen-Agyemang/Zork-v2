@@ -23,6 +23,16 @@ public class CommandRouter {
         this.questSystem = questSystem;
     }
 
+    private String formatExits(Location loc) {
+        var conns = loc.getConnections();
+        if (conns.isEmpty()) return "none";
+        var parts = new ArrayList<String>();
+        for (var entry : conns.entrySet()) {
+            parts.add(entry.getKey() + " → " + entry.getValue().getName());
+        }
+        return String.join(" | ", parts);
+    }
+
     /**
      * Route a player command to the appropriate handler
      */
@@ -76,9 +86,17 @@ public class CommandRouter {
                     lkOutput.append(
                             "\n(You gotta give Sasha a call here with the phone she's got some good tea for you.)");
                 }
+                if (state.getCurrLocation().getName().equalsIgnoreCase("East College")) {
+                    lkOutput.append(
+                            "\n(A history professor glances at the HistoryWall: 'Something is missing from that display. An artifact from Julian's science building belongs here.')");
+                }
+                if (state.getCurrLocation().getName().equalsIgnoreCase("Stadium")) {
+                    lkOutput.append(
+                            "\n(The Monon Bell gleams under the stadium lights. You can feel the weight of this moment. Type 'jump' to return to Lilly when you're ready.)");
+                }
                 if (state.getCurrLocation().getName().equalsIgnoreCase("Lilly Building")) {
                     lkOutput.append(
-                            "\n(OH! The guy Sasha was talking about is here and surprisingly hitting the strings pretty well! But blah blah you gotta take it and step");
+                            "\n(A guitarist in the corner is hitting the strings impressively. Take the GlazedGuitar — Sasha needs it at GCPA. Also spotted: a treadmill. Type 'use treadmill' to take on the sprint challenge.)");
                 }
                 if (state.getCurrLocation().getName().equalsIgnoreCase("GCPA")) {
                     lkOutput.append(
@@ -103,6 +121,7 @@ public class CommandRouter {
                 for (String itemName : locationItems) {
                     lkOutput.append("\n+ ").append(itemName);
                 }
+                lkOutput.append("\nExits: ").append(formatExits(state.getCurrLocation()));
                 return lkOutput.toString();
             }
 
@@ -135,12 +154,12 @@ public class CommandRouter {
                 }
             }
 
-            case "connections" -> {
-                ArrayList<String> connectionNames = state.getCurrLocation().getConnectionNames();
-                if (connectionNames.isEmpty()) {
+            case "connections", "exits" -> {
+                var conns = state.getCurrLocation().getConnections();
+                if (conns.isEmpty()) {
                     return "No exits from here";
                 } else {
-                    return "Exits: " + String.join(", ", connectionNames);
+                    return "Exits: " + formatExits(state.getCurrLocation());
                 }
             }
 
@@ -179,8 +198,10 @@ public class CommandRouter {
                                  ║                    ZORK v2 - GAME GUIDE                     ║
                                 ╚═══════════════════════════════════════════════════════════════╝
 
-                                🎮 OBJECTIVE: Explore the campus, collect valuable items, and manage your moves wisely.
-                                Track your moves and points with the 'status' command. Goal: maximize points! or for others least moves🙃.
+                                🎮 OBJECTIVE: DePauw needs you. Seven core missions span the campus — rescue animals,
+                                deliver DNA, save the music show, return an ancient artifact to East College, recover
+                                the President's MacBook, and push your limits on the treadmill. Ace all seven and a
+                                legendary stadium moment awaits the bold. Maximize points, minimize moves.
 
                                 ─────────────────────── BASIC COMMANDS ──────────────────────────
 
@@ -222,7 +243,16 @@ public class CommandRouter {
 
                                 PUT <item> IN <container>
                                   Place an item from your inventory into a container at your current location.
-                                  Example: 'put sandwich in backpack'
+                                  Example: 'put salmon in aquarium'
+
+                                USE <item>
+                                  Interact with fixed objects or usable items.
+                                  Example: 'use treadmill' at Lilly Building to start the sprint challenge.
+                                  Also works on food: 'use chicken' to eat it and reset hunger.
+
+                                OPEN <container>
+                                  Inspect a container at your location to see what's inside.
+                                  Example: 'open guitarcase' to check what's in the case at GCPA.
 
                                 INVENTORY
                                   Display all items you're currently carrying in your backpack.
@@ -236,12 +266,18 @@ public class CommandRouter {
                                 HELP
                                   Directs you to this guide. You must have the Help item to read it.
 
+                                EXITS
+                                  Shows all available exits from your current location with destination names.
+                                  Example: north → GCPA | west → Roy Library
+
                                 CLEAR
                                   Wipes your terminal screen for a clean workspace. Your moves, points,
                                   and inventory are NOT affected — it only clears what's displayed.
 
                                 QUIT
-                                  Exit the game.
+                                  Ends your run and saves your score to the leaderboard.
+                                  Check the GLOBAL RANKINGS button on the debrief screen to see where you placed.
+                                  Tip: hitting REBOOT also saves your score before resetting.
 
                                 ═════════════════════ STRATEGIC GAMEPLAY TIPS ═════════════════
 
@@ -296,13 +332,20 @@ public class CommandRouter {
                                                                 Reward: +7 points
 
                                                                 🏃 TREADMILL TYPING SPRINT:
-                                                                Use the treadmill at Lilly and ace the typing challenge.
+                                                                Head to Lilly Building and type 'use treadmill' to start the sprint.
+                                                                Ace the typing challenge to earn points and unlock the Stadium bonus.
                                                                 Reward: +15 points
 
                                                                 🏛️  ANCIENT ARTIFACT RECOVERY:
                                                                 The AncientArtifact in Julian's DisplayCase doesn't belong there.
                                                                 Return it to the HistoryWall at East College where it truly belongs.
                                                                 Reward: +13 points
+
+                                                                ⚡ STADIUM SPRINT (BONUS — unlocks after treadmill):
+                                                                After beating the treadmill challenge, a coach will offer you one more sprint.
+                                                                Type 'continue' to accept. Ace the second typing challenge to be transported
+                                                                to Byron P. Hollett Stadium for the Monon Bell moment.
+                                                                Reward: +25 points | Type 'jump' to return to Lilly afterwards.
 
                                 ─────────────────────────────────────────────────────────────────
                                 Good luck, explorer! Make every move count and collect wisely!
@@ -366,6 +409,10 @@ public class CommandRouter {
                         }
                         return "That's a container. Try 'open " + itemName + "' first or 'take <item> from " + itemName
                                 + "'";
+                    }
+
+                    if (Item.normalizeName(itemName).equals(Item.normalizeName("Treadmill"))) {
+                        return "The treadmill is bolted to the floor. Type 'use treadmill' to run on it.";
                     }
 
                     if (state.getCurrLocation().hasItem(itemName)) {
@@ -672,6 +719,7 @@ public class CommandRouter {
         output.append(dnaSystem.tickCountdown());
         output.append(foodSystem.applyHungerAfterMove());
         output.append(foodSystem.checkDiningLocationPenalty());
+        output.append("\nExits: ").append(formatExits(state.getCurrLocation()));
 
         return output.toString();
     }

@@ -45,6 +45,8 @@ export default function App() {
   const sessionIdRef = useRef(null)
   const sessionTimerRef = useRef(null)
   const scoreSavedRef = useRef(false)
+  const slideshowIntervalRef = useRef(null)
+  const slideshowIndexRef = useRef(0)
 
   // On mount: resume from a shared URL session or a locally saved session.
   // URL params take priority so share links always restore the right game.
@@ -188,8 +190,8 @@ export default function App() {
       await fetchState(newSessionId)
       setMessages([
         { type: 'system', text: 'TACTICAL TERMINAL CORE INITIALIZED.', time: now() },
-        { type: 'system', text: 'You stand in East College — the crown jewel of DePauw University, built in 1877. Its Victorian Gothic tower has watched over this campus for generations. Your adventure begins here.', time: now() },
-        { type: 'system', text: 'Type "examine help" to view the campus mission briefing.', time: now() }
+        { type: 'system', text: 'You stand in East College — the crown jewel of DePauw University, built in 1877. Its Victorian Gothic tower has watched over this campus for generations. Seven missions await. The Monon Bell belongs to those who push furthest.', time: now() },
+        { type: 'system', text: 'Type "examine help" to read your mission briefing, or "look" to survey your surroundings.', time: now() }
       ])
       setLoading(false)
       pollIntervalRef.current = setInterval(() => fetchState(sessionIdRef.current), 1500)
@@ -382,6 +384,11 @@ export default function App() {
     }
   }
 
+  const EAST_COLLEGE_IMAGES = [
+    '/eastcollege.png', '/eastcollege1.png', '/eastcollege2.png',
+    '/eastcollege3.png', '/eastcollege4.png', '/eastcollege5.png'
+  ]
+
   const LOCATION_IMAGES = {
     'east college':           '/eastcollege.png',
     'stadium':                '/monon.png',
@@ -411,6 +418,27 @@ export default function App() {
     const t = setTimeout(() => setFadingBg(null), 900)
     return () => clearTimeout(t)
   }, [newBg])
+
+  useEffect(() => {
+    if (slideshowIntervalRef.current) {
+      clearInterval(slideshowIntervalRef.current)
+      slideshowIntervalRef.current = null
+    }
+    if (locationKey === 'east college') {
+      slideshowIndexRef.current = 0
+      slideshowIntervalRef.current = setInterval(() => {
+        slideshowIndexRef.current = (slideshowIndexRef.current + 1) % EAST_COLLEGE_IMAGES.length
+        const next = EAST_COLLEGE_IMAGES[slideshowIndexRef.current]
+        setFadingBg(activeBgRef.current)
+        activeBgRef.current = next
+        setActiveBg(next)
+        setTimeout(() => setFadingBg(null), 900)
+      }, 5000)
+    }
+    return () => {
+      if (slideshowIntervalRef.current) clearInterval(slideshowIntervalRef.current)
+    }
+  }, [locationKey])
 
   if (showCallsignScreen) {
     return (
@@ -649,7 +677,21 @@ export default function App() {
             </div>
           </div>
           <div className="vertical-menu-bottom">
-            <div className="menu-item" onClick={() => initGame(callsign)}>
+            <div className="menu-item" onClick={() => {
+              if (!scoreSavedRef.current && state && (state.points > 0 || state.moveCount > 0)) {
+                scoreSavedRef.current = true
+                fetch('/leaderboard/save', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    callsign: callsign || 'OPERATOR_01',
+                    score: state.points || 0,
+                    moveCount: state.moveCount || 0
+                  })
+                }).catch(() => {})
+              }
+              initGame(callsign)
+            }}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
               </svg>
@@ -941,11 +983,14 @@ export default function App() {
                 <div className="modal-sec-header">🎮 CORE OBJECTIVE</div>
                 <div className="modal-sec-content">
                   DePauw needs you. Endangered animals are at risk. A legendary musician's lost relics are scattered across campus.
-                  The President's MacBook has vanished. And somewhere at The Fluttering Duck, a sealed box of
-                  venomous snakes sits unnoticed among the performers' equipment — one wrong move by the wrong person and it's over.
+                  The President's MacBook has vanished. A sealed box of venomous snakes sits unnoticed at The Fluttering Duck —
+                  one wrong move by the wrong person and it's over. An ancient artifact sits in the wrong building, waiting to be returned.
+                  And for those who can push past their limits, the Monon Bell and a legendary stadium moment await.
                   <br/><br/>
                   Navigate campus, complete your missions, and protect what matters. Move efficiently — every wasted step costs you.
-                  Hunger and thirst build as you travel, so eat when you can. The most thorough explorers tend to find things others miss.
+                  Hunger builds as you travel, so eat when you can. The most thorough explorers find things others miss.
+                  <br/><br/>
+                  <strong>Starting point:</strong> East College. Seven core quests. One bonus sprint. Make it count.
                 </div>
               </div>
 
@@ -955,8 +1000,23 @@ export default function App() {
                   <div><strong>HELP</strong></div>
                   <div>Opens this manual at any time.</div>
 
+                  <div><strong>LOOK</strong></div>
+                  <div>Redisplays your current location description and visible items.</div>
+
+                  <div><strong>STATUS</strong></div>
+                  <div>Shows your current score, move count, and quest progress.</div>
+
+                  <div><strong>QUESTS</strong></div>
+                  <div>Lists all active quests and their current completion state.</div>
+
+                  <div><strong>EXITS</strong></div>
+                  <div>Lists all available exits from your current location with destination names (e.g. north → GCPA).</div>
+
                   <div><strong>CLEAR</strong></div>
-                  <div>Wipes the terminal log to give you a clean screen. Your progress, score, and inventory are untouched.</div>
+                  <div>Wipes the terminal log. Progress, score, and inventory are untouched.</div>
+
+                  <div><strong>QUIT</strong></div>
+                  <div>Ends your run, saves your score to the leaderboard, and shows your final stats. Use the <strong>GLOBAL RANKINGS</strong> button on the debrief screen to see where you placed.</div>
                 </div>
               </div>
 
@@ -965,10 +1025,10 @@ export default function App() {
                 <div className="modal-sec-grid">
                   <div><strong>GO &lt;direction&gt;</strong></div>
                   <div>Cardinal direction (north, south, east, west) to move. Costs 1 move.</div>
-                  
+
                   <div><strong>JUMP</strong></div>
                   <div>Special teleport action at key campus spots. Costs 2 moves.</div>
-                  
+
                   <div><strong>CROSS</strong></div>
                   <div>Bridge crossing action at central campus hubs. Costs 2 moves.</div>
                 </div>
@@ -977,17 +1037,26 @@ export default function App() {
               <div className="modal-section">
                 <div className="modal-sec-header">📦 INVENTORY CONTROLS</div>
                 <div className="modal-sec-grid">
+                  <div><strong>INVENTORY</strong></div>
+                  <div>Lists everything currently in your cargo.</div>
+
                   <div><strong>TAKE &lt;item&gt;</strong></div>
                   <div>Pick up items at your current location and add to cargo.</div>
-                  
+
                   <div><strong>DROP &lt;item&gt;</strong></div>
                   <div>Remove an item from cargo and leave it at your location.</div>
-                  
+
                   <div><strong>EXAMINE &lt;item&gt;</strong></div>
-                  <div>Get full specifications and telemetry details on any item.</div>
-                  
-                  <div><strong>PUT &lt;item&gt; IN &lt;box&gt;</strong></div>
-                  <div>Place cargo inside container objects (e.g. putting salmon in aquarium).</div>
+                  <div>Get full details on any item in your cargo or at your location.</div>
+
+                  <div><strong>OPEN &lt;container&gt;</strong></div>
+                  <div>Inspect a container at your current location to see what's inside.</div>
+
+                  <div><strong>PUT &lt;item&gt; IN &lt;container&gt;</strong></div>
+                  <div>Place a cargo item inside a container (e.g. put Salmon in Aquarium).</div>
+
+                  <div><strong>USE &lt;item&gt;</strong></div>
+                  <div>Interact with special objects — e.g. <strong>use treadmill</strong> at Lilly to start the sprint challenge. Also works on food items to eat them.</div>
                 </div>
               </div>
 
@@ -996,13 +1065,13 @@ export default function App() {
                 <div className="modal-sec-grid">
                   <div><strong>The Music Show</strong></div>
                   <div>Call Sasha via Phone. Collect microphone & glowing guitar, combine sheets, and secure all in GCPA GuitarCase.</div>
-                  
+
                   <div><strong>DNA Delivery</strong></div>
                   <div>Grab PCR DNA from Olin and rush to Julian within 3 moves before it spoils!</div>
-                  
+
                   <div><strong>Endangered Salmon</strong></div>
                   <div>Save the dying salmon at Hoover and place it inside Olin's Aquarium.</div>
-                  
+
                   <div><strong>Treasure Box (Snakes)</strong></div>
                   <div>Carry sealed TreasureBox from The Fluttering Duck to Olin, then place inside SafeBox. Do NOT open the box!</div>
 
@@ -1010,10 +1079,13 @@ export default function App() {
                   <div>The President's Macbook was spotted at Julian. Return it to the MacbookCase at the Administration Building.</div>
 
                   <div><strong>Treadmill Challenge</strong></div>
-                  <div>Head to Lilly Building and use the Treadmill for an energy and points boost.</div>
+                  <div>Head to Lilly Building and type <strong>use treadmill</strong> to start the sprint. Ace the typing challenge for a points boost.</div>
 
                   <div><strong>Ancient Artifact</strong></div>
                   <div>The AncientArtifact in Julian's DisplayCase doesn't belong there. Return it to the HistoryWall at East College.</div>
+
+                  <div><strong>Stadium Sprint</strong> ⚡ BONUS</div>
+                  <div>Unlocks after completing the treadmill. Accept the coach's offer and ace a second typing challenge to be transported to the Stadium for a legendary Monon Bell moment. +25 pts.</div>
                 </div>
               </div>
 
