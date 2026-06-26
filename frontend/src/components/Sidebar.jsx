@@ -147,10 +147,22 @@ export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
             <div className="operator-stats-grid">
               <div className="op-stat-lbl">CYCLES:</div>
               <div className="op-stat-val">{(state?.moveCount || 0).toString().padStart(5, '0')}</div>
-              
+
               <div className="op-stat-lbl">EXP:</div>
               <div className="op-stat-val">{(state?.points || 0).toLocaleString()} XP</div>
-              
+
+              <div className="op-stat-lbl">RANK:</div>
+              <div className="op-stat-val" style={{ fontSize: '8px' }}>
+                {(() => {
+                  const p = state?.points || 0
+                  if (p >= 130) return 'LEGEND'
+                  if (p >= 100) return 'EXPLORER'
+                  if (p >= 75)  return 'ADVENTURER'
+                  if (p >= 40)  return 'WANDERER'
+                  return 'NOVICE'
+                })()}
+              </div>
+
               <div className="op-stat-lbl">SECTOR:</div>
               <div className="op-stat-val truncate-sector" title={getSectorName()}>
                 {getSectorName()}

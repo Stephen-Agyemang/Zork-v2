@@ -677,6 +677,23 @@ export default function App() {
             </div>
           </div>
           <div className="vertical-menu-bottom">
+            <div className="menu-item" onClick={async () => {
+              try {
+                const res = await fetch('/leaderboard/top')
+                const data = await res.json()
+                setLeaderboard(data)
+                setShowLeaderboard(true)
+              } catch {
+                setLeaderboard([])
+                setShowLeaderboard(true)
+              }
+            }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              <span className="menu-item-text" style={{ fontSize: '7px' }}>RANKS</span>
+            </div>
             <div className="menu-item" onClick={() => {
               if (!scoreSavedRef.current && state && (state.points > 0 || state.moveCount > 0)) {
                 scoreSavedRef.current = true

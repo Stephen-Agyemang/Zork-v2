@@ -1,25 +1,23 @@
 package com.mygroup;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * REST controller for leaderboard score submission and retrieval.
  *
- * POST /leaderboard/save    — validate and persist a score entry
+ * POST /leaderboard/save    — upsert: keeps only the best score per callsign
  * GET  /leaderboard/top     — top 10 global scores (highest score, fewest moves wins ties)
  * GET  /leaderboard/top-dpu — top 10 filtered to callsigns ending in _dpu or .dpu
  *
- * Defenses built in:
- *  - Rate limit: one save per IP per 60 seconds to block rapid re-submissions
- *  - Score bounds: rejects impossible scores (negative or above MAX_SCORE) and bogus move counts
+ * Defenses:
+ *  - Score bounds: rejects impossible scores and bogus move counts
  *  - Profanity filter: silently drops entries with blocked words in the callsign
- *  All rejections return 200 OK — clients can't tell which check fired.
+ *  - One row per callsign: only replaces existing entry if new score is strictly better
  */
 @RestController
 @RequestMapping("/leaderboard")
@@ -27,10 +25,8 @@ public class LeaderboardController {
 
     private static final int MAX_SCORE = 300;
     private static final int MAX_MOVES = 10000;
-    private static final long RATE_LIMIT_MS = 60_000;
 
     private final ScoreRepository repo;
-    private final ConcurrentHashMap<String, Long> lastSaveTime = new ConcurrentHashMap<>();
 
     public LeaderboardController(ScoreRepository repo) {
         this.repo = repo;
@@ -50,19 +46,9 @@ public class LeaderboardController {
         return false;
     }
 
-    private String getClientIp(HttpServletRequest request) {
-        String forwarded = request.getHeader("X-Forwarded-For");
-        return (forwarded != null) ? forwarded.split(",")[0].trim() : request.getRemoteAddr();
-    }
-
     @PostMapping("/save")
-    public ResponseEntity<Void> save(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public ResponseEntity<Void> save(@RequestBody Map<String, Object> body) {
         try {
-            String ip = getClientIp(request);
-            long now = System.currentTimeMillis();
-            Long last = lastSaveTime.get(ip);
-            if (last != null && now - last < RATE_LIMIT_MS) return ResponseEntity.ok().build();
-
             String callsign = (String) body.getOrDefault("callsign", "OPERATOR_01");
             if (hasProfanity(callsign)) return ResponseEntity.ok().build();
 
@@ -71,8 +57,18 @@ public class LeaderboardController {
             if (score < 0 || score > MAX_SCORE || moveCount < 1 || moveCount > MAX_MOVES)
                 return ResponseEntity.ok().build();
 
-            lastSaveTime.put(ip, now);
-            repo.save(new ScoreEntry(callsign, score, moveCount));
+            Optional<ScoreEntry> existing = repo.findTopByCallsignIgnoreCaseOrderByScoreDescMoveCountAsc(callsign);
+            if (existing.isPresent()) {
+                ScoreEntry best = existing.get();
+                boolean newIsBetter = score > best.getScore()
+                        || (score == best.getScore() && moveCount < best.getMoveCount());
+                if (newIsBetter) {
+                    repo.delete(best);
+                    repo.save(new ScoreEntry(callsign, score, moveCount));
+                }
+            } else {
+                repo.save(new ScoreEntry(callsign, score, moveCount));
+            }
         } catch (Exception e) {
             // fail silently if DB unavailable
         }
