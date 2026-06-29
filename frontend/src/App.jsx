@@ -48,6 +48,42 @@ export default function App() {
   const slideshowIntervalRef = useRef(null)
   const slideshowIndexRef = useRef(0)
 
+  const getCompletedMissionCount = (scoreState) => [
+    scoreState?.musicTaskComplete,
+    scoreState?.dnaTaskComplete,
+    scoreState?.salmonTaskComplete,
+    scoreState?.snakeTaskComplete,
+    scoreState?.macbookTaskComplete,
+    scoreState?.treadmillUsed,
+    scoreState?.artifactTaskComplete,
+    scoreState?.stadiumTaskComplete
+  ].filter(Boolean).length
+
+  const saveScore = async (scoreState = state) => {
+    if (scoreSavedRef.current || !scoreState) return false
+
+    const moveCount = scoreState.moveCount || 0
+    const completedMissions = getCompletedMissionCount(scoreState)
+    if (moveCount < 1 || completedMissions < 1) return false
+
+    try {
+      const response = await fetch('/leaderboard/save', {
+        method: 'POST',
+        headers: { 'X-Session-ID': sessionIdRef.current }
+      })
+
+      if (!response.ok) {
+        throw new Error(`Leaderboard save failed (${response.status})`)
+      }
+
+      scoreSavedRef.current = true
+      return true
+    } catch (e) {
+      console.error('Leaderboard save failure:', e)
+      return false
+    }
+  }
+
   // On mount: resume from a shared URL session or a locally saved session.
   // URL params take priority so share links always restore the right game.
   useEffect(() => {
@@ -144,16 +180,7 @@ export default function App() {
   // Auto-save score to leaderboard when game ends
   useEffect(() => {
     if (state?.finaleShown && !scoreSavedRef.current) {
-      scoreSavedRef.current = true
-      fetch('/leaderboard/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          callsign: callsign || 'OPERATOR_01',
-          score: state.points || 0,
-          moveCount: state.moveCount || 0
-        })
-      }).catch(() => {})
+      saveScore(state)
     }
   }, [state?.finaleShown])
 
@@ -251,21 +278,12 @@ export default function App() {
       setHistoryIndex(-1)
       setMessages(prev => [...prev, { type: 'command', text: `> ${sanitizedCommand}`, time: now() }])
 
-      // If user typed quit, switch to logs/debrief tab and save score
-      if (sanitizedCommand.toLowerCase() === 'quit') {
+      const isQuitCommand = sanitizedCommand.toLowerCase() === 'quit'
+
+      // If user typed quit, switch to logs/debrief tab immediately.
+      // The score save happens after the command response and fresh state fetch.
+      if (isQuitCommand) {
         setActiveTab('LOGS')
-        if (!scoreSavedRef.current && state) {
-          scoreSavedRef.current = true
-          fetch('/leaderboard/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              callsign: callsign || 'OPERATOR_01',
-              score: state.points || 0,
-              moveCount: state.moveCount || 0
-            })
-          }).catch(() => {})
-        }
       }
 
       const response = await fetch('/game/command', {
@@ -279,8 +297,20 @@ export default function App() {
       // Unlock input as soon as the command response arrives — user can type again
       setCommandPending(false)
 
-      // Fire state fetch in background so overlay updates without blocking input
-      fetchState()
+      // Refresh state before saving on quit so we do not submit stale move/score data.
+      if (isQuitCommand) {
+        const latestResponse = await fetch('/game/state', {
+          headers: { 'X-Session-ID': sessionIdRef.current }
+        })
+        if (latestResponse.ok) {
+          const latestState = await latestResponse.json()
+          setState(latestState)
+          await saveScore(latestState)
+        }
+      } else {
+        // Fire state fetch in background so overlay updates without blocking input
+        fetchState()
+      }
 
       setMessages(prev => [...prev, { type: 'output', text: output, time: now() }])
 
@@ -694,18 +724,14 @@ export default function App() {
               </svg>
               <span className="menu-item-text" style={{ fontSize: '7px' }}>RANKS</span>
             </div>
-            <div className="menu-item" onClick={() => {
-              if (!scoreSavedRef.current && state && (state.points > 0 || state.moveCount > 0)) {
-                scoreSavedRef.current = true
-                fetch('/leaderboard/save', {
+            <div className="menu-item" onClick={async () => {
+              if (!scoreSavedRef.current && state && getCompletedMissionCount(state) >= 1 && sessionIdRef.current) {
+                await fetch('/game/command', {
                   method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    callsign: callsign || 'OPERATOR_01',
-                    score: state.points || 0,
-                    moveCount: state.moveCount || 0
-                  })
+                  headers: { 'Content-Type': 'text/plain', 'X-Session-ID': sessionIdRef.current },
+                  body: 'quit'
                 }).catch(() => {})
+                await saveScore(state)
               }
               initGame(callsign)
             }}>

@@ -122,6 +122,8 @@ public class QuestSystem {
      * Full end-game summary (verbatim from original GameEngine design).
      */
     public String getEndGameSummary() {
+        state.showFinale();
+
         int moveCount = state.getMoveCount();
         int points = state.getPoints();
 

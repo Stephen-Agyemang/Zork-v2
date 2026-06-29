@@ -18,6 +18,9 @@ import java.util.Map;
 @RequestMapping("/game")
 public class GameController {
 
+    private static final int MAX_CALLSIGN_LENGTH = 32;
+    private static final int MAX_COMMAND_LENGTH = 200;
+
     private final SessionManager sessionManager;
 
     public GameController(SessionManager sessionManager) {
@@ -27,7 +30,7 @@ public class GameController {
     // Creates a fresh game world for the player and returns a UUID session token
     @PostMapping("/start")
     public ResponseEntity<Map<String, String>> startGame(@RequestBody Map<String, String> body) {
-        String callsign = body.getOrDefault("callsign", "OPERATOR_01");
+        String callsign = normalizeCallsign(body.getOrDefault("callsign", "OPERATOR_01"));
         String sessionId = sessionManager.createSession(callsign);
         if (sessionId == null) {
             // MAX_SESSIONS cap hit — tell the client to retry rather than silently failing
@@ -44,6 +47,10 @@ public class GameController {
     public ResponseEntity<String> processCommand(
             @RequestHeader("X-Session-ID") String sessionId,
             @RequestBody String userInput) {
+        if (userInput == null || userInput.length() > MAX_COMMAND_LENGTH) {
+            return ResponseEntity.badRequest().body("Command rejected.");
+        }
+
         GameEngine engine = sessionManager.getEngine(sessionId);
         if (engine == null) {
             return ResponseEntity.status(404).body("Session not found. Please start a new game.");
@@ -59,6 +66,14 @@ public class GameController {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.ok(engine.getGameState());
+    }
+
+    private String normalizeCallsign(String callsign) {
+        String normalized = callsign == null ? "" : callsign.trim();
+        if (normalized.isBlank()) normalized = "OPERATOR_01";
+        return normalized.length() <= MAX_CALLSIGN_LENGTH
+                ? normalized
+                : normalized.substring(0, MAX_CALLSIGN_LENGTH);
     }
 
 }
