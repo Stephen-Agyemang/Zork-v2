@@ -693,8 +693,11 @@ public class CommandRouter {
             return "You can't go that way";
         }
 
-        // Warn before entering any dining location for the first time
-        if (foodSystem.isDiningLocation(nextLocation) && !state.isVisitedHoover() && !state.isVisitedDuck()) {
+        // Warn before entering any dining location for the first time.
+        // The warning is recorded per location so the second attempt goes through.
+        if (foodSystem.isDiningLocation(nextLocation) && !state.isVisitedHoover() && !state.isVisitedDuck()
+                && !state.getDiningWarningsShown().contains(nextLocation.getName())) {
+            state.getDiningWarningsShown().add(nextLocation.getName());
             String nextName = nextLocation.getName().toLowerCase();
             String nearby = nextName.equals("hoover")
                     ? "From Hoover you can reach Olin (Biology/DNA quest), GCPA (Music venue), and Roy Library."

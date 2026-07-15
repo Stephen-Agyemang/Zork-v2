@@ -1,4 +1,5 @@
 package com.mygroup;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -153,7 +154,10 @@ public class Location {
         return new ArrayList<>(connections.keySet());
     }
 
-    // Full connections map: direction → destination Location
+    // Full connections map: direction → destination Location.
+    // @JsonIgnore keeps Jackson from recursing through the cyclic location graph
+    // when GameState (and its currLocation) is serialized for /game/state.
+    @JsonIgnore
     public HashMap<String, Location> getConnections() {
         return connections;
     }

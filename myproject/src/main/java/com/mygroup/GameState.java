@@ -24,6 +24,9 @@ public class GameState {
 
     public boolean visitedHoover;
     public boolean visitedDuck;
+    // Dining locations the pre-entry warning has already fired for —
+    // the second movement attempt into a warned location goes through
+    private HashSet<String> diningWarningsShown;
 
     // Inventory / Resources
     private final ContainerItem inventory;
@@ -97,6 +100,7 @@ public class GameState {
         this.helpDropLocation = null;
         this.visitedHoover = false;
         this.visitedDuck = false;
+        this.diningWarningsShown = new HashSet<>();
 
         // Food and Survival
         this.couponsUnlimited = false;
@@ -153,6 +157,7 @@ public class GameState {
         this.helpDropLocation = null;
         this.visitedHoover = false;
         this.visitedDuck = false;
+        this.diningWarningsShown = new HashSet<>();
         this.couponsUnlimited = false;
         this.hungerMoveCounter = 0;
         this.foodLockChoice = null;
@@ -285,6 +290,10 @@ public class GameState {
         }
         // Already locked, compare safely
         return choice != null && foodLockChoice.equalsIgnoreCase(choice);
+    }
+
+    public HashSet<String> getDiningWarningsShown() {
+        return diningWarningsShown;
     }
 
     public void incrementHungerCounter() {
