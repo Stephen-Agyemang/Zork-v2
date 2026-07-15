@@ -5,7 +5,7 @@ Zork v2 is a full-stack, campus-themed text adventure game set at DePauw Univers
 ## Features
 
 - **15 campus locations** — East College (start), Julian, Olin, GCPA, Roy Library, CDI, Lilly Building, The Union Building, Hoover, The Fluttering Duck, Administration Building, Mason Hall, Reese Hall, Humbert Hall, and Stadium
-- **7 core quests + 1 bonus** — DNA delivery (timed, 3-move limit), music show assembly, salmon rescue, snake containment, MacBook recovery, ancient artifact return, treadmill sprint, and the unlockable Stadium/Monon Bell bonus (max 162 pts)
+- **7 core quests + 1 bonus** — DNA delivery (timed, 3-move limit), music show assembly, salmon rescue, snake containment, MacBook recovery, ancient artifact return, treadmill sprint, and the unlockable Stadium/Monon Bell bonus
 - Cardinal movement (`go north/south/east/west`, 1 move) plus `jump` and `cross` (2 moves each)
 - Exits display destinations on every move and `look` (`north → GCPA | west → Roy Library`)
 - Inventory, container, and item interactions — `take`, `drop`, `examine`, `open`, `put`, `use`
