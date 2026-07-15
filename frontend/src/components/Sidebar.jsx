@@ -186,7 +186,7 @@ export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
                 🧬 DNA SPOILING · {state.dnaMovesLeft} MOVE{state.dnaMovesLeft !== 1 ? 'S' : ''} LEFT
               </div>
             )}
-            {(state?.hungerMoveCounter ?? 0) > 5 && (
+            {(state?.hungerMoveCounter ?? 0) >= 4 && (
               <div className="intel-alert intel-warn">
                 ⚡ FUEL LOW · FIND FOOD NOW
               </div>

@@ -30,16 +30,19 @@ export default function RightPanel({ state, onShareSession, linkCopied, onComman
     return Math.min(95, Math.max(8, thirstLoad + dnaLoad + cargoLoad + sanityLoad))
   }
 
+  // hungerMoveCounter cycles 0-4 on the server (it resets to 0 the move it hits 5,
+  // when the player auto-eats or takes the starvation penalty), so scale by 20
+  // to sweep 0-80% and treat 4 as the "about to starve" threshold.
   const getThirst = () => {
     if (!state) return 10
-    return Math.min(100, (state.hungerMoveCounter || 0) * 10)
+    return Math.min(100, (state.hungerMoveCounter || 0) * 20)
   }
 
   const getSanity = () => {
     if (!state) return 90
     let base = 95
     if (state.dnaTaskActive) base -= 15
-    if (state.hungerMoveCounter > 5) base -= 20
+    if ((state.hungerMoveCounter || 0) >= 4) base -= 20
     return Math.max(12, base)
   }
 

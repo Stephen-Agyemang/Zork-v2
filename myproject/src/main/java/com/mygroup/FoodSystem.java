@@ -83,7 +83,7 @@ public class FoodSystem {
         StringBuilder message = new StringBuilder();
 
         // Check for hunger - player must eat if counter reaches 5
-        if (state.getHungerCounter() >= 5) {
+        if (state.getHungerMoveCounter() >= 5) {
             state.resetHungerCounter();
             // Try to consume one food
             for (Item item : state.getInventory().getItems()) {

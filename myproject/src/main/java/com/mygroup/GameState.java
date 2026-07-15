@@ -291,7 +291,9 @@ public class GameState {
         hungerMoveCounter++;
     }
 
-    public int getHungerCounter() {
+    // Named to match the field so Jackson serializes it as "hungerMoveCounter",
+    // which is the key the frontend HUD (thirst meter / FUEL LOW alert) reads.
+    public int getHungerMoveCounter() {
         return hungerMoveCounter;
     }
 
