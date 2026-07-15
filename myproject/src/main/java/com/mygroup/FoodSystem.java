@@ -71,6 +71,47 @@ public class FoodSystem {
     }
 
     /**
+     * True once both wildlife rescues are done — the "bio hero" eats free at dining halls
+     */
+    public boolean hasUnlimitedMeals() {
+        return state.isSalmonTaskComplete() && state.isSnakeTaskComplete();
+    }
+
+    /**
+     * Gate a food pickup before it happens, per the rules in the Help guide:
+     * carry at most 3 foods, and dining-hall food costs a FoodCoupon unless
+     * both wildlife rescues are complete.
+     * @return a refusal message if the pickup is blocked, or null if allowed
+     */
+    public String blockFoodPickupReason() {
+        if (getFoodCount() >= 3) {
+            return "You can't carry more than 3 foods. Eat one first ('use <food>') or leave this one behind.";
+        }
+        if (isDiningLocation(state.getCurrLocation())
+                && !hasUnlimitedMeals()
+                && getCouponCount() == 0) {
+            return "The cashier stops you — meals here need a FoodCoupon and you're out. (Rescue both endangered animals and you'll eat free.)";
+        }
+        return null;
+    }
+
+    /**
+     * Pay for an allowed food pickup and restart the freshness clock so
+     * fresh food doesn't spoil off the previous food's timer.
+     * @return a note to append to the pickup message ("" outside dining halls)
+     */
+    public String settleFoodPickup() {
+        state.resetFoodDecayCounter();
+        if (!isDiningLocation(state.getCurrLocation())) {
+            return "";
+        }
+        if (hasUnlimitedMeals()) {
+            return " (On the house — the bio hero eats free.)";
+        }
+        return consumeCoupon() ? " (1 FoodCoupon spent.)" : "";
+    }
+
+    /**
      * Apply hunger effects after a move
      * - Increment hunger counter
      * - Consume food if hungry

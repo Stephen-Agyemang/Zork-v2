@@ -19,3 +19,6 @@ frontend/node/
 myproject/src/main/resources/static/
 
 DESIGN_BRIEF.md
+
+# Claude Code local project files (skills, plans)
+.claude/

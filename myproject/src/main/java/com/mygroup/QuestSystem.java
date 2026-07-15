@@ -97,6 +97,10 @@ public class QuestSystem {
         }
 
         state.showFinale();
+        // All-core-quests completion bonus — TypingChallengeSystem.maybeFinaleMessage()
+        // awards the same +10 when the final quest completes through a typing challenge,
+        // so the bonus is identical no matter which action finishes the run.
+        state.addPoints(10);
 
         StringBuilder summary = new StringBuilder();
         summary.append("\n\n========================================\n");
@@ -107,6 +111,7 @@ public class QuestSystem {
         summary.append("  saved the salmon and snakes, rocked the music,\n");
         summary.append("  returned the artifact to East College,\n");
         summary.append("  and finished the treadmill grind.\n\n");
+        summary.append("  Completion Bonus : +10 points\n");
         summary.append("  Total Points : ").append(state.getPoints()).append("\n");
         summary.append("  Total Moves  : ").append(state.getMoveCount()).append("\n");
         summary.append("\n");

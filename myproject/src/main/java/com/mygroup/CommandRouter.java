@@ -235,7 +235,7 @@ public class CommandRouter {
 
                                 TAKE <item> FROM <container>
                                   Remove an item from a container (like a box or case) at your location.
-                                  Example: 'take chicken from togbox'
+                                  Example: 'take chicken from greenbox'
 
                                 DROP <item>
                                   Remove an item from your inventory and leave it at your current location.
@@ -367,6 +367,55 @@ public class CommandRouter {
                     return "Take what?";
                 } else {
                     String itemName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
+
+                    // Support syntax: take <item> from <container> — parsed before the
+                    // whole-phrase container check, which would otherwise never match it
+                    int fromIndex = -1;
+                    for (int i = 1; i < words.length; i++) {
+                        if (words[i].equals("from")) {
+                            fromIndex = i;
+                            break;
+                        }
+                    }
+                    if (fromIndex > 1 && fromIndex < words.length - 1) {
+                        String thingName = String.join(" ", Arrays.copyOfRange(words, 1, fromIndex));
+                        String containerName = String.join(" ",
+                                Arrays.copyOfRange(words, fromIndex + 1, words.length));
+                        if (!state.getCurrLocation().hasContainerItem(containerName)) {
+                            return "There's no container called " + containerName + " here.";
+                        }
+                        ContainerItem container = (ContainerItem) state.getCurrLocation().getItem(containerName);
+                        if (!container.hasItem(thingName)) {
+                            return "The " + containerName + " doesn't contain " + thingName + ".";
+                        }
+                        // Dangerous action: trying to remove snakes from the box costs points and is
+                        // disallowed
+                        if (Item.normalizeName(containerName).equals(Item.normalizeName("TreasureBox")) &&
+                                Item.normalizeName(thingName).equals(Item.normalizeName("Snakes"))) {
+                            state.subtractPoints(10);
+                            return "Danger! Do NOT remove snakes from the box. You lose 10 points for endangering everyone. Carry the TreasureBox to Olin instead.";
+                        }
+                        // Food inside containers (e.g. Chicken in the GreenBox) follows the
+                        // same dining rules as food on the counter
+                        Item peek = container.getItem(thingName);
+                        String containerFoodNote = "";
+                        if (peek != null && foodSystem.isFoodItem(peek)) {
+                            String blocked = foodSystem.blockFoodPickupReason();
+                            if (blocked != null) {
+                                return blocked;
+                            }
+                            containerFoodNote = foodSystem.settleFoodPickup();
+                        }
+                        Item takenFrom = container.removeItem(thingName);
+                        state.getInventory().addItem(takenFrom);
+                        // DNA pickup starts the 3-move delivery countdown, same as a plain take
+                        if (Item.normalizeName(takenFrom.getName()).contains("batmandna")) {
+                            state.startDNATask(3);
+                        }
+                        questSystem.combineSheetsInInventory();
+                        return "You took " + thingName + " from " + containerName + "." + containerFoodNote;
+                    }
+
                     // Special-case: allow picking up the sealed TreasureBox to carry it safely to
                     // Olin
                     if (state.getCurrLocation().hasContainerItem(itemName)) {
@@ -375,37 +424,6 @@ public class CommandRouter {
                             state.getInventory().addItem(box);
                             state.getCurrLocation().removeItem(itemName);
                             return "You carefully pick up the sealed TreasureBox. Handle with care and take it to Olin.";
-                        }
-                        // Support syntax: take <item> from <container>
-                        int fromIndex = -1;
-                        for (int i = 1; i < words.length; i++) {
-                            if (words[i].equals("from")) {
-                                fromIndex = i;
-                                break;
-                            }
-                        }
-                        if (fromIndex > 1 && fromIndex < words.length - 1) {
-                            String thingName = String.join(" ", Arrays.copyOfRange(words, 1, fromIndex));
-                            String containerName = String.join(" ",
-                                    Arrays.copyOfRange(words, fromIndex + 1, words.length));
-                            if (!state.getCurrLocation().hasContainerItem(containerName)) {
-                                return "There's no container called " + containerName + " here.";
-                            }
-                            ContainerItem container = (ContainerItem) state.getCurrLocation().getItem(containerName);
-                            if (!container.hasItem(thingName)) {
-                                return "The " + containerName + " doesn't contain " + thingName + ".";
-                            }
-                            // Dangerous action: trying to remove snakes from the box costs points and is
-                            // disallowed
-                            if (Item.normalizeName(containerName).equals(Item.normalizeName("TreasureBox")) &&
-                                    Item.normalizeName(thingName).equals(Item.normalizeName("Snakes"))) {
-                                state.subtractPoints(10);
-                                return "Danger! Do NOT remove snakes from the box. You lose 10 points for endangering everyone. Carry the TreasureBox to Olin instead.";
-                            }
-                            Item takenFrom = container.removeItem(thingName);
-                            state.getInventory().addItem(takenFrom);
-                            questSystem.combineSheetsInInventory();
-                            return "You took " + thingName + " from " + containerName + ".";
                         }
                         return "That's a container. Try 'open " + itemName + "' first or 'take <item> from " + itemName
                                 + "'";
@@ -416,6 +434,15 @@ public class CommandRouter {
                     }
 
                     if (state.getCurrLocation().hasItem(itemName)) {
+                        Item toTake = state.getCurrLocation().getItem(itemName);
+                        String foodNote = "";
+                        if (foodSystem.isFoodItem(toTake)) {
+                            String blocked = foodSystem.blockFoodPickupReason();
+                            if (blocked != null) {
+                                return blocked;
+                            }
+                            foodNote = foodSystem.settleFoodPickup();
+                        }
                         Item taken = state.getCurrLocation().removeItem(itemName);
                         state.getInventory().addItem(taken);
 
@@ -437,7 +464,7 @@ public class CommandRouter {
                             state.startDNATask(3);
                         }
                         questSystem.combineSheetsInInventory();
-                        return "You picked up  " + itemName;
+                        return "You picked up  " + itemName + foodNote;
                     } else {
                         return "That item is not here";
                     }

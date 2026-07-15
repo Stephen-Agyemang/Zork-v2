@@ -165,7 +165,7 @@ public class WorldBuilder {
         duckContainer.addItem(snake);
         duck.addItem(duckContainer);
 
-        ContainerItem hooverContainer = new ContainerItem("ToGoBox", "Container", "A to-go box, and it feels like there's food inside...");
+        ContainerItem hooverContainer = new ContainerItem("GreenBox", "Container", "A green to-go box, and it feels like there's food inside...");
         Item chickenAmerican = new Item("Chicken", "Food", "A chicken piece with American cheese melted on top");
         hooverContainer.addItem(chickenAmerican);
         Item cutleries = new Item("Cutleries", "Utensils", "A set of plastic cutleries to eat your food with");
