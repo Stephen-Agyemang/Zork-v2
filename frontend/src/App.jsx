@@ -483,7 +483,7 @@ export default function App() {
               className="callsign-input"
               type="text"
               maxLength={32}
-              placeholder="e.g. Stephen, ALPHA_01, anything"
+              placeholder="e.g. Alex, ALPHA_01, anything"
               value={callsignInput}
               onChange={e => { setCallsignInput(e.target.value); setCallsignError('') }}
               onKeyDown={e => { if (e.key === 'Enter') handleCallsignSubmit() }}
@@ -502,7 +502,7 @@ export default function App() {
             </button>
             <div style={{ marginTop: '16px', fontFamily: 'Share Tech Mono, monospace', fontSize: '10px', color: 'var(--color-outline)', textAlign: 'center', lineHeight: '1.6', letterSpacing: '0.5px' }}>
               DePauw student? Add <span style={{ color: 'var(--color-primary)' }}>_dpu</span> to your name<br />
-              (e.g. <span style={{ color: 'var(--color-primary)' }}>Stephen_dpu</span>) to appear on the DePauw leaderboard
+              (e.g. <span style={{ color: 'var(--color-primary)' }}>Alex_dpu</span>) to appear on the DePauw leaderboard
             </div>
           </div>
         </div>
