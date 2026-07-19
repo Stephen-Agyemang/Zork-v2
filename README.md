@@ -2,7 +2,7 @@
 
 Zork v2 is a full-stack, campus-themed text adventure game set at DePauw University. A Spring Boot REST API drives the game world and session state; a React/Vite terminal-style frontend renders the experience with selectable visual themes, a callsign/profile flow, and global + campus-specific leaderboards.
 
-> **Project status:** This is an independent, noncommercial student project created to explore Java, full-stack development, and the software development lifecycle. It began as class work and continued as a personal learning project inspired by classic parser-based interactive fiction. It is not affiliated with or endorsed by DePauw University, Microsoft, Activision, or the original creators of Zork.
+> **Project status:** This is an independent, noncommercial student project created to explore Java, full-stack development, and the software development lifecycle. It began as class work and continued as a personal learning project inspired by classic parser-based interactive fiction. It is not affiliated with or endorsed by Microsoft, Activision, or the original creators of Zork.
 
 ## Features
 
