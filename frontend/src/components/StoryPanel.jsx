@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './StoryPanel.css'
 
-export default function StoryPanel({ messages, state, activeBg, fadingBg }) {
+export default function StoryPanel({ messages, state }) {
   const scrollRef = useRef(null)
   const [cursorTime, setCursorTime] = useState(() => {
     const d = new Date()
@@ -58,9 +58,6 @@ export default function StoryPanel({ messages, state, activeBg, fadingBg }) {
             <span className="hud-tag hud-tag-primary">NEURAL_LINK: SYNC</span>
           </div>
         </div>
-
-        {fadingBg && <div className="terminal-watermark terminal-watermark-out" style={{ backgroundImage: `url(${fadingBg})` }} />}
-        {activeBg && <div className="terminal-watermark terminal-watermark-in" style={{ backgroundImage: `url(${activeBg})` }} />}
 
         <div className="panel-body console-log-body" ref={scrollRef}>
           

@@ -83,48 +83,6 @@
   flex: 1;
 }
 
-/* Atmospheric watermark of school photo — crisp, minimal processing */
-.terminal-watermark {
-  position: absolute;
-  top: 52px; left: 0; right: 0; bottom: 0;
-  background-size: cover;
-  background-position: center center;
-  pointer-events: none;
-  z-index: 0;
-  filter: brightness(55%) saturate(50%);
-}
-
-/* Net/mesh overlay — tactical scrim crosshatch over the photo */
-.terminal-watermark::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(45deg, rgba(0,0,0,0.5) 0px, rgba(0,0,0,0.5) 1px, transparent 1px, transparent 9px),
-    repeating-linear-gradient(-45deg, rgba(0,0,0,0.5) 0px, rgba(0,0,0,0.5) 1px, transparent 1px, transparent 9px);
-  mix-blend-mode: overlay;
-  opacity: 0.6;
-}
-
-.terminal-watermark-in {
-  animation: wm-fade-in 0.9s ease forwards;
-}
-
-.terminal-watermark-out {
-  animation: wm-fade-out 0.9s ease forwards;
-}
-
-@keyframes wm-fade-in {
-  from { opacity: 0; }
-  to   { opacity: var(--wm-opacity, 0.19); }
-}
-
-@keyframes wm-fade-out {
-  from { opacity: var(--wm-opacity, 0.19); }
-  to   { opacity: 0; }
-}
-
 .log-line {
   display: flex;
   align-items: flex-start;

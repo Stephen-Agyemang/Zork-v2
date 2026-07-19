@@ -2,6 +2,8 @@
 
 Zork v2 is a full-stack, campus-themed text adventure game set at DePauw University. A Spring Boot REST API drives the game world and session state; a React/Vite terminal-style frontend renders the experience with selectable visual themes, a callsign/profile flow, and global + campus-specific leaderboards.
 
+> **Project status:** This is an independent, noncommercial student project created to explore Java, full-stack development, and the software development lifecycle. It began as class work and continued as a personal learning project inspired by classic parser-based interactive fiction. It is not affiliated with or endorsed by DePauw University, Microsoft, Activision, or the original creators of Zork.
+
 ## Features
 
 - **15 campus locations** — East College (start), Julian, Olin, GCPA, Roy Library, CDI, Lilly Building, The Union Building, Hoover, The Fluttering Duck, Administration Building, Mason Hall, Reese Hall, Humbert Hall, and Stadium
@@ -10,7 +12,6 @@ Zork v2 is a full-stack, campus-themed text adventure game set at DePauw Univers
 - Exits display destinations on every move and `look` (`north → GCPA | west → Roy Library`)
 - Inventory, container, and item interactions — `take`, `drop`, `examine`, `open`, `put`, `use`
 - Hunger/food system, DNA delivery countdown, typing-challenge minigame
-- East College starting location cycles through a 6-photo slideshow
 - Session-isolated concurrent games — many players can run simultaneously on one server
 - Persistent leaderboard: global rankings + a DePauw-only leaderboard (callsigns ending in `_dpu` or `.dpu`)
 - Score deduplication — one entry per callsign, only updated when a new run beats the existing best
@@ -18,7 +19,7 @@ Zork v2 is a full-stack, campus-themed text adventure game set at DePauw Univers
 - Live RANK label in sidebar (NOVICE → WANDERER → ADVENTURER → EXPLORER → LEGEND)
 - RANKS button accessible at any point during gameplay (no need to quit first)
 - Score saved on `quit`, on all-quests completion, and on REBOOT
-- 5 selectable UI themes (amber, green, phantom, steampunk, archive) with location-specific background photography
+- 5 selectable terminal UI themes (amber, green, phantom, steampunk, archive)
 
 ## Tech Stack
 

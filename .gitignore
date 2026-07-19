@@ -20,5 +20,9 @@ myproject/src/main/resources/static/
 
 DESIGN_BRIEF.md
 
+# Local holding area for photographs with unverified provenance.
+# These files are retained locally but must not be served or redistributed.
+local-unverified-photos/
+
 # Claude Code local project files (skills, plans)
 .claude/

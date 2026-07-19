@@ -38,15 +38,10 @@ export default function App() {
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [dpuLeaderboard, setDpuLeaderboard] = useState(null)
   const [showDpuLeaderboard, setShowDpuLeaderboard] = useState(false)
-  const [activeBg, setActiveBg] = useState(null)
-  const [fadingBg, setFadingBg] = useState(null)
-  const activeBgRef = useRef(null)
   const pollIntervalRef = useRef(null)
   const sessionIdRef = useRef(null)
   const sessionTimerRef = useRef(null)
   const scoreSavedRef = useRef(false)
-  const slideshowIntervalRef = useRef(null)
-  const slideshowIndexRef = useRef(0)
 
   const getCompletedMissionCount = (scoreState) => [
     scoreState?.musicTaskComplete,
@@ -414,62 +409,6 @@ export default function App() {
     }
   }
 
-  const EAST_COLLEGE_IMAGES = [
-    '/eastcollege.png', '/eastcollege1.png', '/eastcollege2.png',
-    '/eastcollege3.png', '/eastcollege4.png', '/eastcollege5.png'
-  ]
-
-  const LOCATION_IMAGES = {
-    'east college':           '/eastcollege.png',
-    'stadium':                '/monon.png',
-  'julian':                 '/julian.jpg',
-    'hoover':                 '/hoover.jpg',
-    'olin':                   '/olin.jpg',
-    'gcpa':                   '/gcpa.jpg',
-    'roy library':            '/roylibrary.jpg',
-    'cdi':                    '/cdi.jpg',
-    'lilly building':         '/lilly.jpg',
-    'the fluttering duck':    '/duck.jpg',
-    'the union building':     '/ub.jpg',
-    'administration building':'/admin.jpg',
-    'mason hall':             '/mason.jpg',
-    'reese hall':             '/reese.jpg',
-    'humbert hall':           '/humbert.jpg',
-  }
-
-  const locationKey = state?.currLocation?.name?.toLowerCase() || ''
-  const newBg = LOCATION_IMAGES[locationKey] || '/school.jpg'
-
-  useEffect(() => {
-    if (newBg === activeBgRef.current) return
-    setFadingBg(activeBgRef.current)
-    activeBgRef.current = newBg
-    setActiveBg(newBg)
-    const t = setTimeout(() => setFadingBg(null), 900)
-    return () => clearTimeout(t)
-  }, [newBg])
-
-  useEffect(() => {
-    if (slideshowIntervalRef.current) {
-      clearInterval(slideshowIntervalRef.current)
-      slideshowIntervalRef.current = null
-    }
-    if (locationKey === 'east college') {
-      slideshowIndexRef.current = 0
-      slideshowIntervalRef.current = setInterval(() => {
-        slideshowIndexRef.current = (slideshowIndexRef.current + 1) % EAST_COLLEGE_IMAGES.length
-        const next = EAST_COLLEGE_IMAGES[slideshowIndexRef.current]
-        setFadingBg(activeBgRef.current)
-        activeBgRef.current = next
-        setActiveBg(next)
-        setTimeout(() => setFadingBg(null), 900)
-      }, 5000)
-    }
-    return () => {
-      if (slideshowIntervalRef.current) clearInterval(slideshowIntervalRef.current)
-    }
-  }, [locationKey])
-
   if (showCallsignScreen) {
     return (
       <div className={`chassis-monitor theme-${theme}`}>
@@ -755,7 +694,7 @@ export default function App() {
             />
 
             {/* Center Column: Telemetry monitor and log panel */}
-            <StoryPanel messages={messages} state={state} activeBg={activeBg} fadingBg={fadingBg} />
+            <StoryPanel messages={messages} state={state} />
 
             {/* Right Column: session load, signatures inventory, active quests */}
             <RightPanel state={state} onShareSession={handleShareSession} linkCopied={linkCopied} onCommand={handleCommand} collapsed={rightPanelCollapsed} onToggleCollapse={() => setRightPanelCollapsed(c => !c)} />
