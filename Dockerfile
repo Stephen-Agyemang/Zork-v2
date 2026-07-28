@@ -1,7 +1,9 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
-RUN cd myproject && mvn package -DskipTests
+# A container build is a release candidate: compile, run the complete test
+# suite, and package only if verification succeeds.
+RUN cd myproject && mvn --batch-mode clean verify
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app

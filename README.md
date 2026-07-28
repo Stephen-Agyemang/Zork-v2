@@ -1,5 +1,7 @@
 # Zork v2
 
+[![Quality Gate](https://github.com/Stephen-Agyemang/Zork-v2/actions/workflows/quality-gate.yml/badge.svg?branch=main)](https://github.com/Stephen-Agyemang/Zork-v2/actions/workflows/quality-gate.yml)
+
 Zork v2 is a full-stack, campus-themed text adventure game set at DePauw University. A Spring Boot REST API drives the game world and session state; a React/Vite terminal-style frontend renders the experience with selectable visual themes, a callsign/profile flow, and global + campus-specific leaderboards.
 
 > **Project status:** This is an independent, noncommercial student project created to explore Java, full-stack development, and the software development lifecycle. It began as class work and continued as a personal learning project inspired by classic parser-based interactive fiction. It is not affiliated with or endorsed by Microsoft, Activision, or the original creators of Zork.
@@ -159,9 +161,31 @@ The image is a multi-stage build: Maven compiles the backend JAR, then a slim `e
 
 ## Testing
 
-Run backend tests with:
+The **Quality Gate** runs automatically for every pull request to `main` and
+every push to `main`. It starts from a clean workspace, builds the React
+frontend, compiles the Java application, runs all tests, and builds the
+production Docker image. A failure stops the pipeline before an artifact is
+published.
+
+Run the same full check locally with:
 
 ```bash
 cd myproject
-mvn test
+./mvnw clean verify
 ```
+
+### Enforcing the gate on `main`
+
+In GitHub, open **Settings → Branches → Add branch protection rule** for
+`main`, then require pull requests and require the **Test and build** status
+check to pass before merging. Also disable direct pushes and force pushes for
+everyone who should use the review-and-test flow. This GitHub setting is what
+makes the workflow a mandatory merge gate rather than just an informational
+check.
+
+### Deployment
+
+Successful `main` builds publish the runnable JAR as a 14-day GitHub Actions
+artifact. If Render is not already connected to the repository, add its deploy
+hook as the GitHub Actions secret `RENDER_DEPLOY_HOOK_URL`; the pipeline will
+then trigger a Render deployment only after the full verification job succeeds.

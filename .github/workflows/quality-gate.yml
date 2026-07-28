@@ -1,0 +1,93 @@
+name: Quality Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Newer commits supersede an in-progress validation run for the same branch or PR.
+concurrency:
+  group: quality-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Set up Node cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # Maven runs the frontend production build, compiles the Spring Boot app,
+      # and executes every backend regression test from a clean target directory.
+      - name: Run the full verification suite
+        working-directory: myproject
+        run: ./mvnw --batch-mode clean verify
+
+      # Validate the exact container image Render will run, rather than only the
+      # local Maven output.
+      - name: Build production container
+        run: docker build --tag zork-v2:${{ github.sha }} .
+
+      - name: Smoke-test the production container
+        shell: bash
+        run: |
+          docker run --detach --rm --name zork-v2-ci --publish 8080:8080 zork-v2:${{ github.sha }}
+          trap 'docker logs zork-v2-ci; docker rm --force zork-v2-ci || true' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://localhost:8080/ > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "The production container did not become ready within 60 seconds."
+          exit 1
+
+      - name: Publish production JAR
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: zork-v2-${{ github.sha }}
+          path: myproject/target/myproject-1.0-SNAPSHOT.jar
+          if-no-files-found: error
+          retention-days: 14
+
+  deploy-render:
+    name: Deploy verified main build
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+    steps:
+      - name: Trigger Render deployment when configured
+        shell: bash
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL is not configured; verified artifact is ready for Render's connected-repo deployment."
+            exit 0
+          fi
+          curl --fail --silent --show-error --request POST --retry 3 "$RENDER_DEPLOY_HOOK_URL"
