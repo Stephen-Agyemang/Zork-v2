@@ -123,28 +123,29 @@ export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
       <div className="panel-body">
         {/* Operator Profile Card */}
         <div className="operator-card">
-          <div className="avatar-container">
-            <svg viewBox="0 0 100 100" className="avatar-svg">
-              <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(242, 202, 80, 0.15)" strokeWidth="0.5"/>
-                </pattern>
-              </defs>
-              <rect width="100" height="100" fill="url(#grid)" />
-              {/* High-tech tactical avatar shape */}
-              <circle cx="50" cy="38" r="18" fill="none" stroke="var(--color-primary)" strokeWidth="2" />
-              <path d="M25,80 C25,60 35,55 50,55 C65,55 75,60 75,80" fill="none" stroke="var(--color-primary)" strokeWidth="2" />
-              <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(242, 202, 80, 0.2)" strokeWidth="1" strokeDasharray="2 2" />
-              <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(242, 202, 80, 0.2)" strokeWidth="1" strokeDasharray="2 2" />
-              <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(242, 202, 80, 0.3)" strokeWidth="1" strokeDasharray="4 4" />
-            </svg>
-            <div className="scanline-overlay"></div>
-          </div>
+          <div className="operator-title" title={callsign || 'OPERATOR_01'}>{(callsign || 'OPERATOR_01').toUpperCase()}</div>
+          <div className="operator-card-details">
+            <div className="avatar-container">
+              <svg viewBox="0 0 100 100" className="avatar-svg">
+                <defs>
+                  <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(242, 202, 80, 0.15)" strokeWidth="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100" height="100" fill="url(#grid)" />
+                {/* High-tech tactical avatar shape */}
+                <circle cx="50" cy="38" r="18" fill="none" stroke="var(--color-primary)" strokeWidth="2" />
+                <path d="M25,80 C25,60 35,55 50,55 C65,55 75,60 75,80" fill="none" stroke="var(--color-primary)" strokeWidth="2" />
+                <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(242, 202, 80, 0.2)" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(242, 202, 80, 0.2)" strokeWidth="1" strokeDasharray="2 2" />
+                <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(242, 202, 80, 0.3)" strokeWidth="1" strokeDasharray="4 4" />
+              </svg>
+              <div className="scanline-overlay"></div>
+            </div>
 
-          <div className="operator-meta">
-            <div className="operator-title">{(callsign || 'OPERATOR_01').toUpperCase()}</div>
-            <div className="operator-status">ONLINE // SYNC_OK</div>
-            <div className="operator-stats-grid">
+            <div className="operator-meta">
+              <div className="operator-status">ONLINE // SYNC_OK</div>
+              <div className="operator-stats-grid">
               <div className="op-stat-lbl">CYCLES:</div>
               <div className="op-stat-val">{(state?.moveCount || 0).toString().padStart(5, '0')}</div>
 
@@ -162,12 +163,15 @@ export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
                   return 'NOVICE'
                 })()}
               </div>
-
-              <div className="op-stat-lbl">SECTOR:</div>
-              <div className="op-stat-val truncate-sector" title={getSectorName()}>
-                {getSectorName()}
               </div>
             </div>
+          </div>
+
+          {/* SECTOR gets its own full-width row so long location names
+              (e.g. ADMINISTRATION_BUILDING.DMG) are never clipped */}
+          <div className="operator-sector-row">
+            <span className="op-stat-lbl">SECTOR:</span>
+            <span className="operator-sector-val" title={getSectorName()}>{getSectorName()}</span>
           </div>
         </div>
 
