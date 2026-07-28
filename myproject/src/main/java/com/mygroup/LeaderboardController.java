@@ -5,8 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * REST controller for leaderboard score submission and retrieval.
@@ -53,6 +57,7 @@ public class LeaderboardController {
     }
 
     @PostMapping("/save")
+    @Transactional
     public ResponseEntity<String> save(@RequestHeader("X-Session-ID") String sessionId) {
         try {
             GameEngine engine = sessionManager.getEngine(sessionId);
@@ -73,17 +78,17 @@ public class LeaderboardController {
             if (score < 0 || score > MAX_SCORE || moveCount < 1 || moveCount > MAX_MOVES)
                 return ResponseEntity.ok().build();
 
-            Optional<ScoreEntry> existing = repo.findTopByCallsignIgnoreCaseOrderByScoreDescMoveCountAsc(callsign);
-            if (existing.isPresent()) {
-                ScoreEntry best = existing.get();
-                boolean newIsBetter = score > best.getScore()
-                        || (score == best.getScore() && moveCount < best.getMoveCount());
-                if (newIsBetter) {
-                    repo.delete(best);
-                    repo.save(new ScoreEntry(callsign, score, moveCount));
-                }
-            } else {
+            // Old deployments may already contain duplicate rows for a callsign.
+            // Collapse all of them whenever that player saves again, retaining
+            // only the best result (including the just-completed run).
+            List<ScoreEntry> matchingScores = repo.findAllByCallsignIgnoreCase(callsign);
+            ScoreEntry bestExisting = matchingScores.stream().min(scoreOrder()).orElse(null);
+            boolean newIsBetter = bestExisting == null || isBetter(score, moveCount, bestExisting);
+            repo.deleteAll(matchingScores);
+            if (newIsBetter) {
                 repo.save(new ScoreEntry(callsign, score, moveCount));
+            } else {
+                repo.save(new ScoreEntry(bestExisting.getCallsign(), bestExisting.getScore(), bestExisting.getMoveCount()));
             }
         } catch (RuntimeException e) {
             log.error("Leaderboard save failed", e);
@@ -108,7 +113,9 @@ public class LeaderboardController {
     @GetMapping("/top")
     public ResponseEntity<List<ScoreEntry>> top() {
         try {
-            return ResponseEntity.ok(repo.findTop10ByOrderByScoreDescMoveCountAsc());
+            return ResponseEntity.ok(uniqueBestScores(repo.findAllByOrderByScoreDescMoveCountAsc()).stream()
+                    .limit(10)
+                    .collect(Collectors.toList()));
         } catch (RuntimeException e) {
             log.error("Leaderboard read failed", e);
             return ResponseEntity.status(503).body(List.<ScoreEntry>of());
@@ -118,7 +125,7 @@ public class LeaderboardController {
     @GetMapping("/top-dpu")
     public ResponseEntity<List<ScoreEntry>> topDpu() {
         try {
-            List<ScoreEntry> dpu = repo.findAllByOrderByScoreDescMoveCountAsc().stream()
+            List<ScoreEntry> dpu = uniqueBestScores(repo.findAllByOrderByScoreDescMoveCountAsc()).stream()
                 .filter(e -> {
                     String name = e.getCallsign().toLowerCase();
                     return name.endsWith("_dpu") || name.endsWith(".dpu");
@@ -130,5 +137,28 @@ public class LeaderboardController {
             log.error("DPU leaderboard read failed", e);
             return ResponseEntity.status(503).body(List.<ScoreEntry>of());
         }
+    }
+
+    private static boolean isBetter(int score, int moveCount, ScoreEntry candidate) {
+        return score > candidate.getScore()
+                || (score == candidate.getScore() && moveCount < candidate.getMoveCount());
+    }
+
+    private static Comparator<ScoreEntry> scoreOrder() {
+        return Comparator.comparingInt(ScoreEntry::getScore).reversed()
+                .thenComparingInt(ScoreEntry::getMoveCount)
+                .thenComparing(ScoreEntry::getCompletedAt, Comparator.nullsLast(Comparator.naturalOrder()));
+    }
+
+    private static List<ScoreEntry> uniqueBestScores(List<ScoreEntry> entries) {
+        Map<String, ScoreEntry> bestByCallsign = new LinkedHashMap<>();
+        for (ScoreEntry entry : entries) {
+            String key = entry.getCallsign().trim().toLowerCase(Locale.ROOT);
+            ScoreEntry currentBest = bestByCallsign.get(key);
+            if (currentBest == null || scoreOrder().compare(entry, currentBest) < 0) {
+                bestByCallsign.put(key, entry);
+            }
+        }
+        return bestByCallsign.values().stream().sorted(scoreOrder()).collect(Collectors.toList());
     }
 }
