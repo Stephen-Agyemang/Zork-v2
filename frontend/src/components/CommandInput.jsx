@@ -5,18 +5,20 @@ import './CommandInput.css'
 // CommandInput — the terminal input bar at the bottom of the screen.
 // Handles: typing, Enter to submit, Tab/ArrowRight to autocomplete, ArrowUp/Down for command history,
 // ghost text preview, macro shortcut buttons, and keeping focus in the input at all times.
-export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCommand, state, promptError, pending }) {
+export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCommand, state, promptError, pending, active = true }) {
   const [input, setInput] = useState('')
   const inputRef = useRef(null)
 
-  // Focus on mount and whenever pending clears (after each response)
+  // Focus on mount, when a dialog/tab returns control to the game, and whenever
+  // pending clears after a response. This keeps the terminal ready to type
+  // without stealing focus while a modal is open.
   useEffect(() => {
-    if (!pending) inputRef.current?.focus()
-  }, [pending])
+    if (active && !pending) inputRef.current?.focus()
+  }, [active, pending])
 
   const handleSubmit = () => {
     const cmd = input.trim()
-    if (cmd && !pending) {
+    if (cmd && active && !pending) {
       onCommand(cmd)
       setInput('')
       inputRef.current?.focus()
@@ -78,7 +80,7 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
   ]
 
   const handleMacroClick = (cmd) => {
-    if (pending) return
+    if (!active || pending) return
     playBeep()
     onCommand(cmd)
     inputRef.current?.focus()
@@ -125,10 +127,10 @@ export default function CommandInput({ getHistoryCommand, handleHistoryNav, onCo
           <input
             ref={inputRef}
             value={input}
-            onChange={(e) => { if (!pending) { setInput(e.target.value); playTick() } }}
+            onChange={(e) => { if (active && !pending) { setInput(e.target.value); playTick() } }}
             onKeyDown={handleKeyDown}
             placeholder={pending ? "PROCESSING..." : isChallenge ? "TYPE THE WORDS SHOWN ABOVE..." : "INITIATE COMMAND SEQUENCE..."}
-            disabled={pending}
+            disabled={pending || !active}
             autoFocus
             className="deck-input-field"
           />

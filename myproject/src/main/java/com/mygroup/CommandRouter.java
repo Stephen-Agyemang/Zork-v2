@@ -720,18 +720,26 @@ public class CommandRouter {
             return "You can't go that way";
         }
 
-        // Warn before entering any dining location for the first time.
-        // The warning is recorded per location so the second attempt goes through.
-        if (foodSystem.isDiningLocation(nextLocation) && !state.isVisitedHoover() && !state.isVisitedDuck()
+        // Warn before entering either dining location for the first time. This
+        // includes the second dining hall: its penalty is only applied after the
+        // player has seen the warning and deliberately repeats the command.
+        boolean enteringUnvisitedDiningHall = (nextLocation.getName().equalsIgnoreCase("Hoover")
+                && !state.isVisitedHoover())
+                || (nextLocation.getName().equalsIgnoreCase("The Fluttering Duck")
+                && !state.isVisitedDuck());
+        if (foodSystem.isDiningLocation(nextLocation) && enteringUnvisitedDiningHall
                 && !state.getDiningWarningsShown().contains(nextLocation.getName())) {
             state.getDiningWarningsShown().add(nextLocation.getName());
             String nextName = nextLocation.getName().toLowerCase();
             String nearby = nextName.equals("hoover")
                     ? "From Hoover you can reach Olin (Biology/DNA quest), GCPA (Music venue), and Roy Library."
                     : "From The Fluttering Duck you can reach Roy Library and the Administration Building (Macbook delivery).";
+            boolean secondDiningHall = state.isVisitedHoover() || state.isVisitedDuck();
+            String consequence = secondDiningHall
+                    ? "This is your SECOND dining location: entering adds +10 moves and costs 25 points. "
+                    : "There are TWO dining spots on campus — Hoover and The Fluttering Duck — and you may only visit ONE without penalty. ";
             return "⚠️  DINING ALERT: " + nextLocation.getName() + " is a dining location. "
-                    + "There are TWO dining spots on campus — Hoover and The Fluttering Duck — and you may only visit ONE without penalty. "
-                    + nearby + " The other dining option offers different access. "
+                    + consequence + nearby + " The other dining option offers different access. "
                     + "Choose wisely, then type the command again to enter.";
         }
 
@@ -747,7 +755,7 @@ public class CommandRouter {
 
         dnaSystem.startCountdownIfNeeded(previousLocation);
         output.append(dnaSystem.tickCountdown());
-        output.append(foodSystem.applyHungerAfterMove());
+        output.append(foodSystem.applyHungerAfterMove(moveCost));
         output.append(foodSystem.checkDiningLocationPenalty());
         output.append("\nExits: ").append(formatExits(state.getCurrLocation()));
 

@@ -941,6 +941,7 @@ export default function App() {
           state={state}
           pending={commandPending}
           promptError={promptError}
+          active={!showHelpModal && !showLeaderboard && !showDpuLeaderboard}
         />
       )}
 

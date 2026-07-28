@@ -118,9 +118,14 @@ public class FoodSystem {
      * - Apply move penalty if no food available
      * - Check for food decay
      */
-    public String applyHungerAfterMove() {
-        state.incrementHungerCounter();
-        state.incrementFoodDecayCounter();
+    public String applyHungerAfterMove(int movesTaken) {
+        // Jump and cross cost two moves. Hunger and food freshness must advance
+        // by that same amount so the survival system matches the move counter.
+        int movement = Math.max(1, movesTaken);
+        for (int i = 0; i < movement; i++) {
+            state.incrementHungerCounter();
+            state.incrementFoodDecayCounter();
+        }
         StringBuilder message = new StringBuilder();
 
         // Check for hunger - player must eat if counter reaches 5
