@@ -208,6 +208,9 @@ public class CommandRouter {
                                 LOOK
                                   Shows the name, description, and all items at your current location.
 
+                                ITEMS
+                                  Lists just the items at your current location, without the full description.
+
                                 EXAMINE <item>
                                   Get detailed information about an item. For example: 'examine phone'
                                   Use this on the Help item (this guide!) to read it anytime.
@@ -263,21 +266,31 @@ public class CommandRouter {
                                   See your current moves used, total points, and location.
                                   Keep track of these to optimize your route!
 
+                                QUESTS
+                                  Shows your progress on the core missions — which ones are done
+                                  and which are still open. Great for checking what's left.
+
                                 HELP
                                   Directs you to this guide. You must have the Help item to read it.
 
-                                EXITS
+                                EXITS (or CONNECTIONS)
                                   Shows all available exits from your current location with destination names.
                                   Example: north → GCPA | west → Roy Library
 
-                                CLEAR
+                                CLEAR (or CLS)
                                   Wipes your terminal screen for a clean workspace. Your moves, points,
                                   and inventory are NOT affected — it only clears what's displayed.
+
+                                SKIP
+                                  Only during a typing challenge — bail out of the drill and get back
+                                  to exploring (you forfeit that challenge's bonus).
 
                                 QUIT
                                   Ends your run and saves your score to the leaderboard.
                                   Check the GLOBAL RANKINGS button on the debrief screen to see where you placed.
                                   Tip: hitting REBOOT also saves your score before resetting.
+
+                                (Tip: greetings like 'hi' or 'hello' get a friendly reply — try them!)
 
                                 ═════════════════════ STRATEGIC GAMEPLAY TIPS ═════════════════
 
@@ -500,7 +513,7 @@ public class CommandRouter {
                 return "You dropped " + itemName;
             }
 
-            case "status" -> {
+            case "status", "score" -> {
                 StringBuilder statusOutput = new StringBuilder();
                 statusOutput.append("=== Player Status ===\n");
                 statusOutput.append("Current Location: ").append(state.getCurrLocation().getName()).append("\n");
@@ -652,31 +665,28 @@ public class CommandRouter {
                 }
             }
 
-            case "talk" -> {
-                if (words.length < 2) {
-                    return "Talk to whom?";
-                }
-                String npcName = String.join(" ", Arrays.copyOfRange(words, 1, words.length));
-                return questSystem.talkToNpc(npcName);
-            }
-
-            case "accept" -> {
-                if (words.length < 2) {
-                    return "Accept what quest?";
-                }
-                String questId = words[1];
-                return questSystem.acceptQuest(questId);
-            }
-
             case "quests" -> {
-                StringBuilder sb = new StringBuilder("=== Quest Status ===\n");
-                questSystem.getQuestStatusLine("music").ifPresent(line -> sb.append(line).append("\n"));
-                questSystem.getQuestStatusLine("macbook").ifPresent(line -> sb.append(line).append("\n"));
-                questSystem.getQuestStatusLine("dna").ifPresent(line -> sb.append(line).append("\n"));
-                questSystem.getQuestStatusLine("salmon").ifPresent(line -> sb.append(line).append("\n"));
-                questSystem.getQuestStatusLine("snake").ifPresent(line -> sb.append(line).append("\n"));
-                String result = sb.toString().trim();
-                return result.isEmpty() ? "No quests tracked yet." : result;
+                // Live progress of the SEVEN core missions only — the ones already named
+                // in the mission briefing. Deliberately omits the hidden dining "visit both"
+                // bonus and the stadium/football bonus so players discover those themselves.
+                record Mission(String label, boolean done) {}
+                Mission[] missions = {
+                    new Mission("The Music Show", state.isMusicTaskComplete()),
+                    new Mission("DNA Delivery", state.isDnaTaskComplete()),
+                    new Mission("Endangered Salmon", state.isSalmonTaskComplete()),
+                    new Mission("Snake Containment", state.isSnakeTaskComplete()),
+                    new Mission("MacBook Return", state.isMacbookTaskComplete()),
+                    new Mission("Treadmill Sprint", state.isTreadmillUsed()),
+                    new Mission("Ancient Artifact", state.isArtifactTaskComplete()),
+                };
+                int done = 0;
+                StringBuilder sb = new StringBuilder("=== MISSION PROGRESS ===\n");
+                for (Mission m : missions) {
+                    if (m.done()) done++;
+                    sb.append(m.done() ? "[✓] " : "[ ] ").append(m.label()).append("\n");
+                }
+                sb.append(done).append(" / ").append(missions.length).append(" core missions complete");
+                return sb.toString();
             }
 
             case "help" -> {

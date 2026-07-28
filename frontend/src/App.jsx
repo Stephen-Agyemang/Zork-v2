@@ -986,17 +986,23 @@ export default function App() {
                   <div><strong>LOOK</strong></div>
                   <div>Redisplays your current location description and visible items.</div>
 
-                  <div><strong>STATUS</strong></div>
-                  <div>Shows your current score, move count, and quest progress.</div>
+                  <div><strong>STATUS</strong> (or <strong>SCORE</strong>)</div>
+                  <div>Shows your current score, move count, location, food, and coupons.</div>
+
+                  <div><strong>ITEMS</strong></div>
+                  <div>Lists just the items at your current location.</div>
 
                   <div><strong>QUESTS</strong></div>
-                  <div>Lists all active quests and their current completion state.</div>
+                  <div>Shows your core mission progress — which are complete and which are still open.</div>
 
-                  <div><strong>EXITS</strong></div>
+                  <div><strong>EXITS</strong> (or <strong>CONNECTIONS</strong>)</div>
                   <div>Lists all available exits from your current location with destination names (e.g. north → GCPA).</div>
 
-                  <div><strong>CLEAR</strong></div>
+                  <div><strong>CLEAR</strong> (or <strong>CLS</strong>)</div>
                   <div>Wipes the terminal log. Progress, score, and inventory are untouched.</div>
+
+                  <div><strong>SKIP</strong></div>
+                  <div>During a typing challenge only — bail out of the drill (you forfeit that bonus).</div>
 
                   <div><strong>QUIT</strong></div>
                   <div>Ends your run, saves your score to the leaderboard, and shows your final stats. Use the <strong>GLOBAL RANKINGS</strong> button on the debrief screen to see where you placed.</div>
@@ -1025,6 +1031,9 @@ export default function App() {
 
                   <div><strong>TAKE &lt;item&gt;</strong></div>
                   <div>Pick up items at your current location and add to cargo.</div>
+
+                  <div><strong>TAKE &lt;item&gt; FROM &lt;container&gt;</strong></div>
+                  <div>Pull an item out of a container at your location (e.g. take chicken from greenbox).</div>
 
                   <div><strong>DROP &lt;item&gt;</strong></div>
                   <div>Remove an item from cargo and leave it at your location.</div>
