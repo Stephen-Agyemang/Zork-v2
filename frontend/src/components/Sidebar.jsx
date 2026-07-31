@@ -116,8 +116,10 @@ export default function Sidebar({ state, onCommand, lastCommand, callsign }) {
       <div className="rivet rivet-br"></div>
 
       <div className="panel-header">
+        {/* The operator's full callsign is shown in the operator-title card
+            below and in the left nav rail, so the cramped header tag that used
+            to echo (and clip) it here has been removed. */}
         <span className="panel-title">OPERATOR_PROFILE</span>
-        <span className="panel-header-icon">{(callsign || 'OP_01').substring(0, 6).toUpperCase()}</span>
       </div>
 
       <div className="panel-body">

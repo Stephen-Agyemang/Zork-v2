@@ -1237,6 +1237,12 @@ body {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  /* Keep long callsigns from overflowing the narrow 52px rail: show what
+     fits and end with an ellipsis instead of a hard mid-word chop. */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .menu-item:hover {
