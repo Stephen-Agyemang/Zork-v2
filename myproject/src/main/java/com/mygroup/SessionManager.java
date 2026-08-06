@@ -3,6 +3,7 @@ package com.mygroup;
 import org.springframework.stereotype.Component;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Holds all active game sessions in memory.
@@ -21,10 +22,23 @@ public class SessionManager {
     // Hard cap to prevent memory exhaustion on the server
     private static final int MAX_SESSIONS = 400;
 
+    // Slots currently reserved. Claimed BEFORE a session is built and released when
+    // one is removed (or when a create is refused). The cap is enforced on this
+    // counter rather than on sessions.size() because check-then-put on the map is
+    // two steps: under a concurrent burst several threads could each pass a
+    // size() < MAX_SESSIONS check before any of them put(), collectively pushing the
+    // live session count past the cap (observed overshooting to 403 in load tests).
+    private final AtomicInteger reservedSlots = new AtomicInteger(0);
+
     // Creates a new session, builds the world, sets the player name, and returns the session ID.
     // Returns null if the server is at capacity.
     public String createSession(String callsign) {
-        if (sessions.size() >= MAX_SESSIONS) {
+        // Atomically claim a slot; if claiming it would exceed the cap, hand it back
+        // and refuse. incrementAndGet + the compensating decrement make the capacity
+        // check and the reservation a single atomic operation, so concurrent starts
+        // can never overshoot MAX_SESSIONS.
+        if (reservedSlots.incrementAndGet() > MAX_SESSIONS) {
+            reservedSlots.decrementAndGet();
             return null;
         }
         String sessionId = UUID.randomUUID().toString();
@@ -41,7 +55,11 @@ public class SessionManager {
     }
 
     public void removeSession(String sessionId) {
-        sessions.remove(sessionId);
+        // Only release a slot if we actually removed a live session, so double
+        // removes (or unknown ids) can't drive reservedSlots below the real count.
+        if (sessionId != null && sessions.remove(sessionId) != null) {
+            reservedSlots.decrementAndGet();
+        }
     }
 
     public int getActiveSessionCount() {
